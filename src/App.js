@@ -1,39 +1,36 @@
 import React from "react";
-import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/LoginForm";
+import PatientDashboard from "./components/PatientDashboard";
+import DoctorDashboard from "./components/DoctorDashboard";
+import NurseDashboard from "./components/NurseDashboard";
+import DietitianDashboard from "./components/DietitianDashboard";
+import NotFound from "./components/NotFound";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
+    <Router>
+      <div className="App">
+        <Navbar />
 
-      {/* Hero Section */}
-      <header className="hero" id="home">
-        <h1>Empower your journey</h1>
-        <p>Manage your health with ease</p>
-        <a href="#services" className="btn-primary">View services</a>
-      </header>
+        <Routes>
+          <Route path="/" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/patient-dashboard" element={<PatientDashboard />} />
+          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+          <Route path="/nurse-dashboard" element={<NurseDashboard />} />
+          <Route path="/dietitian-dashboard" element={<DietitianDashboard />} />
+          <Route path="/unknown-role" element={<NotFound />} />
+        </Routes>
 
-      {/* About Section */}
-      <section className="about" id="about">
-        <h2>Your partner in kidney health</h2>
-        <p>
-          Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health needs.
-        </p>
-      </section>
-
-      {/* Registration Form Placeholder */}
-      <section id="register">
-        <h2>Register Now</h2>
-        <RegisterForm />
-      </section>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
 export default App;
-

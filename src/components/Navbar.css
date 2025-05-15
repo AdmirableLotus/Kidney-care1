@@ -1,0 +1,29 @@
+/* Placeholder styles for Navbar */
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  li {
+    display: inline;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  a:hover {
+    color: #007bff;
+  }
+  
