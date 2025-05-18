@@ -1,47 +1,35 @@
-/* Reset and Base Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* === Global Reset & Fonts === */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  background-color: #f4f6f9;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9f9f9;
   color: #333;
 }
 
-/* Header & Navigation */
-header {
-  background-color: #007BFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-nav {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.App {
+  text-align: center;
+  padding: 2rem;
 }
 
-.logo {
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-}
-
+/* === Navigation === */
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 15px;
+  justify-content: center;
+  gap: 20px;
+  padding: 0;
+  margin: 20px 0;
 }
 
 .nav-links li a {
-  color: #ffffff;
+  color: #1e88e5;
   text-decoration: none;
   padding: 10px 15px;
   border-radius: 4px;
@@ -52,10 +40,10 @@ nav {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Hero Section */
+/* === Hero Section === */
 .hero {
   position: relative;
-  background: url('public/images/hero-image.jpg') center/cover no-repeat;
+  background: url("/images/back.jpg") center/cover no-repeat;
   color: #ffffff;
   text-align: center;
   padding: 140px 20px;
@@ -64,28 +52,73 @@ nav {
 .hero::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* dark overlay */
+  z-index: 0;
+}
+
+.hero h1,
+.hero p {
+  position: relative;
   z-index: 1;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
+/* === Buttons === */
+button {
+  background-color: #1e88e5;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
 }
 
-.hero-content h1 {
-  font-size: 48px;
-  margin-bottom: 20px;
+button:hover {
+  background-color: #1565c0;
 }
 
-.hero-content p {
-  font-size: 22px;
-  margin-bottom: 30px;
+/* === Forms === */
+input, select, textarea {
+  padding: 0.6rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.cta-button {
-  background-color: #1abc9c;
-  color: #ffffff;
-  padding: 12px 28px;
+/* === Footer === */
+footer {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+/* === Footer Links === */
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.footer-links li {
+  list-style: none;
+}
+
+.footer-links li a {
+  text-decoration: none;
+  color: #2c3e50;
+}
+
+.footer-links li a:hover {
+  color: #1abc9c;
 }
