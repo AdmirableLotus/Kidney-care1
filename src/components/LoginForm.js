@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
@@ -20,7 +20,7 @@ const LoginForm = () => {
       const token = res.data.token;
       localStorage.setItem("token", token);
 
-      const decoded = jwt_decode(token);
+      const decoded = jwtDecode(token);
       const role = decoded.role;
 
       // Redirect based on role

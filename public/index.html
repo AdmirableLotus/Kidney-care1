@@ -1,43 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kidney Care</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <header>
+    <nav>
+      <div class="logo">Kidney Care</div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Testimonials</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Empower your journey</h1>
+      <p>Manage your health with ease</p>
+      <a href="#" class="cta-button">View services</a>
+    </div>
+  </section>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  <section class="about">
+    <div class="container">
+      <h2>Empowering patients</h2>
+      <p>Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health management needs...</p>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <div class="feature">
+        <h3>Health Tracking</h3>
+        <p>Monitor your health with precision and ease.</p>
+      </div>
+      <div class="feature">
+        <h3>Patient-Medical Team Connection</h3>
+        <p>Enhance communication with your healthcare providers.</p>
+      </div>
+      <div class="feature">
+        <h3>Personalized Health Insights</h3>
+        <p>Receive tailored information for better health decisions.</p>
+      </div>
+      <div class="feature">
+        <h3>Transplant Tracker</h3>
+        <p>Stay informed about your transplant journey.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="container">
+      <h2>What our users say</h2>
+      <div class="testimonial">
+        <img src="images/user1.jpg" alt="Brandon Vega">
+        <p>"Kidney Care has transformed my experience with dialysis..."</p>
+        <h4>Brandon Vega</h4>
+        <span>Independent</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="container">
+      <h2>Get in touch</h2>
+      <form>
+        <input type="text" name="name" placeholder="Name *" required>
+        <input type="email" name="email" placeholder="Email address *" required>
+        <input type="tel" name="phone" placeholder="Phone number">
+        <textarea name="message" placeholder="Message" required></textarea>
+        <label>
+          <input type="checkbox" required>
+          I allow this website to store my submission so they can respond to my inquiry.
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      <div class="contact-info">
+        <p>Email: akondratyeva19@gmail.com</p>
+        <p>Location: Bellevue, NE US</p>
+        <p>Hours:</p>
+        <ul>
+          <li>Monday - Friday: 9:00am – 10:00pm</li>
+          <li>Saturday: 9:00am – 6:00pm</li>
+          <li>Sunday: 9:00am – 12:00pm</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="#">Schedule Appointment</a></li>
+        <li><a href="#">Complete Intake</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+      <p>Web design by B12</p>
+    </div>
+  </footer>
+
+</body>
 </html>
