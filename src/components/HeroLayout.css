@@ -1,0 +1,27 @@
+@media screen and (max-width: 768px) {
+    .hero-section {
+      flex-direction: column;
+      padding: 2rem 1rem;
+      height: auto;
+    }
+  
+    .hero-centerpiece img {
+      width: 200px;
+      margin-bottom: 2rem;
+    }
+  
+    .hero-feature {
+      position: static;
+      margin: 1rem auto;
+      width: 90%;
+    }
+  
+    .hero-overlay h1 {
+      font-size: 1.8rem;
+    }
+  
+    .hero-overlay p {
+      font-size: 1rem;
+    }
+  }
+  
