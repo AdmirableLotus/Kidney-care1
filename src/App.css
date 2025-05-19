@@ -43,7 +43,7 @@ code {
 /* === Hero Section === */
 .hero {
   position: relative;
-  background: url("/images/back.jpg") center/cover no-repeat;
+  background: url('./assets/back.jpg') center/cover no-repeat;
   color: #ffffff;
   text-align: center;
   padding: 140px 20px;

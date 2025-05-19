@@ -1,29 +1,22 @@
-/* Placeholder styles for Navbar */
 .navbar {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  li {
-    display: inline;
-  }
-  
-  a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  a:hover {
-    color: #007bff;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #1e88e5;
+  color: white;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.auth-button {
+  background-color: white;
+  color: #1e88e5;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
