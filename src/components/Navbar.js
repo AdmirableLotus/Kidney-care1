@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AuthModal from './AuthModal';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -13,7 +12,8 @@ export default function Navbar() {
           Login / Sign Up
         </button>
       </nav>
-      {showModal && <AuthModal closeModal={() => setShowModal(false)} />}
+
+      {/* Modal will be added later */}
     </>
   );
 }

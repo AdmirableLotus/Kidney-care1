@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kidney Care</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Header -->
   <header>
-    <nav>
+    <nav class="navbar">
       <div class="logo">Kidney Care</div>
+
       <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
@@ -21,9 +23,14 @@
         <li><a href="#">Blog</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
+
+      <div class="auth-actions">
+        <a href="/login.html" class="login-button">Login / Sign Up</a>
+      </div>
     </nav>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
       <h1>Empower your journey</h1>
@@ -32,13 +39,17 @@
     </div>
   </section>
 
+  <!-- About Section -->
   <section class="about">
     <div class="container">
       <h2>Empowering patients</h2>
-      <p>Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health management needs...</p>
+      <p>
+        Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health management needs...
+      </p>
     </div>
   </section>
 
+  <!-- Features -->
   <section class="features">
     <div class="container">
       <div class="feature">
@@ -60,6 +71,7 @@
     </div>
   </section>
 
+  <!-- Testimonials -->
   <section class="testimonials">
     <div class="container">
       <h2>What our users say</h2>
@@ -72,20 +84,22 @@
     </div>
   </section>
 
+  <!-- Contact Section -->
   <section class="contact">
     <div class="container">
       <h2>Get in touch</h2>
       <form>
-        <input type="text" name="name" placeholder="Name *" required>
-        <input type="email" name="email" placeholder="Email address *" required>
-        <input type="tel" name="phone" placeholder="Phone number">
+        <input type="text" name="name" placeholder="Name *" required />
+        <input type="email" name="email" placeholder="Email address *" required />
+        <input type="tel" name="phone" placeholder="Phone number" />
         <textarea name="message" placeholder="Message" required></textarea>
         <label>
-          <input type="checkbox" required>
+          <input type="checkbox" required />
           I allow this website to store my submission so they can respond to my inquiry.
         </label>
         <button type="submit">Submit</button>
       </form>
+
       <div class="contact-info">
         <p>Email: akondratyeva19@gmail.com</p>
         <p>Location: Bellevue, NE US</p>
@@ -99,6 +113,7 @@
     </div>
   </section>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
       <ul class="footer-links">
@@ -108,9 +123,16 @@
         <li><a href="#">Resources</a></li>
         <li><a href="#">Privacy Policy</a></li>
       </ul>
+
+      <div class="auth-buttons">
+        <a href="/login.html" class="btn">Log In</a>
+        <a href="/signup.html" class="btn">Sign Up</a>
+      </div>
+
       <p>Web design by B12</p>
     </div>
   </footer>
 
 </body>
 </html>
+
