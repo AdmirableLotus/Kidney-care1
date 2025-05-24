@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import RegisterForm from "./components/RegisterForm";
+import HomePage from "./components/HomePage";
 import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 import PatientDashboard from "./components/PatientDashboard";
 import StaffDashboard from "./components/StaffDashboard";
 
-// Helper to check if user is logged in
+// Get user from localStorage
 const getUser = () => {
   try {
     return JSON.parse(localStorage.getItem("user"));
@@ -21,11 +22,12 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/register" element={<RegisterForm />} />
+        {/* Public Pages */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
 
-        {/* Role-Based Dashboards */}
+        {/* Protected Dashboards */}
         <Route
           path="/dashboard/patient"
           element={
@@ -47,8 +49,8 @@ const App = () => {
           }
         />
 
-        {/* Default Route */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Redirect all other routes to home */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
