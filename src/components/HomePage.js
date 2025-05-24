@@ -41,7 +41,7 @@ const HomePage = () => {
           <a href="/contact" className="cta-button">Get in touch</a>
         </div>
         <div className="image">
-          <img src="/images/kidney-about.jpg" alt="About Kidney Care" />
+          <img src="/images/kidney-about.webp" alt="About Kidney Care" />
         </div>
       </section>
 
@@ -51,28 +51,28 @@ const HomePage = () => {
         <h2>Transforming dialysis management.</h2>
         <div className="feature-grid">
           <div className="feature">
-            <img src="/images/feature-tracking.jpg" alt="Health Tracking" />
+            <img src="/images/feature-tracking.png" alt="Health Tracking" />
             <div className="content">
               <h3>Health tracking</h3>
               <p>Monitor your health with precision and ease.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-connection.jpg" alt="Team Connection" />
+            <img src="/images/feature-connection.png" alt="Team Connection" />
             <div className="content">
               <h3>Patient-medical team connection</h3>
               <p>Enhance communication with your healthcare providers.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-insights.jpg" alt="Health Insights" />
+            <img src="/images/feature-insights.png" alt="Health Insights" />
             <div className="content">
               <h3>Personalized health insights</h3>
               <p>Receive tailored information for better health decisions.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-transplant.jpg" alt="Transplant Tracker" />
+            <img src="/images/feature-transplant.png" alt="Transplant Tracker" />
             <div className="content">
               <h3>Transplant tracker</h3>
               <p>Stay informed about your transplant journey.</p>

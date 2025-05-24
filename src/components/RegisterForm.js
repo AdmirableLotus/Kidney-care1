@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './RegisterForm.css';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    roleCategory: "patient",
-    roleDetail: "",
+    userType: "patient", // 'patient' or 'medical'
+    medicalRole: "",
   });
 
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -22,94 +22,93 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
 
-    const isMedical = formData.roleCategory === "medical";
-    if (isMedical && !formData.roleDetail) {
-      setMessage("Please specify your role as medical staff.");
-      setLoading(false);
-      return;
-    }
-
-    const finalRole = isMedical ? formData.roleDetail : "patient";
+    const role =
+      formData.userType === "medical"
+        ? formData.medicalRole
+        : "patient";
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: finalRole
+        role,
       });
 
-      setMessage(res.data.message || "Registered successfully");
+      setMessage(res.data.message || "Registered successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        userType: "patient",
+        medicalRole: "",
+      });
     } catch (err) {
-      setMessage(err.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
+      setMessage(err.response?.data?.message || "Registration failed.");
     }
   };
 
   return (
     <div className="form-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit} className="register-form">
+      <h2>Create an Account</h2>
+      <form onSubmit={handleSubmit}>
         <input
           name="name"
-          onChange={handleChange}
           value={formData.name}
-          placeholder="Name"
+          onChange={handleChange}
+          placeholder="Full Name"
           required
         />
         <input
           name="email"
           type="email"
-          onChange={handleChange}
           value={formData.email}
-          placeholder="Email"
+          onChange={handleChange}
+          placeholder="Email Address"
           required
         />
         <input
           name="password"
           type="password"
-          onChange={handleChange}
           value={formData.password}
-          placeholder="Password"
+          onChange={handleChange}
+          placeholder="Create Password"
           required
         />
 
-        <label>Are you a:</label>
+        <label>User Type</label>
         <select
-          name="roleCategory"
-          value={formData.roleCategory}
+          name="userType"
+          value={formData.userType}
           onChange={handleChange}
         >
           <option value="patient">Patient</option>
           <option value="medical">Medical Staff</option>
         </select>
 
-        {formData.roleCategory === "medical" && (
+        {formData.userType === "medical" && (
           <>
-            <label>Specify your role:</label>
+            <label>Medical Role</label>
             <select
-              name="roleDetail"
-              value={formData.roleDetail}
+              name="medicalRole"
+              value={formData.medicalRole}
               onChange={handleChange}
               required
             >
-              <option value="">Select...</option>
-              <option value="doctor">Doctor</option>
-              <option value="nurse">Nurse</option>
+              <option value="">-- Select Role --</option>
               <option value="dietitian">Dietitian</option>
-              <option value="other">Other</option>
+              <option value="social_worker">Social Worker</option>
+              <option value="nephrologist">Nephrologist</option>
+              <option value="primary_care_doctor">Primary Care Doctor</option>
+              <option value="transplant_team_member">Transplant Team Member</option>
             </select>
           </>
         )}
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
+        <button type="submit">Register</button>
       </form>
+
       {message && <p className="form-message">{message}</p>}
     </div>
   );
