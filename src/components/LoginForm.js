@@ -1,49 +1,65 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+    setLoading(true);
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-      const token = res.data.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      const decoded = jwtDecode(token);
-      const role = decoded.role;
-
-      // Redirect based on role
-      if (role === "patient") navigate("/patient-dashboard");
-      else if (role === "doctor") navigate("/doctor-dashboard");
-      else if (role === "nurse") navigate("/nurse-dashboard");
-      else if (role === "dietitian") navigate("/dietitian-dashboard");
-      else navigate("/unknown-role");
-
+      setMessage(`Welcome ${res.data.user.name}! Redirecting...`);
+      setTimeout(() => {
+        const role = res.data.user.role;
+        window.location.href = role === "patient" ? "/dashboard/patient" : "/dashboard/staff";
+      }, 1000);
     } catch (err) {
       setMessage(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="email" type="email" onChange={handleChange} placeholder="Email" required />
-        <input name="password" type="password" onChange={handleChange} placeholder="Password" required />
-        <button type="submit">Login</button>
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          name="email"
+          type="email"
+          onChange={handleChange}
+          value={formData.email}
+          placeholder="Email"
+          required
+        />
+        <input
+          name="password"
+          type="password"
+          onChange={handleChange}
+          value={formData.password}
+          placeholder="Password"
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Log In"}
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="form-message">{message}</p>}
     </div>
   );
 };
