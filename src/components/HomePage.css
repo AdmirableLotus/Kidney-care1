@@ -1,10 +1,21 @@
-/* Reset and layout */
+/* Reset and Layout */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f4f7f6;
   color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Navbar */
@@ -17,34 +28,45 @@ body {
   color: white;
 }
 
-.navbar .logo {
+.logo {
   font-size: 1.5rem;
   font-weight: bold;
 }
 
-.navbar .nav-links {
-  list-style: none;
+.nav-links {
   display: flex;
   gap: 25px;
 }
 
-.navbar .nav-links li a {
+.nav-links li a {
   color: white;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-.auth-actions a {
+.nav-links li a:hover {
+  color: #23b500;
+}
+
+.auth-actions .login-button {
+  background-color: transparent;
   color: white;
   border: 1px solid white;
-  padding: 8px 15px;
+  padding: 8px 16px;
   border-radius: 4px;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.auth-actions .login-button:hover {
+  background-color: white;
+  color: #0f261d;
 }
 
 /* Hero Section */
 .hero {
   background: url('/images/hero-background.jpg') center/cover no-repeat;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.6);
   background-blend-mode: darken;
   color: white;
   text-align: center;
@@ -118,6 +140,14 @@ body {
   margin-bottom: 40px;
 }
 
+.features .highlight {
+  color: #23b500;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
 .feature-grid {
   display: grid;
   gap: 30px;
@@ -152,10 +182,11 @@ body {
   color: #555;
 }
 
-/* Testimonials */
+/* Testimonials Section */
 .testimonials {
   padding: 60px 10%;
   background-color: #fff;
+  text-align: center;
 }
 
 .testimonials h2 {
@@ -163,10 +194,19 @@ body {
   color: #0f261d;
 }
 
+.testimonials .highlight {
+  color: #23b500;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
 .testimonial-grid {
   display: grid;
   gap: 30px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 30px;
 }
 
 .testimonial {
@@ -174,6 +214,9 @@ body {
   border-radius: 8px;
   padding: 20px;
   background: #fdfdfd;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
 }
 
 /* Footer */
@@ -184,15 +227,16 @@ footer {
   text-align: center;
 }
 
-footer .footer-links {
+.footer-links {
   list-style: none;
   display: flex;
   justify-content: center;
   gap: 25px;
-  padding: 0;
+  flex-wrap: wrap;
   margin-bottom: 15px;
 }
 
-footer .footer-links li a {
+.footer-links li a {
   color: white;
+  font-weight: 500;
 }

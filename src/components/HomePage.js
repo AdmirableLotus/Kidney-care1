@@ -18,7 +18,7 @@ const HomePage = () => {
             <li><a href="#">Blog</a></li>
           </ul>
           <div className="auth-actions">
-            <a href="/contact">Contact</a>
+            <a href="/login" className="login-button">Login / Sign Up</a>
           </div>
         </nav>
       </header>
