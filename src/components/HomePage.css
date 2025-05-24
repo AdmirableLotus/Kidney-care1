@@ -122,10 +122,18 @@ ul {
   display: block;
 }
 
+.about .image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .about .image img {
-  max-width: 400px;
-  width: 100%;
+  max-width: 100%;
+  height: auto;
   border-radius: 10px;
+  object-fit: cover;
 }
 
 /* Features Section */
@@ -160,6 +168,11 @@ ul {
   box-shadow: 0px 4px 10px rgba(0,0,0,0.06);
   overflow: hidden;
   text-align: left;
+  transition: transform 0.2s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
 }
 
 .feature img {
@@ -228,7 +241,6 @@ footer {
 }
 
 .footer-links {
-  list-style: none;
   display: flex;
   justify-content: center;
   gap: 25px;

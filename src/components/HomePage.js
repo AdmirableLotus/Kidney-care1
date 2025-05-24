@@ -41,7 +41,7 @@ const HomePage = () => {
           <a href="/contact" className="cta-button">Get in touch</a>
         </div>
         <div className="image">
-          <img src="/images/kidney-about.jpg" alt="Kidney Care illustration" />
+          <img src="/images/kidney-about.jpg" alt="About Kidney Care" />
         </div>
       </section>
 
