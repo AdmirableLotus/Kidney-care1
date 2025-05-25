@@ -1,124 +1,171 @@
-/* === Global Reset & Fonts === */
+/* Reset & Base Styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f9f9f9;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f6;
   color: #333;
+  background-image: url('/images/hero-background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0f261d;
+  color: white;
+  padding: 1rem 2rem;
 }
 
-.App {
-  text-align: center;
-  padding: 2rem;
-}
-
-/* === Navigation === */
 .nav-links {
   list-style: none;
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 0;
-  margin: 20px 0;
+  gap: 1.5rem;
 }
 
-.nav-links li a {
-  color: #1e88e5;
-  text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  transition: background 0.3s;
-}
-
-.nav-links li a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* === Hero Section === */
-.hero {
-  position: relative;
-  background: url('./assets/back.jpg') center/cover no-repeat;
-  color: #ffffff;
-  text-align: center;
-  padding: 140px 20px;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4); /* dark overlay */
-  z-index: 0;
-}
-
-.hero h1,
-.hero p {
-  position: relative;
-  z-index: 1;
-}
-
-/* === Buttons === */
-button {
-  background-color: #1e88e5;
+.nav-links a {
   color: white;
-  padding: 10px 20px;
-  border: none;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.auth-actions a {
+  color: #0f261d;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
   border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
+  font-weight: bold;
   transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #1565c0;
+.auth-actions a:hover {
+  background-color: #ddd;
 }
 
-/* === Forms === */
-input, select, textarea {
-  padding: 0.6rem;
-  margin: 0.5rem 0;
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-/* === Footer === */
-footer {
-  background-color: #f1f1f1;
-  padding: 1rem;
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  background-color: #1dbf73;
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.cta-button:hover {
+  background-color: #159a5b;
+}
+
+/* Sections */
+section {
+  padding: 4rem 2rem;
+}
+
+.about,
+.features,
+.testimonials {
+  background-color: #f9f9f9;
+}
+
+.features {
+  background-color: #eef3f2;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
   margin-top: 2rem;
+}
+
+.feature {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.feature img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.feature .content {
+  padding: 1rem;
+}
+
+.testimonial-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.testimonial {
+  flex: 1 1 300px;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+  color: #1dbf73;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  background-color: #0f261d;
+  color: white;
+  padding: 2rem;
   text-align: center;
 }
 
-/* === Footer Links === */
 .footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-.footer-links li {
-  list-style: none;
+  gap: 1rem;
 }
 
 .footer-links li a {
+  color: white;
   text-decoration: none;
-  color: #2c3e50;
-}
-
-.footer-links li a:hover {
-  color: #1abc9c;
 }
