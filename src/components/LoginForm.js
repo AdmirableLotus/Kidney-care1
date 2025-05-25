@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './LoginForm.css';
 
 const LoginForm = () => {
-  const [role, setRole] = useState('patient');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleRoleChange = (e) => {
-    setRole(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Placeholder for authentication logic
-    // Replace this with actual authentication API call
-    if (email && password) {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      const { token, role } = res.data;
+
+      localStorage.setItem('token', token);
+      // Redirect based on role
       if (role === 'patient') {
         navigate('/dashboard/patient');
       } else {
-        navigate('/dashboard/staff');
+        navigate('/dashboard/staff'); // You can fine-tune this if needed
       }
-    } else {
-      alert('Please enter both email and password.');
+
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Login failed.");
     }
   };
 
@@ -32,37 +33,23 @@ const LoginForm = () => {
     <div className="login-form-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Role:
-          <select value={role} onChange={handleRoleChange}>
-            <option value="patient">Patient</option>
-            <option value="dietitian">Dietitian</option>
-            <option value="social_worker">Social Worker</option>
-            <option value="nephrologist">Nephrologist</option>
-            <option value="primary_care_doctor">Primary Care Doctor</option>
-            <option value="transplant_team_member">Transplant Team Member</option>
-          </select>
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
+      {message && <p className="form-message">{message}</p>}
     </div>
   );
 };
