@@ -4,6 +4,8 @@ import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import PatientDashboard from './components/PatientDashboard';
 import StaffDashboard from './components/StaffDashboard';
+import HomePage from './components/HomePage';
+import './App.css';
 
 function App() {
   return (
