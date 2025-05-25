@@ -18,11 +18,13 @@ function App() {
         </ul>
       </nav>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/dashboard/patient" element={<PatientDashboard />} />
         <Route path="/dashboard/staff" element={<StaffDashboard />} />
         <Route path="/" element={<h1>Welcome to Kidney Care</h1>} />
+        
       </Routes>
     </Router>
   );
