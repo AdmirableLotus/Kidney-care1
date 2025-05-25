@@ -1,61 +1,77 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./PatientDashboard.css"; // Optional styling if you want it
 
 const PatientDashboard = () => {
   const [entries, setEntries] = useState([]);
   const [newEntry, setNewEntry] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchEntries = async () => {
     try {
-      const res = await axios.get("/api/patient/entries");
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/patient/entries", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setEntries(res.data);
+      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch entries", err);
+      setError("Unable to load entries.");
+      setLoading(false);
     }
   };
 
-  // ✅ Fixed: Ignoring missing dependency warning safely
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchEntries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/patient/entries", { content: newEntry });
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:5000/api/patient/entries", { content: newEntry }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setNewEntry("");
       fetchEntries();
     } catch (err) {
       console.error("Failed to submit entry", err);
+      setError("Could not submit your entry.");
     }
   };
 
   return (
-    <div>
+    <div className="patient-dashboard">
       <h2>
-        Welcome back{" "}
-        <span role="img" aria-label="smiling face">
-          😊
-        </span>
+        Welcome back <span role="img" aria-label="smiling face">😊</span>
       </h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="journal-form">
         <textarea
           value={newEntry}
           onChange={(e) => setNewEntry(e.target.value)}
           placeholder="Write something about today..."
           rows={4}
+          required
         />
         <button type="submit">Submit</button>
       </form>
 
+      {error && <p className="error">{error}</p>}
+
       <h3>Your Past Entries</h3>
-      <ul>
-        {entries.map((entry, index) => (
-          <li key={index}>{entry.content}</li>
-        ))}
-      </ul>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul className="entry-list">
+          {entries.map((entry, index) => (
+            <li key={index}>{entry.content}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

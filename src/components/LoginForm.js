@@ -17,11 +17,12 @@ const LoginForm = () => {
       const { token, role } = res.data;
 
       localStorage.setItem('token', token);
-      // Redirect based on role
+      localStorage.setItem('userRole', role);
+
       if (role === 'patient') {
         navigate('/dashboard/patient');
       } else {
-        navigate('/dashboard/staff'); // You can fine-tune this if needed
+        navigate('/dashboard/staff');
       }
 
     } catch (err) {

@@ -1,0 +1,85 @@
+/* Container Styling */
+.patient-dashboard {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #f9fdf8;
+  border-radius: 12px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Headings */
+.patient-dashboard h2 {
+  color: #184d2b;
+  font-size: 2rem;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.patient-dashboard h3 {
+  color: #184d2b;
+  font-size: 1.5rem;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+/* Form Layout */
+.journal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+/* Textarea for Journal */
+.journal-form textarea {
+  padding: 14px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  min-height: 120px;
+  background-color: #fff;
+}
+
+/* Submit Button */
+.journal-form button {
+  align-self: flex-start;
+  background-color: #23b500;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.journal-form button:hover {
+  background-color: #1a9200;
+}
+
+/* Entry List */
+.entry-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.entry-list li {
+  background-color: #ffffff;
+  border-left: 5px solid #23b500;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Error Message */
+.error {
+  color: #e60000;
+  font-weight: 500;
+  margin-top: 10px;
+}
