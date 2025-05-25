@@ -10,16 +10,21 @@ const HomePage = () => {
         <nav className="navbar">
           <div className="logo">Kidney Care</div>
           <ul className="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Testimonials</a></li>
-            <li><a href="#">How It Works</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/services">Services</Link></li>
+            <li><Link to="/testimonials">Testimonials</Link></li>
+            <li><Link to="/how-it-works">How It Works</Link></li>
+            <li><Link to="/news">News</Link></li>
+            <li><Link to="/blog">Blog</Link></li>
           </ul>
-          <div className="auth-actions">
-            <Link to="/login" className="login-button">Login / Sign Up</Link>
+          <div className="auth-dropdown">
+            <button className="login-button">Login / Sign Up ▼</button>
+            <div className="dropdown-content">
+              <Link to="/login">Login</Link>
+              <Link to="/register/patient">Patient Sign Up</Link>
+              <Link to="/register/staff">Medical Staff Sign Up</Link>
+            </div>
           </div>
         </nav>
       </header>
@@ -28,7 +33,7 @@ const HomePage = () => {
       <section className="hero">
         <h1>Empower your journey</h1>
         <p>Manage your health with ease</p>
-        <a href="#" className="cta-button">View services</a>
+        <Link to="/services" className="cta-button">View services</Link>
       </section>
 
       {/* About Section */}
@@ -39,7 +44,7 @@ const HomePage = () => {
           <p>
             Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health management needs. We understand the daily challenges faced by individuals with chronic kidney disease (CKD) and those undergoing dialysis. Our platform simplifies the management of hydration, nutrient intake, and overall well-being while fostering better communication between patients and their medical teams.
           </p>
-          <a href="/contact" className="cta-button">Get in touch</a>
+          <Link to="/contact" className="cta-button">Get in touch</Link>
         </div>
         <div className="image">
           <img src="/images/kidney-about.jpg" alt="About Kidney Care" />
@@ -108,11 +113,11 @@ const HomePage = () => {
       {/* Footer */}
       <footer>
         <ul className="footer-links">
-          <li><a href="#">Schedule Appointment</a></li>
-          <li><a href="#">Complete Intake</a></li>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Resources</a></li>
-          <li><a href="#">Privacy Policy</a></li>
+          <li><Link to="/appointment">Schedule Appointment</Link></li>
+          <li><Link to="/intake">Complete Intake</Link></li>
+          <li><Link to="/faq">FAQ</Link></li>
+          <li><Link to="/resources">Resources</Link></li>
+          <li><Link to="/privacy">Privacy Policy</Link></li>
         </ul>
         <p>Web design by B12</p>
       </footer>
