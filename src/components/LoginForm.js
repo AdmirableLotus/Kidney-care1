@@ -1,65 +1,68 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './LoginForm.css';
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState('patient');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage("");
-    setLoading(true);
 
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      setMessage(`Welcome ${res.data.user.name}! Redirecting...`);
-      setTimeout(() => {
-        const role = res.data.user.role;
-        window.location.href = role === "patient" ? "/dashboard/patient" : "/dashboard/staff";
-      }, 1000);
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed");
-    } finally {
-      setLoading(false);
+    // Placeholder for authentication logic
+    // Replace this with actual authentication API call
+    if (email && password) {
+      if (role === 'patient') {
+        navigate('/dashboard/patient');
+      } else {
+        navigate('/dashboard/staff');
+      }
+    } else {
+      alert('Please enter both email and password.');
     }
   };
 
   return (
-    <div className="form-container">
+    <div className="login-form-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
-        <input
-          name="email"
-          type="email"
-          onChange={handleChange}
-          value={formData.email}
-          placeholder="Email"
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          onChange={handleChange}
-          value={formData.password}
-          placeholder="Password"
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Log In"}
-        </button>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Role:
+          <select value={role} onChange={handleRoleChange}>
+            <option value="patient">Patient</option>
+            <option value="dietitian">Dietitian</option>
+            <option value="social_worker">Social Worker</option>
+            <option value="nephrologist">Nephrologist</option>
+            <option value="primary_care_doctor">Primary Care Doctor</option>
+            <option value="transplant_team_member">Transplant Team Member</option>
+          </select>
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
+        <button type="submit">Login</button>
       </form>
-      {message && <p className="form-message">{message}</p>}
     </div>
   );
 };

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './RegisterForm.css'; // reuse shared styles
+import './RegisterForm.css';
 
 const StaffRegisterForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: ""
+    role: "" // medical role selected from dropdown
   });
 
   const [message, setMessage] = useState("");
@@ -23,11 +23,9 @@ const StaffRegisterForm = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
-        ...formData
-      });
+      const res = await axios.post("http://localhost:5000/api/auth/register", formData);
 
-      setMessage(res.data.message || "Medical staff registered successfully!");
+      setMessage(res.data.message || "Registered successfully!");
       setFormData({ name: "", email: "", password: "", role: "" });
     } catch (err) {
       setMessage(err.response?.data?.message || "Registration failed.");
@@ -61,8 +59,7 @@ const StaffRegisterForm = () => {
           placeholder="Create Password"
           required
         />
-
-        <label>Select Role</label>
+        <label>Select Medical Role</label>
         <select
           name="role"
           value={formData.role}
@@ -76,7 +73,6 @@ const StaffRegisterForm = () => {
           <option value="primary_care_doctor">Primary Care Doctor</option>
           <option value="transplant_team_member">Transplant Team Member</option>
         </select>
-
         <button type="submit">Register</button>
       </form>
 
