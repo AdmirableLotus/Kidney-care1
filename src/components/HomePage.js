@@ -10,30 +10,25 @@ const HomePage = () => {
         <nav className="navbar">
           <div className="logo">Kidney Care</div>
           <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/services">Services</Link></li>
-            <li><Link to="/testimonials">Testimonials</Link></li>
-            <li><Link to="/how-it-works">How It Works</Link></li>
-            <li><Link to="/news">News</Link></li>
-            <li><Link to="/blog">Blog</Link></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Blog</a></li>
           </ul>
-          <div className="auth-dropdown">
-            <button className="login-button">Login / Sign Up ▼</button>
-            <div className="dropdown-content">
-              <Link to="/login">Login</Link>
-              <Link to="/register/patient">Patient Sign Up</Link>
-              <Link to="/register/staff">Medical Staff Sign Up</Link>
-            </div>
+          <div className="auth-actions">
+            <Link to="/login" className="login-button">Login / Sign Up</Link>
           </div>
         </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" style={{ backgroundImage: `url("/images/hero-background.jpg")` }}>
         <h1>Empower your journey</h1>
         <p>Manage your health with ease</p>
-        <Link to="/services" className="cta-button">View services</Link>
+        <a href="#" className="cta-button">View services</a>
       </section>
 
       {/* About Section */}
@@ -44,10 +39,10 @@ const HomePage = () => {
           <p>
             Kidney Care is a pioneering health-tech company in Bellevue, dedicated to empowering dialysis patients with a comprehensive mobile solution tailored to their unique health management needs. We understand the daily challenges faced by individuals with chronic kidney disease (CKD) and those undergoing dialysis. Our platform simplifies the management of hydration, nutrient intake, and overall well-being while fostering better communication between patients and their medical teams.
           </p>
-          <Link to="/contact" className="cta-button">Get in touch</Link>
+          <a href="/contact" className="cta-button">Get in touch</a>
         </div>
         <div className="image">
-          <img src="/images/kidney-about.jpg" alt="About Kidney Care" />
+          <img src="/images/kidney-about.webp" alt="About Kidney Care" />
         </div>
       </section>
 
@@ -57,28 +52,28 @@ const HomePage = () => {
         <h2>Transforming dialysis management.</h2>
         <div className="feature-grid">
           <div className="feature">
-            <img src="/images/feature-tracking.jpg" alt="Health Tracking" />
+            <img src="/images/feature-tracking.png" alt="Health Tracking" />
             <div className="content">
               <h3>Health tracking</h3>
               <p>Monitor your health with precision and ease.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-connection.jpg" alt="Team Connection" />
+            <img src="/images/feature-connection.png" alt="Team Connection" />
             <div className="content">
               <h3>Patient-medical team connection</h3>
               <p>Enhance communication with your healthcare providers.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-insights.jpg" alt="Health Insights" />
+            <img src="/images/feature-insights.png" alt="Health Insights" />
             <div className="content">
               <h3>Personalized health insights</h3>
               <p>Receive tailored information for better health decisions.</p>
             </div>
           </div>
           <div className="feature">
-            <img src="/images/feature-transplant.jpg" alt="Transplant Tracker" />
+            <img src="/images/feature-transplant.png" alt="Transplant Tracker" />
             <div className="content">
               <h3>Transplant tracker</h3>
               <p>Stay informed about your transplant journey.</p>
@@ -113,11 +108,11 @@ const HomePage = () => {
       {/* Footer */}
       <footer>
         <ul className="footer-links">
-          <li><Link to="/appointment">Schedule Appointment</Link></li>
-          <li><Link to="/intake">Complete Intake</Link></li>
-          <li><Link to="/faq">FAQ</Link></li>
-          <li><Link to="/resources">Resources</Link></li>
-          <li><Link to="/privacy">Privacy Policy</Link></li>
+          <li><a href="#">Schedule Appointment</a></li>
+          <li><a href="#">Complete Intake</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Privacy Policy</a></li>
         </ul>
         <p>Web design by B12</p>
       </footer>
