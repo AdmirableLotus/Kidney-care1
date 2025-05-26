@@ -1,51 +1,45 @@
-// src/components/RegisterForm.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './RegisterForm.css';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+import './LoginForm.css';
 
-const RegisterForm = () => {
+const LoginForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
-    role: 'patient',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Registration failed');
-      navigate('/login');
+      const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const { user, token } = res.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('userRole', user.role);
+
+      if (user.role === 'patient') {
+        navigate('/dashboard/patient');
+      } else {
+        navigate('/dashboard/staff');
+      }
     } catch (err) {
-      setError(err.message);
+      console.error('❌ Login Error:', err);
+      setError(err.response?.data?.message || 'Login failed.');
     }
   };
 
   return (
     <div className="form-container">
-      <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+      <form className="form-box" onSubmit={handleSubmit}>
+        <h2>Login</h2>
+        {error && <p className="error">{error}</p>}
         <input
           type="email"
           name="email"
@@ -62,17 +56,11 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
         />
-        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="patient">Patient</option>
-          <option value="medical_staff">Medical Staff</option>
-        </select>
-        <button type="submit">Sign Up</button>
+        <button type="submit">Log In</button>
+        <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
       </form>
-      <p>
-        Already have an account? <a href="/login">Log In</a>
-      </p>
     </div>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;
