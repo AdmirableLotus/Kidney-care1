@@ -1,9 +1,10 @@
-// src/components/RegisterForm.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './RegisterForm.css';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+import './LoginForm.css';
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,33 +12,28 @@ const RegisterForm = () => {
     role: 'patient',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Registration failed');
-      navigate('/login');
+      const res = await axios.post('http://localhost:5000/api/auth/register', formData);
+      console.log('✅ Registration Success:', res.data);
+      navigate('/login'); // Redirect to login after success
     } catch (err) {
-      setError(err.message);
+      console.error('❌ Registration Error:', err);
+      setError(err.response?.data?.message || 'Registration failed.');
     }
   };
 
   return (
     <div className="form-container">
-      <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <form className="form-box" onSubmit={handleSubmit}>
+        <h2>Register</h2>
+        {error && <p className="error">{error}</p>}
         <input
           type="text"
           name="name"
@@ -67,10 +63,8 @@ const RegisterForm = () => {
           <option value="medical_staff">Medical Staff</option>
         </select>
         <button type="submit">Sign Up</button>
+        <p>Already have an account? <Link to="/login">Log In</Link></p>
       </form>
-      <p>
-        Already have an account? <a href="/login">Log In</a>
-      </p>
     </div>
   );
 };
