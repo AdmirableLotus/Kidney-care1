@@ -1,69 +1,75 @@
+// src/components/RegisterForm.js
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './RegisterForm.css';
 
 const RegisterForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('patient');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'patient',
+  });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
-        name,
-        email,
-        password,
-        role,
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-      alert('Registration successful! Please log in.');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
       navigate('/login');
-    } catch (error) {
-      console.error('Registration failed:', error);
-      alert('Registration failed. Please try again.');
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="auth-form">
+    <div className="form-container">
       <h2>Register</h2>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <label>Name:
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
-        <label>Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <label>Role:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="patient">Patient</option>
-            <option value="staff">Medical Staff</option>
-          </select>
-        </label>
-        <button type="submit">Register</button>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <select name="role" value={formData.role} onChange={handleChange}>
+          <option value="patient">Patient</option>
+          <option value="medical_staff">Medical Staff</option>
+        </select>
+        <button type="submit">Sign Up</button>
       </form>
       <p>
-        Already have an account? <Link to="/login">Login here</Link>
+        Already have an account? <a href="/login">Log In</a>
       </p>
     </div>
   );
