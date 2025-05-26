@@ -1,60 +1,73 @@
-/* src/components/LoginForm.css and src/components/RegisterForm.css */
 .form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('../images/hero-background.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.form-box {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
   max-width: 400px;
-  margin: 5% auto;
-  padding: 2rem;
-  background-color: #ffffffcc;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.form-container h2 {
+.form-box h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
   color: #0f261d;
+  margin-bottom: 1.5rem;
 }
 
-.form-container input,
-.form-container select {
+input {
+  display: block;
   width: 100%;
+  margin: 0.75rem 0;
   padding: 0.75rem;
-  margin-bottom: 1rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
-.form-container button {
+button {
   width: 100%;
-  padding: 0.75rem;
-  background-color: #1dbf73;
-  color: white;
+  padding: 0.8rem;
+  background-color: #1ec661;
+  color: #fff;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
 }
 
-.form-container button:hover {
-  background-color: #159a5b;
+button:hover {
+  background-color: #17a851;
 }
 
-.form-container .error {
-  color: red;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.form-container p {
+p {
   text-align: center;
   margin-top: 1rem;
+  font-size: 0.95rem;
 }
 
-.form-container a {
-  color: #1dbf73;
+p a {
+  color: #0f261d;
+  font-weight: 600;
   text-decoration: none;
 }
 
-.form-container a:hover {
+p a:hover {
   text-decoration: underline;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
