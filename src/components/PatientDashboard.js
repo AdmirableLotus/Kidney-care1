@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./PatientDashboard.css"; // Optional styling if you want it
+import "./PatientDashboard.css";
+
+// 👇 Import your water intake form
+import WaterIntakeForm from "./WaterIntakeForm";
 
 const PatientDashboard = () => {
   const [entries, setEntries] = useState([]);
@@ -25,7 +28,6 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     fetchEntries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e) => {
@@ -48,6 +50,12 @@ const PatientDashboard = () => {
       <h2>
         Welcome back <span role="img" aria-label="smiling face">😊</span>
       </h2>
+
+      {/* 💧 Water Intake Section */}
+      <div className="widget water-intake-section">
+        <h3>💧 Track Your Water Intake</h3>
+        <WaterIntakeForm />
+      </div>
 
       <form onSubmit={handleSubmit} className="journal-form">
         <textarea

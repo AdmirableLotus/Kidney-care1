@@ -83,3 +83,10 @@
   font-weight: 500;
   margin-top: 10px;
 }
+.water-intake-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #dedede;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
