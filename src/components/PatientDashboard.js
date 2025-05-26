@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./PatientDashboard.css";
+import WaterIntakeChart from "./WaterIntakeChart";
+import WaterIntakeForm from "./WaterIntakeForm";
+
 
 // 👇 Import your water intake form
 import WaterIntakeForm from "./WaterIntakeForm";
