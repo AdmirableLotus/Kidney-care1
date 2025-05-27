@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./PatientDashboard.css";
+
+// 💧 Hydration components
+import WaterIntakeForm from "./WaterIntakeForm";
 import WaterIntakeChart from "./WaterIntakeChart";
-import WaterIntakeForm from "./WaterIntakeForm";
-
-
-// 👇 Import your water intake form
-import WaterIntakeForm from "./WaterIntakeForm";
 
 const PatientDashboard = () => {
   const [entries, setEntries] = useState([]);
@@ -37,9 +35,13 @@ const PatientDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/patient/entries", { content: newEntry }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.post(
+        "http://localhost:5000/api/patient/entries",
+        { content: newEntry },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       setNewEntry("");
       fetchEntries();
     } catch (err) {
@@ -54,12 +56,14 @@ const PatientDashboard = () => {
         Welcome back <span role="img" aria-label="smiling face">😊</span>
       </h2>
 
-      {/* 💧 Water Intake Section */}
+      {/* 💧 Water Intake Tracker */}
       <div className="widget water-intake-section">
         <h3>💧 Track Your Water Intake</h3>
         <WaterIntakeForm />
+        <WaterIntakeChart />
       </div>
 
+      {/* 📝 Daily Journal */}
       <form onSubmit={handleSubmit} className="journal-form">
         <textarea
           value={newEntry}
