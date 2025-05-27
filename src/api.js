@@ -1,18 +1,26 @@
-import React from "react";
-import RegisterForm from "./components/RegisterForm";
-import LoginForm from "./components/LoginForm";
-import "./App.css";
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>KidneyCare</h1>
-      <div className="auth-section">
-        <RegisterForm />
-        <LoginForm />
-      </div>
-    </div>
-  );
-}
+const API_BASE_URL = 'http://localhost:5000/api';
 
-export default App;
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+// Set the token dynamically
+export const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
+
+// Auth
+export const register = (userData) => api.post('/auth/register', userData);
+export const login = (userData) => api.post('/auth/login', userData);
+
+// Water Intake
+export const logWater = (amount) => api.post('/patient/water', { amount });
+export const getWaterLogs = () => api.get('/patient/water');
+
+export default api;
