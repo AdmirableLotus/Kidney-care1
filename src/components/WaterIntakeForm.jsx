@@ -17,8 +17,8 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
     }
 
     try {
-      await axios.post(
-        '/api/patient/water',
+      const response = await axios.post(
+        'http://localhost:5000/api/patient/water',
         { amount: parseInt(amount) },
         {
           headers: {
@@ -27,12 +27,14 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
           },
         }
       );
+
       setSuccess('Water intake logged successfully!');
       setAmount('');
       if (onLogSuccess) onLogSuccess();
+      console.log('✅ Logged water intake:', response.data);
     } catch (err) {
-      console.error('Logging water error:', err.message);
-      setError('Error logging water intake.');
+      console.error('❌ Logging water error:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Error logging water intake.');
     }
   };
 
@@ -44,6 +46,7 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
+        placeholder="Enter amount in ml"
       />
       <button onClick={handleLogWater}>Log Water</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -53,4 +56,3 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
 };
 
 export default WaterIntakeForm;
-    

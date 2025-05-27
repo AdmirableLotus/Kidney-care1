@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const WaterIntakeChart = ({ reloadTrigger }) => {
   const [data, setData] = useState([]);
@@ -18,21 +18,30 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
     const fetchWaterIntake = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/patient/water-intake", {
-          headers: { Authorization: `Bearer ${token}` }
+        const res = await axios.get("http://localhost:5000/api/patient/water", {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const dailyTotals = {};
-
-        res.data.forEach(entry => {
-          const day = new Date(entry.date).toISOString().split("T")[0];
-          if (!dailyTotals[day]) dailyTotals[day] = 0;
-          dailyTotals[day] += entry.amount;
+        res.data.forEach((entry) => {
+          const day = new Date(entry.date).toLocaleDateString("en-CA");
+          dailyTotals[day] = (dailyTotals[day] || 0) + entry.amount;
         });
 
-        const formatted = Object.entries(dailyTotals)
-          .map(([date, amount]) => ({ date, amount }))
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        // Generate last 7 days (local dates)
+        const days = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const local = d.toLocaleDateString("en-CA");
+          days.push(local);
+        }
+
+        // Merge with fetched data
+        const formatted = days.map((date) => ({
+          date: new Date(date),
+          amount: dailyTotals[date] || 0,
+        }));
 
         setData(formatted);
       } catch (error) {
@@ -50,14 +59,19 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
-            tickFormatter={(str) => format(new Date(str), "MMM d")}
+            tickFormatter={(date) => format(date, "MMM d")}
           />
           <YAxis unit="ml" />
           <Tooltip
             formatter={(value) => `${value} ml`}
             labelFormatter={(label) => format(new Date(label), "PPP")}
           />
-          <Line type="monotone" dataKey="amount" stroke="#23b500" strokeWidth={3} />
+          <Line
+            type="monotone"
+            dataKey="amount"
+            stroke="#23b500"
+            strokeWidth={3}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
