@@ -5,13 +5,11 @@ const FoodLogForm = ({ onEntryAdded }) => {
   const [form, setForm] = useState({
     date: new Date().toISOString().split("T")[0],
     meal: "",
-    protein: "",
-    phosphorus: "",
-    sodium: "",
-    potassium: "",
+    description: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,27 +19,20 @@ const FoodLogForm = ({ onEntryAdded }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
     try {
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:5000/api/patient/food",
-        {
-          ...form,
-          protein: Number(form.protein),
-          phosphorus: Number(form.phosphorus),
-          sodium: Number(form.sodium),
-          potassium: Number(form.potassium),
-        },
+        form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setForm({
         date: new Date().toISOString().split("T")[0],
         meal: "",
-        protein: "",
-        phosphorus: "",
-        sodium: "",
-        potassium: "",
+        description: "",
       });
+      setSuccess("Food entry logged and nutrients calculated!");
       if (onEntryAdded) onEntryAdded();
     } catch (err) {
       setError("Failed to log food entry.");
@@ -54,12 +45,10 @@ const FoodLogForm = ({ onEntryAdded }) => {
       <h3>Log Your Meal</h3>
       <label>Date: <input type="date" name="date" value={form.date} onChange={handleChange} required /></label>
       <label>Meal: <input type="text" name="meal" value={form.meal} onChange={handleChange} required /></label>
-      <label>Protein (g): <input type="number" name="protein" value={form.protein} onChange={handleChange} required /></label>
-      <label>Phosphorus (mg): <input type="number" name="phosphorus" value={form.phosphorus} onChange={handleChange} required /></label>
-      <label>Sodium (mg): <input type="number" name="sodium" value={form.sodium} onChange={handleChange} required /></label>
-      <label>Potassium (mg): <input type="number" name="potassium" value={form.potassium} onChange={handleChange} required /></label>
+      <label>What did you eat? <input type="text" name="description" value={form.description} onChange={handleChange} required placeholder="e.g. 12 strawberries, 2 slices of cheese" /></label>
       <button type="submit" disabled={loading}>{loading ? "Logging..." : "Log Meal"}</button>
       {error && <div className="error">{error}</div>}
+      {success && <div className="success">{success}</div>}
     </form>
   );
 };

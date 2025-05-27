@@ -5,6 +5,8 @@ import "./PatientDashboard.css";
 // Components
 import WaterIntakeForm from "./WaterIntakeForm";
 import WaterIntakeChart from "./WaterIntakeChart";
+import FoodLogForm from "./FoodLogForm";
+import FoodLogChart from "./FoodLogChart";
 
 // Icons
 import { FaTint, FaChartLine } from "react-icons/fa";
@@ -66,6 +68,14 @@ const PatientDashboard = () => {
         <WaterIntakeForm onSubmitSuccess={() => setReloadChart(prev => !prev)} />
         <h3><FaChartLine /> Water Intake (Last 7 Days)</h3>
         <WaterIntakeChart reloadTrigger={reloadChart} />
+      </div>
+
+      {/* 🍽 Food Log Tracker */}
+      <div className="widget food-log-section">
+        <h3>Track Your Food Intake</h3>
+        <FoodLogForm onEntryAdded={() => {}} />
+        <h3>Your Food Intake (Last 7 Days)</h3>
+        <FoodLogChart />
       </div>
 
       {/* 📝 Daily Journal */}
