@@ -14,6 +14,7 @@ const PatientDashboard = () => {
   const [newEntry, setNewEntry] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reloadChart, setReloadChart] = useState(false);
 
   const fetchEntries = async () => {
     try {
@@ -62,9 +63,9 @@ const PatientDashboard = () => {
       {/* 💧 Water Intake Tracker */}
       <div className="widget water-intake-section">
         <h3><FaTint /> Track Your Water Intake</h3>
-        <WaterIntakeForm />
+        <WaterIntakeForm onSubmitSuccess={() => setReloadChart(prev => !prev)} />
         <h3><FaChartLine /> Water Intake (Last 7 Days)</h3>
-        <WaterIntakeChart />
+        <WaterIntakeChart reloadTrigger={reloadChart} />
       </div>
 
       {/* 📝 Daily Journal */}

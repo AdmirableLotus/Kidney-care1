@@ -9,8 +9,9 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { format, parseISO } from "date-fns";
 
-const WaterIntakeChart = () => {
+const WaterIntakeChart = ({ reloadTrigger }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -21,11 +22,17 @@ const WaterIntakeChart = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // Format data for Recharts
-        const formatted = res.data.map(entry => ({
-          date: new Date(entry.date).toLocaleDateString(),
-          amount: entry.amount
-        }));
+        const dailyTotals = {};
+
+        res.data.forEach(entry => {
+          const day = new Date(entry.date).toISOString().split("T")[0];
+          if (!dailyTotals[day]) dailyTotals[day] = 0;
+          dailyTotals[day] += entry.amount;
+        });
+
+        const formatted = Object.entries(dailyTotals)
+          .map(([date, amount]) => ({ date, amount }))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         setData(formatted);
       } catch (error) {
@@ -34,18 +41,23 @@ const WaterIntakeChart = () => {
     };
 
     fetchWaterIntake();
-  }, []);
+  }, [reloadTrigger]);
 
   return (
-    <div style={{ width: "100%", height: 300 }}>
-      <h3>📊 Water Intake (Last 7 Days)</h3>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="water-intake-chart">
+      <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis label={{ value: "ml", angle: -90, position: "insideLeft" }} />
-          <Tooltip />
-          <Line type="monotone" dataKey="amount" stroke="#007BFF" strokeWidth={2} />
+          <XAxis
+            dataKey="date"
+            tickFormatter={(str) => format(new Date(str), "MMM d")}
+          />
+          <YAxis unit="ml" />
+          <Tooltip
+            formatter={(value) => `${value} ml`}
+            labelFormatter={(label) => format(new Date(label), "PPP")}
+          />
+          <Line type="monotone" dataKey="amount" stroke="#23b500" strokeWidth={3} />
         </LineChart>
       </ResponsiveContainer>
     </div>
