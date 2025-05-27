@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./PatientDashboard.css";
 
-// 💧 Hydration components
+// Components
 import WaterIntakeForm from "./WaterIntakeForm";
 import WaterIntakeChart from "./WaterIntakeChart";
+
+// Icons
+import { FaTint, FaChartLine } from "react-icons/fa";
 
 const PatientDashboard = () => {
   const [entries, setEntries] = useState([]);
@@ -58,8 +61,9 @@ const PatientDashboard = () => {
 
       {/* 💧 Water Intake Tracker */}
       <div className="widget water-intake-section">
-        <h3>💧 Track Your Water Intake</h3>
+        <h3><FaTint /> Track Your Water Intake</h3>
         <WaterIntakeForm />
+        <h3><FaChartLine /> Water Intake (Last 7 Days)</h3>
         <WaterIntakeChart />
       </div>
 
