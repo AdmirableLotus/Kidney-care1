@@ -8,6 +8,8 @@ import WaterIntakeChart from "./WaterIntakeChart";
 import FoodLogForm from "./FoodLogForm";
 import FoodLogChart from "./FoodLogChart";
 import FoodLogList from "./FoodLogList";
+import MedicationForm from "./MedicationForm";
+import MedicationList from "./MedicationList";
 
 // Icons
 import { FaTint, FaChartLine } from "react-icons/fa";
@@ -79,6 +81,13 @@ const PatientDashboard = () => {
         <FoodLogChart />
         <h3>Meal & Snack Log (Last 7 Days)</h3>
         <FoodLogList />
+      </div>
+
+      {/* 💊 Medication Tracker */}
+      <div className="widget medication-section">
+        <h3>Medication & Schedule</h3>
+        <MedicationForm onAdded={() => {}} />
+        <MedicationList />
       </div>
 
       {/* 📝 Daily Journal */}
