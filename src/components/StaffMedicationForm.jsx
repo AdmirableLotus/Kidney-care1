@@ -126,8 +126,14 @@ const StaffMedicationForm = ({ onAdded }) => {
         fontWeight: 700,
         fontSize: '1.1rem',
         marginTop: 12,
-        boxShadow: '0 2px 8px rgba(80,80,180,0.10)'
-      }}>{loading ? "Assigning..." : "Assign Medication"}</button>
+        boxShadow: '0 2px 8px rgba(80,80,180,0.10)',
+        letterSpacing: 1,
+        transition: 'background 0.3s',
+        cursor: loading ? 'not-allowed' : 'pointer',
+      }}
+      onMouseOver={e => e.currentTarget.style.background = 'linear-gradient(90deg, #185a9d 0%, #43cea2 100%)'}
+      onMouseOut={e => e.currentTarget.style.background = 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)'}
+      >{loading ? "Assigning..." : "Assign Medication"}</button>
       {error && <div className="error" style={{ color: '#ffbaba', marginTop: 12 }}>{error}</div>}
       {success && <div className="success" style={{ color: '#baffc9', marginTop: 12 }}>{success}</div>}
     </form>
