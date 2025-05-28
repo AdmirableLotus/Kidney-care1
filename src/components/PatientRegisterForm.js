@@ -48,6 +48,20 @@ const PatientRegisterForm = () => {
     }
   };
 
+  const handleTestPatient = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name: "Test Patient",
+        email: `testpatient${Date.now()}@example.com`,
+        password: "Test2025!",
+        role: "patient"
+      });
+      setMessage("Test patient registered successfully!");
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Registration failed.");
+    }
+  };
+
   return (
     <div className="form-container">
       <h2>Patient Sign Up</h2>
@@ -77,6 +91,7 @@ const PatientRegisterForm = () => {
         />
         <button type="submit">Register</button>
         <button type="button" onClick={handleAlena} style={{marginLeft:8}}>Register Alena</button>
+        <button type="button" onClick={handleTestPatient} style={{marginLeft:8}}>Register Test Patient</button>
       </form>
 
       {message && <p className="form-message">{message}</p>}
