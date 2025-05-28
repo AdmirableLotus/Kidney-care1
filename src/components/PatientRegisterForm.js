@@ -34,6 +34,20 @@ const PatientRegisterForm = () => {
     }
   };
 
+  const handleAlena = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/auth/register", {
+        name: "Alena",
+        email: "alena@example.com",
+        password: "Alena2025!",
+        role: "patient"
+      });
+      setMessage("Patient Alena registered successfully!");
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Registration failed.");
+    }
+  };
+
   return (
     <div className="form-container">
       <h2>Patient Sign Up</h2>
@@ -62,6 +76,7 @@ const PatientRegisterForm = () => {
           required
         />
         <button type="submit">Register</button>
+        <button type="button" onClick={handleAlena} style={{marginLeft:8}}>Register Alena</button>
       </form>
 
       {message && <p className="form-message">{message}</p>}
