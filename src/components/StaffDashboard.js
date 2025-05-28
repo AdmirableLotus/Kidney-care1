@@ -25,6 +25,7 @@ const StaffDashboard = () => {
       <div style={{ marginTop: "40px" }}>
         <StaffMedicationForm />
       </div>
+      {/* You can add more widgets or charts here for a modern dashboard look */}
     </div>
   );
 };
