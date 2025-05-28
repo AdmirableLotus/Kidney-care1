@@ -1,4 +1,5 @@
 import React from "react";
+import StaffMedicationForm from "./StaffMedicationForm";
 
 const StaffDashboard = () => {
   return (
@@ -19,6 +20,10 @@ const StaffDashboard = () => {
           <li>Approve or flag symptom reports</li>
           <li>Export daily summaries</li>
         </ul>
+      </div>
+
+      <div style={{ marginTop: "40px" }}>
+        <StaffMedicationForm />
       </div>
     </div>
   );
