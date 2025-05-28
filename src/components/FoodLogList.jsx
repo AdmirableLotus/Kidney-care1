@@ -37,6 +37,19 @@ const FoodLogList = () => {
             <div>
               Protein: {entry.protein}g, Phosphorus: {entry.phosphorus}mg, Sodium: {entry.sodium}mg, Potassium: {entry.potassium}mg
             </div>
+            <button onClick={async () => {
+              if(window.confirm('Delete this entry?')) {
+                try {
+                  const token = localStorage.getItem('token');
+                  await axios.delete(`http://localhost:5000/api/patient/food/${entry._id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+                  setEntries(entries.filter(e => e._id !== entry._id));
+                } catch (err) {
+                  alert('Failed to delete entry.');
+                }
+              }
+            }}>Delete</button>
           </li>
         ))}
       </ul>
