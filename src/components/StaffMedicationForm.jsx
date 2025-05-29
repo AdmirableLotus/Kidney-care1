@@ -8,9 +8,6 @@ const StaffMedicationForm = ({ onAdded }) => {
     name: "",
     dosage: "",
     frequency: "",
-    time: "",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: "",
     notes: "",
   });
   const [loading, setLoading] = useState(false);
@@ -46,7 +43,7 @@ const StaffMedicationForm = ({ onAdded }) => {
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:5000/api/patient/medication",
-        { ...form, time: form.time.split(",").map(t => t.trim()) },
+        { ...form },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setSuccess("Medication assigned!");
@@ -55,9 +52,6 @@ const StaffMedicationForm = ({ onAdded }) => {
         name: "",
         dosage: "",
         frequency: "",
-        time: "",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: "",
         notes: "",
       });
       if (onAdded) onAdded();
@@ -99,18 +93,6 @@ const StaffMedicationForm = ({ onAdded }) => {
       <label style={{ display: 'block', marginBottom: 16 }}>
         <span style={{ fontWeight: 500 }}>Frequency:</span>
         <input name="frequency" value={form.frequency} onChange={handleChange} required placeholder="e.g. Once daily" style={{ width: '100%', padding: 8, borderRadius: 8, border: 'none', marginTop: 4 }} />
-      </label>
-      <label style={{ display: 'block', marginBottom: 16 }}>
-        <span style={{ fontWeight: 500 }}>Time(s):</span>
-        <input name="time" value={form.time} onChange={handleChange} placeholder="e.g. 08:00, 20:00" style={{ width: '100%', padding: 8, borderRadius: 8, border: 'none', marginTop: 4 }} />
-      </label>
-      <label style={{ display: 'block', marginBottom: 16 }}>
-        <span style={{ fontWeight: 500 }}>Start Date:</span>
-        <input type="date" name="startDate" value={form.startDate} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 8, border: 'none', marginTop: 4 }} />
-      </label>
-      <label style={{ display: 'block', marginBottom: 16 }}>
-        <span style={{ fontWeight: 500 }}>End Date:</span>
-        <input type="date" name="endDate" value={form.endDate} onChange={handleChange} style={{ width: '100%', padding: 8, borderRadius: 8, border: 'none', marginTop: 4 }} />
       </label>
       <label style={{ display: 'block', marginBottom: 16 }}>
         <span style={{ fontWeight: 500 }}>Notes:</span>
