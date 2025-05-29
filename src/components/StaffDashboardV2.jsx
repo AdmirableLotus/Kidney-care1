@@ -12,10 +12,16 @@ const StaffDashboardV2 = () => {
     // Fetch all patients
     const fetchPatients = async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/users?role=patient", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setPatients(res.data);
+      try {
+        const res = await axios.get("/api/users?role=patient", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPatients(res.data);
+        console.log('Loaded patients:', res.data);
+      } catch (err) {
+        console.error('Failed to load patients:', err);
+        setPatients([]);
+      }
     };
     fetchPatients();
   }, []);
@@ -70,15 +76,19 @@ const StaffDashboardV2 = () => {
         <select
           className="text-black p-2 rounded-lg w-96"
           value={selectedPatient || ""}
-          onChange={e => setSelectedPatient(e.target.value)}
+          onChange={e => {
+            setSelectedPatient(e.target.value);
+            console.log('Selected patient:', e.target.value);
+          }}
         >
-          <option value="">Select patient...</option>
-          {patients.map(p => (
+          <option value="" disabled={!selectedPatient} hidden={!!selectedPatient}>Select patient...</option>
+          {patients && patients.length > 0 ? patients.map(p => (
             <option key={p._id} value={p._id}>
               {p.name} - {p.email}
             </option>
-          ))}
+          )) : <option disabled>No patients found</option>}
         </select>
+        {(!patients || patients.length === 0) && <div className="text-red-500 ml-4">No patients found or loaded.</div>}
       </div>
       {selectedPatient && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
