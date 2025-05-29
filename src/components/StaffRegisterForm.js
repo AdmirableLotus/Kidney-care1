@@ -66,12 +66,12 @@ const StaffRegisterForm = () => {
           onChange={handleChange}
           required
         >
-          <option value="">-- Select Role --</option>
+          <option value="">Select Role</option>
+          <option value="medical_staff">Medical Staff (General)</option>
+          <option value="doctor">Doctor</option>
+          <option value="nurse">Nurse</option>
           <option value="dietitian">Dietitian</option>
-          <option value="social_worker">Social Worker</option>
-          <option value="nephrologist">Nephrologist</option>
-          <option value="primary_care_doctor">Primary Care Doctor</option>
-          <option value="transplant_team_member">Transplant Team Member</option>
+          <option value="admin">Admin</option>
         </select>
         <button type="submit">Register</button>
       </form>
