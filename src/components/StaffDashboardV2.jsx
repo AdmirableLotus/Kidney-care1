@@ -234,28 +234,68 @@ const StaffDashboardV2 = () => {
           </div>
         </div>
       )}
-      {/* Summary Cards Row */}
+      {/* Modern Analytics Header */}
       {selectedPatient && (
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 -mt-20 z-10 relative mb-8">
-          <div className="bg-gradient-to-br from-blue-900 to-indigo-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
-            <span className="text-4xl mb-2 text-cyan-400 drop-shadow">👤</span>
-            <div className="text-3xl font-extrabold tracking-tight">{patients.find(p => p._id === selectedPatient)?.name || '--'}</div>
-            <div className="text-xs opacity-80 mt-1">Patient Name</div>
+        <div className="relative flex flex-col items-center justify-center w-full mb-12">
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 z-0">
+            <div className="rounded-full bg-gradient-to-br from-purple-200 via-pink-100 to-blue-200 opacity-80 w-[340px] h-[340px] md:w-[420px] md:h-[420px] flex items-center justify-center shadow-2xl"></div>
           </div>
-          <div className="bg-gradient-to-br from-purple-900 to-pink-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
-            <span className="text-4xl mb-2 text-pink-300 drop-shadow">💧</span>
-            <div className="text-3xl font-extrabold tracking-tight">{fluidData.reduce((a, b) => a + b.ml, 0)}<span className="text-base ml-1 font-medium">ml</span></div>
-            <div className="text-xs opacity-80 mt-1">Fluid Intake (7d)</div>
+          <div className="relative z-10 flex flex-col items-center justify-center pt-12">
+            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-indigo-400 via-purple-300 to-blue-300 flex items-center justify-center shadow-xl border-8 border-white/60">
+              <span className="text-7xl md:text-8xl text-indigo-700 opacity-80">👤</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-6 mb-2 text-indigo-900">{patients.find(p => p._id === selectedPatient)?.name || '--'}</h2>
+            <p className="text-lg text-indigo-700 opacity-80">Patient Overview</p>
           </div>
-          <div className="bg-gradient-to-br from-green-900 to-teal-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
-            <span className="text-4xl mb-2 text-green-300 drop-shadow">🍽️</span>
-            <div className="text-3xl font-extrabold tracking-tight">{foodData.length}</div>
-            <div className="text-xs opacity-80 mt-1">Meals Logged (7d)</div>
+        </div>
+      )}
+
+      {/* Circular Summary Stats */}
+      {selectedPatient && (
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 -mt-32 mb-12 z-10 relative">
+          {/* Fluid Intake */}
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              <svg width="110" height="110">
+                <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
+                <circle cx="55" cy="55" r="48" fill="none" stroke="#38bdf8" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (fluidData && fluidData.length ? Math.min(fluidData.reduce((a, b) => a + b.ml, 0) / 2000, 1) * 301.59 : 0))} strokeLinecap="round" />
+              </svg>
+              <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-cyan-700">{fluidData && fluidData.length ? fluidData.reduce((a, b) => a + b.ml, 0) : '--'}<span className="text-xs font-medium">ml</span></span>
+            </div>
+            <div className="mt-2 text-sm text-cyan-700 font-semibold">Fluid Intake</div>
           </div>
-          <div className="bg-gradient-to-br from-yellow-600 to-orange-500 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
-            <span className="text-4xl mb-2 text-yellow-300 drop-shadow">🧪</span>
-            <div className="text-3xl font-extrabold tracking-tight">{labResults.length}</div>
-            <div className="text-xs opacity-80 mt-1">Lab Results</div>
+          {/* Meals Logged */}
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              <svg width="110" height="110">
+                <circle cx="55" cy="55" r="48" fill="#fffde7" />
+                <circle cx="55" cy="55" r="48" fill="none" stroke="#fbbf24" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (foodData && foodData.length ? Math.min(foodData.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
+              </svg>
+              <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-yellow-700">{foodData && foodData.length ? foodData.length : '--'}</span>
+            </div>
+            <div className="mt-2 text-sm text-yellow-700 font-semibold">Meals Logged</div>
+          </div>
+          {/* Lab Results */}
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              <svg width="110" height="110">
+                <circle cx="55" cy="55" r="48" fill="#fce4ec" />
+                <circle cx="55" cy="55" r="48" fill="none" stroke="#f472b6" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (labResults && labResults.length ? Math.min(labResults.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
+              </svg>
+              <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-pink-700">{labResults && labResults.length ? labResults.length : '--'}</span>
+            </div>
+            <div className="mt-2 text-sm text-pink-700 font-semibold">Lab Results</div>
+          </div>
+          {/* Journal Entries */}
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              <svg width="110" height="110">
+                <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
+                <circle cx="55" cy="55" r="48" fill="none" stroke="#34d399" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (patientEntries && patientEntries.length ? Math.min(patientEntries.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
+              </svg>
+              <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-green-700">{patientEntries && patientEntries.length ? patientEntries.length : '--'}</span>
+            </div>
+            <div className="mt-2 text-sm text-green-700 font-semibold">Journal Entries</div>
           </div>
         </div>
       )}
