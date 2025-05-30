@@ -104,21 +104,6 @@ const StaffDashboardV2 = () => {
         <button className="staff-logout-btn">Logout</button>
       </header>
       <div className="staff-patient-select">
-        <select
-          className="staff-patient-dropdown"
-          value={selectedPatient || ""}
-          onChange={e => {
-            setSelectedPatient(e.target.value);
-            console.log('Selected patient:', e.target.value);
-          }}
-        >
-          <option value="" disabled={!selectedPatient} hidden={!!selectedPatient}>Select patient...</option>
-          {patients && patients.length > 0 ? patients.map(p => (
-            <option key={p._id} value={p._id}>
-              {p.name} - {p.email}
-            </option>
-          )) : <option disabled>No patients found</option>}
-        </select>
         {(!patients || patients.length === 0) && <div className="staff-no-patients">No patients found or loaded.</div>}
       </div>
       {/* Modern Analytics Header */}
