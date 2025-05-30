@@ -113,13 +113,13 @@ const StaffDashboardV2 = () => {
         {patients && patients.length > 0 ? (
           <select
             className="staff-patient-dropdown"
-            value={selectedPatient || ""}
+            value={selectedPatient}
             onChange={e => {
               setSelectedPatient(e.target.value);
               console.log('Selected patient:', e.target.value);
             }}
           >
-            <option value="" disabled={!selectedPatient} hidden={!!selectedPatient}>Select patient...</option>
+            <option value="">Select patient...</option>
             {patients.map(p => (
               <option key={p._id} value={p._id}>
                 {p.name} - {p.email}
