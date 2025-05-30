@@ -112,22 +112,22 @@ const PatientDashboard = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 -mt-20 z-10 relative">
         <div className="bg-gradient-to-br from-blue-800 to-indigo-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
           <FaTint className="text-3xl mb-2 text-cyan-300" />
-          <div className="text-2xl font-bold">{summary.totalWater || '--'}<span className="text-base ml-1">ml</span></div>
+          <div className="text-2xl font-bold">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-base ml-1">ml</span></div>
           <div className="text-xs opacity-70 mt-1">Water Intake (Today)</div>
         </div>
         <div className="bg-gradient-to-br from-purple-800 to-pink-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
           <FaHeartbeat className="text-3xl mb-2 text-pink-300" />
-          <div className="text-2xl font-bold">{summary.avgBP || '--'}</div>
+          <div className="text-2xl font-bold">{summary.avgBP !== undefined ? summary.avgBP : '--'}</div>
           <div className="text-xs opacity-70 mt-1">Avg Blood Pressure</div>
         </div>
         <div className="bg-gradient-to-br from-green-800 to-teal-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
           <FaPills className="text-3xl mb-2 text-green-300" />
-          <div className="text-2xl font-bold">{summary.medCount || '--'}</div>
+          <div className="text-2xl font-bold">{summary.medCount !== undefined ? summary.medCount : '--'}</div>
           <div className="text-xs opacity-70 mt-1">Medications</div>
         </div>
         <div className="bg-gradient-to-br from-yellow-700 to-orange-600 rounded-2xl shadow-lg p-5 flex flex-col items-center">
           <FaAppleAlt className="text-3xl mb-2 text-yellow-300" />
-          <div className="text-2xl font-bold">{summary.foodCount || '--'}</div>
+          <div className="text-2xl font-bold">{summary.foodCount !== undefined ? summary.foodCount : '--'}</div>
           <div className="text-xs opacity-70 mt-1">Meals Logged</div>
         </div>
       </div>
