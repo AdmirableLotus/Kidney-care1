@@ -1,0 +1,112 @@
+/* StaffDashboardV2.css - Modern analytics dashboard styles */
+
+.staff-analytics-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.staff-analytics-header .analytics-bg-circle {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  width: 340px;
+  height: 340px;
+  background: linear-gradient(135deg, #e9d5ff 0%, #fce7f3 60%, #bae6fd 100%);
+  opacity: 0.8;
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(80, 80, 180, 0.18);
+}
+
+.staff-analytics-header .analytics-avatar {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 60%, #7dd3fc 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(80, 80, 180, 0.18);
+  border: 8px solid rgba(255,255,255,0.6);
+  z-index: 1;
+}
+
+.staff-analytics-header .analytics-avatar span {
+  font-size: 4rem;
+  color: #3730a3;
+  opacity: 0.85;
+}
+
+.staff-analytics-header .analytics-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #3730a3;
+  z-index: 1;
+}
+
+.staff-analytics-header .analytics-subtitle {
+  font-size: 1.1rem;
+  color: #6366f1;
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.staff-circular-stats {
+  max-width: 900px;
+  margin: 0 auto 3rem auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .staff-circular-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.staff-circular-stats .stat-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.staff-circular-stats .stat-widget .stat-svg {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.staff-circular-stats .stat-widget .stat-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.staff-circular-stats .stat-widget .stat-label {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  opacity: 0.85;
+}
