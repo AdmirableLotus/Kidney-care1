@@ -96,7 +96,13 @@ const StaffDashboardV2 = () => {
           <span>KidneyCare Staff</span>
         </div>
         <nav className="staff-header-nav">
-          <button type="button" className="staff-header-link">Patients</button>
+          <button
+            type="button"
+            className={`staff-header-link${!selectedPatient ? ' active' : ''}`}
+            onClick={() => setSelectedPatient("")}
+          >
+            Patients
+          </button>
           <button type="button" className="staff-header-link">Appointments</button>
           <button type="button" className="staff-header-link">Reports</button>
           <button type="button" className="staff-header-link">Settings</button>
