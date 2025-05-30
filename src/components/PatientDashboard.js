@@ -11,6 +11,7 @@ import FoodLogList from "./FoodLogList";
 import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
 import BloodPressureChart from "./BloodPressureChart";
+import FluidDashboard from './FluidDashboard';
 
 // Icons
 import { FaTint, FaChartLine } from "react-icons/fa";
@@ -96,6 +97,9 @@ const PatientDashboard = () => {
         <BloodPressureForm onEntryAdded={() => {}} />
         <BloodPressureChart />
       </div>
+
+      {/* 💧 Fluid Intake Dashboard */}
+      <FluidDashboard patientId={user?._id} />
 
       {/* 📝 Daily Journal */}
       <form onSubmit={handleSubmit} className="journal-form">
