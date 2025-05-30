@@ -52,8 +52,33 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
     fetchWaterIntake();
   }, [reloadTrigger]);
 
+  // Add conversion helpers
+  const mlToCups = (ml) => (ml / 240).toFixed(2); // 1 cup = 240ml
+  const mlToOunces = (ml) => (ml / 29.5735).toFixed(2); // 1 oz = 29.5735ml
+
   return (
     <div className="water-intake-chart">
+      <h3>Water Intake (Last 7 Days)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>mL</th>
+            <th>Cups</th>
+            <th>Ounces</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((entry) => (
+            <tr key={entry._id || entry.date}>
+              <td>{new Date(entry.date).toLocaleDateString()}</td>
+              <td>{entry.amount}</td>
+              <td>{mlToCups(entry.amount)}</td>
+              <td>{mlToOunces(entry.amount)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
