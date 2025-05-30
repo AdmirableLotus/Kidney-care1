@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import StaffLabResultForm from './StaffLabResultForm';
 
 const StaffDashboardV2 = () => {
   const [patients, setPatients] = useState([]);
@@ -138,6 +139,11 @@ const StaffDashboardV2 = () => {
           </div>
         </div>
       )}
+      {/* Lab Results Entry */}
+      <div className="rounded-xl shadow-lg bg-gradient-to-br from-green-800 to-blue-700 p-6 mt-8">
+        <h2 className="text-xl font-bold mb-2">Lab Results Entry</h2>
+        <StaffLabResultForm />
+      </div>
     </div>
   );
 };
