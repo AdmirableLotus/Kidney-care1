@@ -104,7 +104,9 @@ const StaffDashboardV2 = () => {
         <button className="staff-logout-btn">Logout</button>
       </header>
       <div className="staff-patient-select">
-        {(!patients || patients.length === 0) && <div className="staff-no-patients">No patients found or loaded.</div>}
+        {(!patients || patients.length === 0) && (
+          <div className="staff-no-patients">No patients found or loaded.</div>
+        )}
       </div>
       {/* Modern Analytics Header */}
       {selectedPatient && (
