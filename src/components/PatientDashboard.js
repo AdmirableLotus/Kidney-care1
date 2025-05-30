@@ -22,6 +22,7 @@ const PatientDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [reloadChart, setReloadChart] = useState(false);
+  const [user, setUser] = useState(null);
 
   const fetchEntries = async () => {
     try {
@@ -37,6 +38,13 @@ const PatientDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     fetchEntries();
@@ -99,7 +107,7 @@ const PatientDashboard = () => {
       </div>
 
       {/* 💧 Fluid Intake Dashboard */}
-      <FluidDashboard patientId={user?._id} />
+      {user && <FluidDashboard patientId={user._id} />}
 
       {/* 📝 Daily Journal */}
       <form onSubmit={handleSubmit} className="journal-form">
