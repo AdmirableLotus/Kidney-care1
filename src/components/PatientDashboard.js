@@ -109,26 +109,26 @@ const PatientDashboard = () => {
       </div>
 
       {/* Summary Cards Row */}
-      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 -mt-20 z-10 relative">
-        <div className="bg-gradient-to-br from-blue-800 to-indigo-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
-          <FaTint className="text-3xl mb-2 text-cyan-300" />
-          <div className="text-2xl font-bold">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-base ml-1">ml</span></div>
-          <div className="text-xs opacity-70 mt-1">Water Intake (Today)</div>
+      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 -mt-24 z-10 relative">
+        <div className="bg-gradient-to-br from-blue-900 to-indigo-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-blue-400/40">
+          <FaTint className="text-4xl mb-2 text-cyan-400 drop-shadow" />
+          <div className="text-3xl font-extrabold tracking-tight">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-base ml-1 font-medium">ml</span></div>
+          <div className="text-xs opacity-80 mt-1">Water Intake (Today)</div>
         </div>
-        <div className="bg-gradient-to-br from-purple-800 to-pink-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
-          <FaHeartbeat className="text-3xl mb-2 text-pink-300" />
-          <div className="text-2xl font-bold">{summary.avgBP !== undefined ? summary.avgBP : '--'}</div>
-          <div className="text-xs opacity-70 mt-1">Avg Blood Pressure</div>
+        <div className="bg-gradient-to-br from-purple-900 to-pink-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-pink-400/40">
+          <FaHeartbeat className="text-4xl mb-2 text-pink-300 drop-shadow" />
+          <div className="text-3xl font-extrabold tracking-tight">{summary.avgBP !== undefined ? summary.avgBP : '--'}</div>
+          <div className="text-xs opacity-80 mt-1">Avg Blood Pressure</div>
         </div>
-        <div className="bg-gradient-to-br from-green-800 to-teal-700 rounded-2xl shadow-lg p-5 flex flex-col items-center">
-          <FaPills className="text-3xl mb-2 text-green-300" />
-          <div className="text-2xl font-bold">{summary.medCount !== undefined ? summary.medCount : '--'}</div>
-          <div className="text-xs opacity-70 mt-1">Medications</div>
+        <div className="bg-gradient-to-br from-green-900 to-teal-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-green-400/40">
+          <FaPills className="text-4xl mb-2 text-green-300 drop-shadow" />
+          <div className="text-3xl font-extrabold tracking-tight">{summary.medCount !== undefined ? summary.medCount : '--'}</div>
+          <div className="text-xs opacity-80 mt-1">Medications</div>
         </div>
-        <div className="bg-gradient-to-br from-yellow-700 to-orange-600 rounded-2xl shadow-lg p-5 flex flex-col items-center">
-          <FaAppleAlt className="text-3xl mb-2 text-yellow-300" />
-          <div className="text-2xl font-bold">{summary.foodCount !== undefined ? summary.foodCount : '--'}</div>
-          <div className="text-xs opacity-70 mt-1">Meals Logged</div>
+        <div className="bg-gradient-to-br from-yellow-600 to-orange-500 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-yellow-300/40">
+          <FaAppleAlt className="text-4xl mb-2 text-yellow-300 drop-shadow" />
+          <div className="text-3xl font-extrabold tracking-tight">{summary.foodCount !== undefined ? summary.foodCount : '--'}</div>
+          <div className="text-xs opacity-80 mt-1">Meals Logged</div>
         </div>
       </div>
 
