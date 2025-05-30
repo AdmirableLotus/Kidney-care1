@@ -96,10 +96,10 @@ const StaffDashboardV2 = () => {
           <span>KidneyCare Staff</span>
         </div>
         <nav className="staff-header-nav">
-          <a href="#">Patients</a>
-          <a href="#">Appointments</a>
-          <a href="#">Reports</a>
-          <a href="#">Settings</a>
+          <button type="button" className="staff-header-link">Patients</button>
+          <button type="button" className="staff-header-link">Appointments</button>
+          <button type="button" className="staff-header-link">Reports</button>
+          <button type="button" className="staff-header-link">Settings</button>
         </nav>
         <button className="staff-logout-btn">Logout</button>
       </header>
@@ -127,7 +127,7 @@ const StaffDashboardV2 = () => {
           <div className="analytics-bg-circle"></div>
           <div className="analytics-header-content">
             <div className="analytics-avatar">
-              <span>👤</span>
+              <span role="img" aria-label="Patient Avatar">👤</span>
             </div>
             <h2 className="analytics-title">{patients.find(p => p._id === selectedPatient)?.name || '--'}</h2>
             <p className="analytics-subtitle">Patient Overview</p>
