@@ -234,6 +234,31 @@ const StaffDashboardV2 = () => {
           </div>
         </div>
       )}
+      {/* Summary Cards Row */}
+      {selectedPatient && (
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 -mt-20 z-10 relative mb-8">
+          <div className="bg-gradient-to-br from-blue-900 to-indigo-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
+            <span className="text-4xl mb-2 text-cyan-400 drop-shadow">👤</span>
+            <div className="text-3xl font-extrabold tracking-tight">{patients.find(p => p._id === selectedPatient)?.name || '--'}</div>
+            <div className="text-xs opacity-80 mt-1">Patient Name</div>
+          </div>
+          <div className="bg-gradient-to-br from-purple-900 to-pink-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
+            <span className="text-4xl mb-2 text-pink-300 drop-shadow">💧</span>
+            <div className="text-3xl font-extrabold tracking-tight">{fluidData.reduce((a, b) => a + b.ml, 0)}<span className="text-base ml-1 font-medium">ml</span></div>
+            <div className="text-xs opacity-80 mt-1">Fluid Intake (7d)</div>
+          </div>
+          <div className="bg-gradient-to-br from-green-900 to-teal-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
+            <span className="text-4xl mb-2 text-green-300 drop-shadow">🍽️</span>
+            <div className="text-3xl font-extrabold tracking-tight">{foodData.length}</div>
+            <div className="text-xs opacity-80 mt-1">Meals Logged (7d)</div>
+          </div>
+          <div className="bg-gradient-to-br from-yellow-600 to-orange-500 rounded-3xl shadow-2xl p-6 flex flex-col items-center">
+            <span className="text-4xl mb-2 text-yellow-300 drop-shadow">🧪</span>
+            <div className="text-3xl font-extrabold tracking-tight">{labResults.length}</div>
+            <div className="text-xs opacity-80 mt-1">Lab Results</div>
+          </div>
+        </div>
+      )}
       {/* Lab Results Entry */}
       <div className="rounded-xl shadow-lg bg-gradient-to-br from-green-800 to-blue-700 p-6 mt-8">
         <h2 className="text-xl font-bold mb-2">Lab Results Entry</h2>

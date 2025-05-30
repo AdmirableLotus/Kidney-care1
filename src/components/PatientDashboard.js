@@ -97,38 +97,65 @@ const PatientDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-      {/* Header Section */}
-      <div className="relative w-full h-48 md:h-56 flex items-center justify-between px-8 py-6 bg-gradient-to-r from-indigo-700 via-purple-700 to-blue-700 rounded-b-3xl shadow-lg mb-8">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-2">Welcome back{user && user.name ? `, ${user.name}` : ''} <span role="img" aria-label="smiling face">😊</span></h2>
-          <p className="text-lg opacity-80">Your Kidney Care Dashboard</p>
+      {/* Modern Analytics Header */}
+      <div className="relative flex flex-col items-center justify-center w-full mb-12">
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 z-0">
+          <div className="rounded-full bg-gradient-to-br from-purple-200 via-pink-100 to-blue-200 opacity-80 w-[340px] h-[340px] md:w-[420px] md:h-[420px] flex items-center justify-center shadow-2xl"></div>
         </div>
-        <div className="hidden md:block absolute right-8 top-6">
-          {/* Decorative chart background or SVG can go here for visual flair */}
+        <div className="relative z-10 flex flex-col items-center justify-center pt-12">
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-indigo-400 via-purple-300 to-blue-300 flex items-center justify-center shadow-xl border-8 border-white/60">
+            <span className="text-7xl md:text-8xl text-indigo-700 opacity-80">🧑‍⚕️</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mt-6 mb-2 text-indigo-900">Welcome back{user && user.name ? `, ${user.name}` : ''}</h2>
+          <p className="text-lg text-indigo-700 opacity-80">Your Kidney Care Dashboard</p>
         </div>
       </div>
 
-      {/* Summary Cards Row */}
-      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 -mt-24 z-10 relative">
-        <div className="bg-gradient-to-br from-blue-900 to-indigo-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-blue-400/40">
-          <FaTint className="text-4xl mb-2 text-cyan-400 drop-shadow" />
-          <div className="text-3xl font-extrabold tracking-tight">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-base ml-1 font-medium">ml</span></div>
-          <div className="text-xs opacity-80 mt-1">Water Intake (Today)</div>
+      {/* Circular Summary Stats */}
+      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 -mt-32 mb-12 z-10 relative">
+        {/* Water Intake */}
+        <div className="flex flex-col items-center">
+          <div className="relative">
+            <svg width="110" height="110">
+              <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#38bdf8" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.totalWater ? Math.min(summary.totalWater / 2000, 1) * 301.59 : 0)}" strokeLinecap="round" />
+            </svg>
+            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-cyan-700">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-xs font-medium">ml</span></span>
+          </div>
+          <div className="mt-2 text-sm text-cyan-700 font-semibold">Water Intake</div>
         </div>
-        <div className="bg-gradient-to-br from-purple-900 to-pink-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-pink-400/40">
-          <FaHeartbeat className="text-4xl mb-2 text-pink-300 drop-shadow" />
-          <div className="text-3xl font-extrabold tracking-tight">{summary.avgBP !== undefined ? summary.avgBP : '--'}</div>
-          <div className="text-xs opacity-80 mt-1">Avg Blood Pressure</div>
+        {/* Blood Pressure */}
+        <div className="flex flex-col items-center">
+          <div className="relative">
+            <svg width="110" height="110">
+              <circle cx="55" cy="55" r="48" fill="#fce4ec" />
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#f472b6" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.avgBP ? Math.min(summary.avgBP / 180, 1) * 301.59 : 0)}" strokeLinecap="round" />
+            </svg>
+            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-pink-700">{summary.avgBP !== undefined ? summary.avgBP : '--'}</span>
+          </div>
+          <div className="mt-2 text-sm text-pink-700 font-semibold">Avg Blood Pressure</div>
         </div>
-        <div className="bg-gradient-to-br from-green-900 to-teal-700 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-green-400/40">
-          <FaPills className="text-4xl mb-2 text-green-300 drop-shadow" />
-          <div className="text-3xl font-extrabold tracking-tight">{summary.medCount !== undefined ? summary.medCount : '--'}</div>
-          <div className="text-xs opacity-80 mt-1">Medications</div>
+        {/* Medications */}
+        <div className="flex flex-col items-center">
+          <div className="relative">
+            <svg width="110" height="110">
+              <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#34d399" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.medCount ? Math.min(summary.medCount / 10, 1) * 301.59 : 0)}" strokeLinecap="round" />
+            </svg>
+            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-green-700">{summary.medCount !== undefined ? summary.medCount : '--'}</span>
+          </div>
+          <div className="mt-2 text-sm text-green-700 font-semibold">Medications</div>
         </div>
-        <div className="bg-gradient-to-br from-yellow-600 to-orange-500 rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-transform hover:scale-105 hover:shadow-yellow-300/40">
-          <FaAppleAlt className="text-4xl mb-2 text-yellow-300 drop-shadow" />
-          <div className="text-3xl font-extrabold tracking-tight">{summary.foodCount !== undefined ? summary.foodCount : '--'}</div>
-          <div className="text-xs opacity-80 mt-1">Meals Logged</div>
+        {/* Meals Logged */}
+        <div className="flex flex-col items-center">
+          <div className="relative">
+            <svg width="110" height="110">
+              <circle cx="55" cy="55" r="48" fill="#fffde7" />
+              <circle cx="55" cy="55" r="48" fill="none" stroke="#fbbf24" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.foodCount ? Math.min(summary.foodCount / 10, 1) * 301.59 : 0)}" strokeLinecap="round" />
+            </svg>
+            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-yellow-700">{summary.foodCount !== undefined ? summary.foodCount : '--'}</span>
+          </div>
+          <div className="mt-2 text-sm text-yellow-700 font-semibold">Meals Logged</div>
         </div>
       </div>
 
