@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import StaffLabResultForm from './StaffLabResultForm';
+import MedicationList from './MedicationList';
+import BloodPressureChart from './BloodPressureChart';
 
 const StaffDashboardV2 = () => {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState("");
   const [fluidData, setFluidData] = useState([]);
   const [foodData, setFoodData] = useState([]);
+  const [labResults, setLabResults] = useState([]);
+  const [patientEntries, setPatientEntries] = useState([]);
+  const [medications, setMedications] = useState([]);
 
   useEffect(() => {
     // Fetch all patients
@@ -55,8 +60,32 @@ const StaffDashboardV2 = () => {
         phosphorus: d.phosphorus,
       })));
     };
+    // Fetch lab results
+    const fetchLabResults = async () => {
+      const token = localStorage.getItem('token');
+      axios.get(`/api/labresults/${selectedPatient}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(res => setLabResults(res.data)).catch(() => setLabResults([]));
+    };
+    // Fetch patient entries (journal)
+    const fetchPatientEntries = async () => {
+      const token = localStorage.getItem('token');
+      axios.get(`/api/patient/entries?userId=${selectedPatient}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(res => setPatientEntries(res.data)).catch(() => setPatientEntries([]));
+    };
+    // Fetch medications
+    const fetchMedications = async () => {
+      const token = localStorage.getItem('token');
+      axios.get(`/api/patient/medication/${selectedPatient}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(res => setMedications(res.data)).catch(() => setMedications([]));
+    };
     fetchFluid();
     fetchFood();
+    fetchLabResults();
+    fetchPatientEntries();
+    fetchMedications();
   }, [selectedPatient]);
 
   return (
@@ -136,6 +165,72 @@ const StaffDashboardV2 = () => {
                 </tbody>
               </table>
             </div>
+          </div>
+          {/* Lab Results Table */}
+          <div className="rounded-xl shadow-lg bg-gradient-to-br from-green-800 to-blue-700 p-6">
+            <h2 className="text-xl font-bold mb-2">Lab Results</h2>
+            <table className="min-w-full text-white">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Albumin</th>
+                  <th>enPCR</th>
+                  <th>spKt/V</th>
+                  <th>K</th>
+                  <th>Hgb</th>
+                  <th>P</th>
+                  <th>Ca</th>
+                  <th>iPTH</th>
+                  <th>Avg Fluid Gain</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {labResults.map(lr => (
+                  <tr key={lr._id}>
+                    <td>{new Date(lr.date).toLocaleDateString()}</td>
+                    <td>{lr.albumin}</td>
+                    <td>{lr.enPCR}</td>
+                    <td>{lr.spKtV}</td>
+                    <td>{lr.potassium}</td>
+                    <td>{lr.hemoglobin}</td>
+                    <td>{lr.phosphorus}</td>
+                    <td>{lr.calciumTotal}</td>
+                    <td>{lr.iPTH}</td>
+                    <td>{lr.avgFluidWeightGain}</td>
+                    <td>{lr.notes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* Medication List */}
+          <div className="rounded-xl shadow-lg bg-gradient-to-br from-blue-800 to-purple-700 p-6">
+            <h2 className="text-xl font-bold mb-2">Medications</h2>
+            <ul>
+              {medications.map(med => (
+                <li key={med._id}>
+                  <strong>{med.name}</strong> ({med.dosage}) - {med.frequency}
+                  {med.notes && <span> | {med.notes}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Patient Journal Entries */}
+          <div className="rounded-xl shadow-lg bg-gradient-to-br from-pink-800 to-purple-700 p-6 col-span-2">
+            <h2 className="text-xl font-bold mb-2">Patient Journal Entries</h2>
+            <ul>
+              {patientEntries.map((entry, idx) => (
+                <li key={entry._id || idx} className="mb-2 p-2 bg-white/10 rounded">
+                  <span className="font-semibold">{new Date(entry.date || entry.createdAt).toLocaleDateString()}:</span> {entry.content}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Blood Pressure Chart */}
+          <div className="rounded-xl shadow-lg bg-gradient-to-br from-blue-800 to-green-700 p-6 col-span-2">
+            <h2 className="text-xl font-bold mb-2">Blood Pressure</h2>
+            <BloodPressureChart patientId={selectedPatient} />
           </div>
         </div>
       )}
