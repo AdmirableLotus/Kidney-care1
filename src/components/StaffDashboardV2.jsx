@@ -90,22 +90,22 @@ const StaffDashboardV2 = () => {
   }, [selectedPatient]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-800 via-purple-700 to-pink-600 p-6 text-white font-sans">
-      <header className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl font-bold">KidneyCare Staff</span>
+    <div className="staff-dashboard-bg">
+      <header className="staff-header">
+        <div className="staff-header-title">
+          <span>KidneyCare Staff</span>
         </div>
-        <nav className="flex gap-6 font-semibold">
-          <a href="#" className="hover:underline">Patients</a>
-          <a href="#" className="hover:underline">Appointments</a>
-          <a href="#" className="hover:underline">Reports</a>
-          <a href="#" className="hover:underline">Settings</a>
+        <nav className="staff-header-nav">
+          <a href="#">Patients</a>
+          <a href="#">Appointments</a>
+          <a href="#">Reports</a>
+          <a href="#">Settings</a>
         </nav>
-        <button className="bg-pink-600 px-4 py-2 rounded-xl font-bold hover:bg-pink-700">Logout</button>
+        <button className="staff-logout-btn">Logout</button>
       </header>
-      <div className="flex justify-center mb-8">
+      <div className="staff-patient-select">
         <select
-          className="text-black p-2 rounded-lg w-96"
+          className="staff-patient-dropdown"
           value={selectedPatient || ""}
           onChange={e => {
             setSelectedPatient(e.target.value);
@@ -119,13 +119,13 @@ const StaffDashboardV2 = () => {
             </option>
           )) : <option disabled>No patients found</option>}
         </select>
-        {(!patients || patients.length === 0) && <div className="text-red-500 ml-4">No patients found or loaded.</div>}
+        {(!patients || patients.length === 0) && <div className="staff-no-patients">No patients found or loaded.</div>}
       </div>
       {/* Modern Analytics Header */}
       {selectedPatient && (
         <div className="staff-analytics-header">
           <div className="analytics-bg-circle"></div>
-          <div className="relative z-10 flex flex-col items-center justify-center pt-12">
+          <div className="analytics-header-content">
             <div className="analytics-avatar">
               <span>👤</span>
             </div>
@@ -145,7 +145,7 @@ const StaffDashboardV2 = () => {
                 <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
                 <circle cx="55" cy="55" r="48" fill="none" stroke="#38bdf8" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (fluidData && fluidData.length ? Math.min(fluidData.reduce((a, b) => a + b.ml, 0) / 2000, 1) * 301.59 : 0))} strokeLinecap="round" />
               </svg>
-              <span className="stat-value text-cyan-700">{fluidData && fluidData.length ? fluidData.reduce((a, b) => a + b.ml, 0) : '--'}<span className="text-xs font-medium">ml</span></span>
+              <span className="stat-value stat-cyan">{fluidData && fluidData.length ? fluidData.reduce((a, b) => a + b.ml, 0) : '--'}<span className="stat-unit">ml</span></span>
             </div>
             <div className="stat-label">Fluid Intake</div>
           </div>
@@ -156,7 +156,7 @@ const StaffDashboardV2 = () => {
                 <circle cx="55" cy="55" r="48" fill="#fffde7" />
                 <circle cx="55" cy="55" r="48" fill="none" stroke="#fbbf24" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (foodData && foodData.length ? Math.min(foodData.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
               </svg>
-              <span className="stat-value text-yellow-700">{foodData && foodData.length ? foodData.length : '--'}</span>
+              <span className="stat-value stat-yellow">{foodData && foodData.length ? foodData.length : '--'}</span>
             </div>
             <div className="stat-label">Meals Logged</div>
           </div>
@@ -167,7 +167,7 @@ const StaffDashboardV2 = () => {
                 <circle cx="55" cy="55" r="48" fill="#fce4ec" />
                 <circle cx="55" cy="55" r="48" fill="none" stroke="#f472b6" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (labResults && labResults.length ? Math.min(labResults.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
               </svg>
-              <span className="stat-value text-pink-700">{labResults && labResults.length ? labResults.length : '--'}</span>
+              <span className="stat-value stat-pink">{labResults && labResults.length ? labResults.length : '--'}</span>
             </div>
             <div className="stat-label">Lab Results</div>
           </div>
@@ -178,7 +178,7 @@ const StaffDashboardV2 = () => {
                 <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
                 <circle cx="55" cy="55" r="48" fill="none" stroke="#34d399" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (patientEntries && patientEntries.length ? Math.min(patientEntries.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
               </svg>
-              <span className="stat-value text-green-700">{patientEntries && patientEntries.length ? patientEntries.length : '--'}</span>
+              <span className="stat-value stat-green">{patientEntries && patientEntries.length ? patientEntries.length : '--'}</span>
             </div>
             <div className="stat-label">Journal Entries</div>
           </div>
