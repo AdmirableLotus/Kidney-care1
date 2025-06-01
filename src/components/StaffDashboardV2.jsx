@@ -14,16 +14,27 @@ const StaffDashboardV2 = () => {
   const [labResults, setLabResults] = useState([]);
   const [patientEntries, setPatientEntries] = useState([]);
   const [medications, setMedications] = useState([]);
+  // Add state for storage error
+  const [storageError, setStorageError] = useState(false);
 
   useEffect(() => {
     // Fetch all patients
     const fetchPatients = async () => {
-      const token = localStorage.getItem("token");
+      let token = null;
+      try {
+        token = localStorage.getItem("token");
+      } catch (e) {
+        console.error('Access to storage is not allowed from this context.');
+        setPatients([]);
+        setStorageError(true);
+        return;
+      }
       try {
         const res = await axios.get("/api/users?role=patient", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setPatients(res.data);
+        setStorageError(false);
         console.log('Loaded patients:', res.data);
       } catch (err) {
         console.error('Failed to load patients:', err);
@@ -97,8 +108,14 @@ const StaffDashboardV2 = () => {
       <header className="staff-header">
         <button className="staff-logout-btn">Logout</button>
       </header>
-      {/* Centered patient dropdown under title, only visible when no patient is selected */}
-      {!selectedPatient && (
+      {/* Show storage error if localStorage is blocked */}
+      {storageError ? (
+        <div className="staff-no-patients" style={{color: 'red', background: '#fff0f0'}}>
+          Access to storage is not allowed from this context. Please run the app in a normal browser window and log in again.
+        </div>
+      ) :
+      /* Centered patient dropdown under title, only visible when no patient is selected */
+      !selectedPatient && (
         <div className="staff-patient-center-group">
           <div className="staff-patient-select">
             {patients && patients.length > 0 ? (
