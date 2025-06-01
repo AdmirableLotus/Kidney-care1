@@ -57,9 +57,11 @@ const RegisterForm = () => {
           value={formData.password}
           onChange={handleChange}
           required
-        />
-        <select name="role" value={formData.role} onChange={handleChange}>
+        />        <select name="role" value={formData.role} onChange={handleChange}>
           <option value="patient">Patient</option>
+          <option value="doctor">Doctor</option>
+          <option value="nurse">Nurse</option>
+          <option value="dietitian">Dietitian</option>
           <option value="medical_staff">Medical Staff</option>
         </select>
         <button type="submit">Sign Up</button>
