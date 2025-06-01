@@ -91,10 +91,10 @@ const StaffDashboardV2 = () => {
 
   return (
     <div className="staff-dashboard-bg staff-dashboard-modern">
+      <div className="staff-header-center">
+        <span>KidneyCare Staff</span>
+      </div>
       <header className="staff-header">
-        <div className="staff-header-title">
-          <span>KidneyCare Staff</span>
-        </div>
         <nav className="staff-header-nav">
           <button
             type="button"

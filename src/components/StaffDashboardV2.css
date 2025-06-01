@@ -16,6 +16,7 @@
   justify-content: space-between;
   padding: 2rem 2.5rem 1.5rem 2.5rem;
   border-bottom: none;
+  margin-top: 0;
 }
 
 .staff-header-title span {
@@ -213,4 +214,21 @@
   font-weight: 600;
   color: #334155;
   opacity: 0.85;
+}
+
+.staff-header-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+.staff-header-center span {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #6366f1;
+  letter-spacing: 1px;
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(99,102,241,0.08);
 }
