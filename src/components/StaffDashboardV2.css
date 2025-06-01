@@ -6,6 +6,13 @@
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
   color: #22223b;
   padding-bottom: 40px;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+body, .staff-dashboard-modern {
+  border-top: none !important;
+  box-shadow: none !important;
 }
 
 .staff-header {
