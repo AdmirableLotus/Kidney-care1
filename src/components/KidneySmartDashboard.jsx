@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
+import { foodDatabase } from '../utils/foodLookup';
 
 const DAILY_LIMITS = {
   phosphorus: 1000,
@@ -125,6 +126,24 @@ const KidneySmartDashboard = () => {
     }
   };
 
+  const handleFoodInput = (e) => {
+    const food = e.target.value.toLowerCase();
+    const match = foodDatabase[food];
+
+    if (match) {
+      setNewEntry({
+        ...newEntry,
+        food: food,
+        protein: match.protein,
+        phosphorus: match.phosphorus,
+        potassium: match.potassium,
+        sodium: match.sodium
+      });
+    } else {
+      setNewEntry({ ...newEntry, food });
+    }
+  };
+
   const renderProgressBar = (nutrient, value, limit) => {
     const percentage = Math.min((value / limit) * 100, 100);
     const color = percentage > 90 ? 'red' : percentage > 70 ? 'yellow' : 'green';
@@ -223,7 +242,7 @@ const KidneySmartDashboard = () => {
               />
               <form onSubmit={handleAddEntry} className="entry-form">
                 <input type="text" placeholder="Meal" value={newEntry.meal} onChange={e => setNewEntry({ ...newEntry, meal: e.target.value })} required />
-                <input type="text" placeholder="Food item" value={newEntry.food} onChange={e => setNewEntry({ ...newEntry, food: e.target.value })} required />
+                <input type="text" placeholder="Food item" value={newEntry.food} onChange={handleFoodInput} required />
                 <input type="number" placeholder="Protein (g)" value={newEntry.protein} onChange={e => setNewEntry({ ...newEntry, protein: Number(e.target.value) })} required />
                 <input type="number" placeholder="Phosphorus (mg)" value={newEntry.phosphorus} onChange={e => setNewEntry({ ...newEntry, phosphorus: Number(e.target.value) })} required />
                 <input type="number" placeholder="Potassium (mg)" value={newEntry.potassium} onChange={e => setNewEntry({ ...newEntry, potassium: Number(e.target.value) })} required />
@@ -253,7 +272,7 @@ const KidneySmartDashboard = () => {
                     </div>
                   </div>
                 ))
-              )}
+              }
             </div>
           </div>
         )}
