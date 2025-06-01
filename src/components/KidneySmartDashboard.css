@@ -1,0 +1,224 @@
+.kidney-smart-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Dashboard sections */
+.dashboard-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+}
+
+/* Nutrient Progress Bars */
+.nutrient-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.nutrient-progress {
+  width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #edf2f7;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar.green {
+  background-color: #48bb78;
+}
+
+.progress-bar.yellow {
+  background-color: #ecc94b;
+}
+
+.progress-bar.red {
+  background-color: #f56565;
+}
+
+/* Tabs */
+.dashboard-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #edf2f7;
+  color: #4a5568;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background: #e2e8f0;
+}
+
+.tab.active {
+  background: #4299e1;
+  color: white;
+}
+
+/* Food Log Section */
+.food-log-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.entry-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.entry-form input {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.add-entry-btn {
+  background: #4299e1;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.add-entry-btn:hover {
+  background: #3182ce;
+}
+
+/* Food Entry Cards */
+.food-entries {
+  display: grid;
+  gap: 1rem;
+}
+
+.food-entry-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.entry-header h3 {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.delete-btn {
+  padding: 0.5rem 1rem;
+  background: #feb2b2;
+  color: #c53030;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: #fc8181;
+}
+
+.entry-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  color: #4a5568;
+}
+
+/* Education Section */
+.education-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.education-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.education-content h3 {
+  color: #2d3748;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.education-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #4a5568;
+}
+
+.education-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .nutrient-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .nutrient-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

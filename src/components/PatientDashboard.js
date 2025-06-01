@@ -5,16 +5,14 @@ import "./PatientDashboard.css";
 // Components
 import WaterIntakeForm from "./WaterIntakeForm";
 import WaterIntakeChart from "./WaterIntakeChart";
-import FoodLogForm from "./FoodLogForm";
-import FoodLogChart from "./FoodLogChart";
-import FoodLogList from "./FoodLogList";
+import KidneySmartDashboard from "./KidneySmartDashboard";
 import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
 import BloodPressureChart from "./BloodPressureChart";
 import FluidDashboard from './FluidDashboard';
 
 // Icons
-import { FaTint, FaChartLine, FaHeartbeat, FaPills, FaBook, FaAppleAlt } from "react-icons/fa";
+import { FaTint, FaChartLine, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
 
 const PatientDashboard = () => {
   const [entries, setEntries] = useState([]);
@@ -111,54 +109,6 @@ const PatientDashboard = () => {
         </div>
       </div>
 
-      {/* Circular Summary Stats */}
-      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 -mt-32 mb-12 z-10 relative">
-        {/* Water Intake */}
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <svg width="110" height="110">
-              <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
-              <circle cx="55" cy="55" r="48" fill="none" stroke="#38bdf8" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.totalWater ? Math.min(summary.totalWater / 2000, 1) * 301.59 : 0)}" strokeLinecap="round" />
-            </svg>
-            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-cyan-700">{summary.totalWater !== undefined ? summary.totalWater : '--'}<span className="text-xs font-medium">ml</span></span>
-          </div>
-          <div className="mt-2 text-sm text-cyan-700 font-semibold">Water Intake</div>
-        </div>
-        {/* Blood Pressure */}
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <svg width="110" height="110">
-              <circle cx="55" cy="55" r="48" fill="#fce4ec" />
-              <circle cx="55" cy="55" r="48" fill="none" stroke="#f472b6" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.avgBP ? Math.min(summary.avgBP / 180, 1) * 301.59 : 0)}" strokeLinecap="round" />
-            </svg>
-            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-pink-700">{summary.avgBP !== undefined ? summary.avgBP : '--'}</span>
-          </div>
-          <div className="mt-2 text-sm text-pink-700 font-semibold">Avg Blood Pressure</div>
-        </div>
-        {/* Medications */}
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <svg width="110" height="110">
-              <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
-              <circle cx="55" cy="55" r="48" fill="none" stroke="#34d399" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.medCount ? Math.min(summary.medCount / 10, 1) * 301.59 : 0)}" strokeLinecap="round" />
-            </svg>
-            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-green-700">{summary.medCount !== undefined ? summary.medCount : '--'}</span>
-          </div>
-          <div className="mt-2 text-sm text-green-700 font-semibold">Medications</div>
-        </div>
-        {/* Meals Logged */}
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <svg width="110" height="110">
-              <circle cx="55" cy="55" r="48" fill="#fffde7" />
-              <circle cx="55" cy="55" r="48" fill="none" stroke="#fbbf24" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset="{301.59 - (summary.foodCount ? Math.min(summary.foodCount / 10, 1) * 301.59 : 0)}" strokeLinecap="round" />
-            </svg>
-            <span className="absolute inset-0 flex flex-col items-center justify-center text-xl font-bold text-yellow-700">{summary.foodCount !== undefined ? summary.foodCount : '--'}</span>
-          </div>
-          <div className="mt-2 text-sm text-yellow-700 font-semibold">Meals Logged</div>
-        </div>
-      </div>
-
       {/* Main Grid Widgets */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 pb-10">
         {/* Water Intake Card */}
@@ -168,58 +118,31 @@ const PatientDashboard = () => {
           <h3 className="text-md font-semibold mt-4 mb-2 flex items-center"><FaChartLine className="mr-2 text-cyan-200" />Water Intake (Last 7 Days)</h3>
           <WaterIntakeChart reloadTrigger={reloadChart} />
         </div>
-        {/* Food Log Card */}
+
+        {/* Food & Nutrition Section - Now using KidneySmartDashboard */}
         <div className="bg-gradient-to-br from-green-900 to-teal-800 rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold mb-2 flex items-center"><FaAppleAlt className="mr-2 text-yellow-300" />Track Your Food Intake</h3>
-          <FoodLogForm onEntryAdded={() => {}} />
-          <h3 className="text-md font-semibold mt-4 mb-2">Your Food Intake (Last 7 Days)</h3>
-          <FoodLogChart />
-          <h3 className="text-md font-semibold mt-4 mb-2">Meal & Snack Log (Last 7 Days)</h3>
-          <FoodLogList />
+          <KidneySmartDashboard />
         </div>
+
         {/* Medication Card */}
         <div className="bg-gradient-to-br from-purple-900 to-pink-900 rounded-2xl shadow-lg p-6 flex flex-col">
           <h3 className="text-lg font-semibold mb-2 flex items-center"><FaPills className="mr-2 text-green-300" />Medication & Schedule</h3>
           <MedicationList />
         </div>
+
         {/* Blood Pressure Card */}
         <div className="bg-gradient-to-br from-pink-900 to-red-800 rounded-2xl shadow-lg p-6 flex flex-col">
           <h3 className="text-lg font-semibold mb-2 flex items-center"><FaHeartbeat className="mr-2 text-pink-300" />Blood Pressure</h3>
           <BloodPressureForm onEntryAdded={() => {}} />
           <BloodPressureChart />
         </div>
+
         {/* Fluid Intake Dashboard Card */}
         {user && (
           <div className="bg-gradient-to-br from-cyan-900 to-blue-800 rounded-2xl shadow-lg p-6 flex flex-col md:col-span-2">
             <FluidDashboard patientId={user._id} />
           </div>
         )}
-        {/* Journal Card */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-lg p-6 flex flex-col md:col-span-2">
-          <h3 className="text-lg font-semibold mb-2 flex items-center"><FaBook className="mr-2 text-blue-200" />Daily Journal</h3>
-          <form onSubmit={handleSubmit} className="journal-form flex flex-col">
-            <textarea
-              value={newEntry}
-              onChange={(e) => setNewEntry(e.target.value)}
-              placeholder="Write something about today..."
-              rows={4}
-              required
-              className="rounded-lg p-3 text-black mb-2"
-            />
-            <button type="submit" className="self-end bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold">Submit</button>
-          </form>
-          {error && <p className="text-red-400 mt-2">{error}</p>}
-          <h3 className="text-md font-semibold mt-6 mb-2">Your Past Entries</h3>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <ul className="entry-list space-y-2 mt-2">
-              {entries.map((entry, index) => (
-                <li key={index} className="bg-gray-700 rounded-lg p-2">{entry.content}</li>
-              ))}
-            </ul>
-          )}
-        </div>
       </div>
     </div>
   );
