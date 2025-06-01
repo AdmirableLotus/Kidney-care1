@@ -35,16 +35,19 @@ const KidneySmartDashboard = () => {
   useEffect(() => {
     fetchFoodEntries();
   }, []);
-
   const fetchFoodEntries = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5000/api/patient/food', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setFoodEntries(response.data);
-      calculateDailyTotals(response.data);
-      processWeeklyData(response.data);
+      // Sort entries by date, most recent first
+      const sortedEntries = response.data.sort((a, b) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setFoodEntries(sortedEntries);
+      calculateDailyTotals(sortedEntries);
+      processWeeklyData(sortedEntries);
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch food entries:', err);
@@ -92,15 +95,18 @@ const KidneySmartDashboard = () => {
 
     setDailyTotals(totals);
   };
-
   const handleAddEntry = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/patient/food', newEntry, {
+      const entryWithDate = {
+        ...newEntry,
+        date: new Date().toISOString()
+      };
+      await axios.post('http://localhost:5000/api/patient/food', entryWithDate, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchFoodEntries();
+      await fetchFoodEntries();
       setNewEntry({
         meal: '',
         food: '',
@@ -111,6 +117,7 @@ const KidneySmartDashboard = () => {
       });
     } catch (err) {
       console.error('Failed to add food entry:', err);
+      alert('Failed to add food entry. Please try again.');
     }
   };
 
@@ -251,7 +258,8 @@ const KidneySmartDashboard = () => {
               </form>
             </div>
 
-            <div className="food-entries">              {loading ? (
+            <div className="food-entries">
+              {loading ? (
                 <p>Loading food entries...</p>
               ) : foodEntries.length === 0 ? (
                 <p>No food entries yet today. Add your first meal!</p>
