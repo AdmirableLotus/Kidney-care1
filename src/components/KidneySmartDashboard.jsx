@@ -93,14 +93,18 @@ const KidneySmartDashboard = () => {
     }), { phosphorus: 0, potassium: 0, sodium: 0, protein: 0 });
 
     setDailyTotals(totals);
-  };
-  const handleAddEntry = async (e) => {
+  };  const handleAddEntry = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');      const entryWithDate = {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId'); // Get user ID from localStorage
+      
+      const entryWithDate = {
         ...newEntry,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        user: userId // Add the user ID to the entry
       };
+      
       await axios.post('http://localhost:3000/api/patient/food', entryWithDate, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -118,11 +122,10 @@ const KidneySmartDashboard = () => {
       alert('Failed to add food entry. Please try again.');
     }
   };
-
   const handleDeleteEntry = async (entryId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/patient/food/${entryId}`, {
+      await axios.delete(`http://localhost:3000/api/patient/food/${entryId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchFoodEntries();
