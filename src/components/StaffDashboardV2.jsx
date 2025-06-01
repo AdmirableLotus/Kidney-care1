@@ -95,43 +95,32 @@ const StaffDashboardV2 = () => {
         <span>KidneyCare Staff</span>
       </div>
       <header className="staff-header">
-        {/* Logout button on top right */}
         <button className="staff-logout-btn">Logout</button>
       </header>
-      {/* Centered Patients button under title, only visible when no patient is selected */}
+      {/* Centered patient dropdown under title, only visible when no patient is selected */}
       {!selectedPatient && (
-        <div className="staff-patient-center-btn">
-          <button
-            type="button"
-            className="staff-header-link active"
-            onClick={() => setSelectedPatient("")}
-          >
-            Patients
-          </button>
-        </div>
-      )}
-      {/* Patient Dropdown: Only show when no patient is selected */}
-      {!selectedPatient && (
-        <div className="staff-patient-select">
-          {patients && patients.length > 0 ? (
-            <select
-              className="staff-patient-dropdown"
-              value={selectedPatient}
-              onChange={e => {
-                setSelectedPatient(e.target.value);
-                console.log('Selected patient:', e.target.value);
-              }}
-            >
-              <option value="">Select patient...</option>
-              {patients.map(p => (
-                <option key={p._id} value={p._id}>
-                  {p.name} - {p.email}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="staff-no-patients">No patients found or loaded.</div>
-          )}
+        <div className="staff-patient-center-group">
+          <div className="staff-patient-select">
+            {patients && patients.length > 0 ? (
+              <select
+                className="staff-patient-dropdown"
+                value={selectedPatient}
+                onChange={e => {
+                  setSelectedPatient(e.target.value);
+                  console.log('Selected patient:', e.target.value);
+                }}
+              >
+                <option value="">Select patient...</option>
+                {patients.map(p => (
+                  <option key={p._id} value={p._id}>
+                    {p.name} - {p.email}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="staff-no-patients">No patients found or loaded.</div>
+            )}
+          </div>
         </div>
       )}
       {/* Show other nav buttons only after patient is selected */}
