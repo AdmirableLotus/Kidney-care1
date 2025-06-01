@@ -14,8 +14,14 @@ const StaffDashboardV2 = () => {
   const [labResults, setLabResults] = useState([]);
   const [patientEntries, setPatientEntries] = useState([]);
   const [medications, setMedications] = useState([]);
-  // Add state for storage error
   const [storageError, setStorageError] = useState(false);
+  const [isLoading, setIsLoading] = useState({
+    fluid: false,
+    food: false,
+    labs: false,
+    entries: false,
+    meds: false
+  });
 
   useEffect(() => {
     // Fetch all patients
@@ -62,59 +68,143 @@ const StaffDashboardV2 = () => {
 
   useEffect(() => {
     if (!selectedPatient) return;
+
+    // Reset data when switching patients
+    setFluidData([]);
+    setFoodData([]);
+    setLabResults([]);
+    setPatientEntries([]);
+    setMedications([]);
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
     // Fetch selected patient's water intake
     const fetchFluid = async () => {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/patient/water/${selectedPatient}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setFluidData(res.data.map(d => ({
-        date: new Date(d.date).toLocaleDateString(),
-        ml: d.amount,
-      })));
+      setIsLoading(prev => ({ ...prev, fluid: true }));
+      try {
+        const res = await axios.get(`http://localhost:5000/api/patient/water/${selectedPatient}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const processedData = Array.isArray(res.data) ? res.data.map(d => ({
+          date: new Date(d.date).toLocaleDateString(),
+          ml: d.amount
+        })) : [];
+        setFluidData(processedData);
+      } catch (err) {
+        console.error('Error fetching fluid data:', err);
+        setFluidData([]);
+      }
+      setIsLoading(prev => ({ ...prev, fluid: false }));
     };
+
     // Fetch selected patient's food log
     const fetchFood = async () => {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`/api/patient/food/${selectedPatient}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setFoodData(res.data.map(d => ({
-        date: new Date(d.date).toLocaleDateString(),
-        meal: d.meal,
-        protein: d.protein,
-        sodium: d.sodium,
-        potassium: d.potassium,
-        phosphorus: d.phosphorus,
-      })));
+      setIsLoading(prev => ({ ...prev, food: true }));
+      try {
+        const res = await axios.get(`http://localhost:5000/api/patient/food/${selectedPatient}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const processedData = Array.isArray(res.data) ? res.data.map(d => ({
+          date: new Date(d.date).toLocaleDateString(),
+          meal: d.meal,
+          protein: d.protein || 0,
+          sodium: d.sodium || 0,
+          potassium: d.potassium || 0,
+          phosphorus: d.phosphorus || 0
+        })) : [];
+        setFoodData(processedData);
+      } catch (err) {
+        console.error('Error fetching food data:', err);
+        setFoodData([]);
+      }
+      setIsLoading(prev => ({ ...prev, food: false }));
     };
+
     // Fetch lab results
     const fetchLabResults = async () => {
-      const token = localStorage.getItem('token');
-      axios.get(`/api/labresults/${selectedPatient}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).then(res => setLabResults(res.data)).catch(() => setLabResults([]));
+      setIsLoading(prev => ({ ...prev, labs: true }));
+      try {
+        const res = await axios.get(`http://localhost:5000/api/labresults/${selectedPatient}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setLabResults(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error('Error fetching lab results:', err);
+        setLabResults([]);
+      }
+      setIsLoading(prev => ({ ...prev, labs: false }));
     };
+
     // Fetch patient entries (journal)
     const fetchPatientEntries = async () => {
-      const token = localStorage.getItem('token');
-      axios.get(`/api/patient/entries?userId=${selectedPatient}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).then(res => setPatientEntries(res.data)).catch(() => setPatientEntries([]));
+      setIsLoading(prev => ({ ...prev, entries: true }));
+      try {
+        const res = await axios.get(`http://localhost:5000/api/patient/entries/${selectedPatient}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setPatientEntries(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error('Error fetching patient entries:', err);
+        setPatientEntries([]);
+      }
+      setIsLoading(prev => ({ ...prev, entries: false }));
     };
+
     // Fetch medications
     const fetchMedications = async () => {
-      const token = localStorage.getItem('token');
-      axios.get(`/api/patient/medication/${selectedPatient}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).then(res => setMedications(res.data)).catch(() => setMedications([]));
+      setIsLoading(prev => ({ ...prev, meds: true }));
+      try {
+        const res = await axios.get(`http://localhost:5000/api/patient/medication/${selectedPatient}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setMedications(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error('Error fetching medications:', err);
+        setMedications([]);
+      }
+      setIsLoading(prev => ({ ...prev, meds: false }));
     };
+
+    // Fetch all data for the selected patient
     fetchFluid();
     fetchFood();
     fetchLabResults();
     fetchPatientEntries();
     fetchMedications();
   }, [selectedPatient]);
+
+  // Get selected patient's name
+  const getSelectedPatientName = () => {
+    const patient = patients.find(p => p._id === selectedPatient);
+    return patient ? patient.name : '--';
+  };
+
+  // Get total fluid intake for today
+  const getTotalFluidIntake = () => {
+    if (!fluidData || !fluidData.length) return '--';
+    const today = new Date().toLocaleDateString();
+    const todayData = fluidData.filter(d => d.date === today);
+    const total = todayData.reduce((sum, d) => sum + (d.ml || 0), 0);
+    return `${total} ml`;
+  };
+
+  // Get meals logged count for today
+  const getMealsLoggedToday = () => {
+    if (!foodData || !foodData.length) return '--';
+    const today = new Date().toLocaleDateString();
+    return foodData.filter(d => d.date === today).length;
+  };
+
+  // Get latest lab results count
+  const getLabResultsCount = () => {
+    return labResults && labResults.length ? labResults.length : '--';
+  };
+
+  // Get journal entries count
+  const getJournalEntriesCount = () => {
+    return patientEntries && patientEntries.length ? patientEntries.length : '--';
+  };
 
   return (
     <div className="staff-dashboard-bg staff-dashboard-modern">
@@ -127,7 +217,7 @@ const StaffDashboardV2 = () => {
       {/* Show storage error if localStorage is blocked */}
       {storageError ? (
         <div className="staff-no-patients" style={{color: 'red', background: '#fff0f0'}}>
-          Access to storage is not allowed from this context. Please run the app in a normal browser window and log in again.
+          {typeof storageError === 'string' ? storageError : 'Access to storage is not allowed from this context. Please run the app in a normal browser window and log in again.'}
         </div>
       ) :
       /* Centered patient dropdown under title, only visible when no patient is selected */
@@ -146,7 +236,7 @@ const StaffDashboardV2 = () => {
                 <option value="">Select patient...</option>
                 {patients.map(p => (
                   <option key={p._id} value={p._id}>
-                    {p.name} - {p.email}
+                    {p.name || 'Unnamed Patient'} - {p.email}
                   </option>
                 ))}
               </select>
@@ -156,6 +246,7 @@ const StaffDashboardV2 = () => {
           </div>
         </div>
       )}
+      
       {/* Show other nav buttons only after patient is selected */}
       {selectedPatient && (
         <nav className="staff-header-nav staff-nav-after-patient">
@@ -164,6 +255,7 @@ const StaffDashboardV2 = () => {
           <button type="button" className="staff-header-link">Settings</button>
         </nav>
       )}
+
       {/* Modern Analytics Header, Circular Stats, and Patient Data Grid */}
       {selectedPatient && (
         <>
@@ -173,125 +265,227 @@ const StaffDashboardV2 = () => {
               <div className="analytics-avatar">
                 <span role="img" aria-label="Patient Avatar">👤</span>
               </div>
-              <h2 className="analytics-title">{patients.find(p => p._id === selectedPatient)?.name || '--'}</h2>
+              <h2 className="analytics-title">{getSelectedPatientName()}</h2>
               <p className="analytics-subtitle">Patient Overview</p>
             </div>
           </div>
+
+          {/* Circular Stats */}
           <div className="staff-circular-stats">
             {/* Fluid Intake */}
             <div className="stat-widget">
               <div className="stat-svg">
-                <svg width="110" height="110">
-                  <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
-                  <circle cx="55" cy="55" r="48" fill="none" stroke="#38bdf8" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (fluidData && fluidData.length ? Math.min(fluidData.reduce((a, b) => a + b.ml, 0) / 2000, 1) * 301.59 : 0))} strokeLinecap="round" />
-                </svg>
-                <span className="stat-value stat-cyan">{fluidData && fluidData.length ? fluidData.reduce((a, b) => a + b.ml, 0) : '--'}<span className="stat-unit">ml</span></span>
+                {isLoading.fluid ? (
+                  <div className="loading-spinner">Loading...</div>
+                ) : (
+                  <svg width="110" height="110">
+                    <circle cx="55" cy="55" r="48" fill="#e0f7fa" />
+                    <circle
+                      cx="55"
+                      cy="55"
+                      r="48"
+                      fill="none"
+                      stroke="#38bdf8"
+                      strokeWidth="10"
+                      strokeDasharray="301.59"
+                      strokeDashoffset={301.59 - (fluidData.length ? Math.min(fluidData.reduce((a, b) => a + (b.ml || 0), 0) / 2000, 1) * 301.59 : 301.59)}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                <span className="stat-value stat-cyan">{getTotalFluidIntake()}</span>
               </div>
               <div className="stat-label">Fluid Intake</div>
             </div>
+
             {/* Meals Logged */}
             <div className="stat-widget">
               <div className="stat-svg">
-                <svg width="110" height="110">
-                  <circle cx="55" cy="55" r="48" fill="#fffde7" />
-                  <circle cx="55" cy="55" r="48" fill="none" stroke="#fbbf24" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (foodData && foodData.length ? Math.min(foodData.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
-                </svg>
-                <span className="stat-value stat-yellow">{foodData && foodData.length ? foodData.length : '--'}</span>
+                {isLoading.food ? (
+                  <div className="loading-spinner">Loading...</div>
+                ) : (
+                  <svg width="110" height="110">
+                    <circle cx="55" cy="55" r="48" fill="#fffde7" />
+                    <circle
+                      cx="55"
+                      cy="55"
+                      r="48"
+                      fill="none"
+                      stroke="#fbbf24"
+                      strokeWidth="10"
+                      strokeDasharray="301.59"
+                      strokeDashoffset={301.59 - (foodData.length ? Math.min(getMealsLoggedToday() / 5, 1) * 301.59 : 301.59)}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                <span className="stat-value stat-yellow">{getMealsLoggedToday()}</span>
               </div>
-              <div className="stat-label">Meals Logged</div>
+              <div className="stat-label">Meals Logged Today</div>
             </div>
+
             {/* Lab Results */}
             <div className="stat-widget">
               <div className="stat-svg">
-                <svg width="110" height="110">
-                  <circle cx="55" cy="55" r="48" fill="#fce4ec" />
-                  <circle cx="55" cy="55" r="48" fill="none" stroke="#f472b6" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (labResults && labResults.length ? Math.min(labResults.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
-                </svg>
-                <span className="stat-value stat-pink">{labResults && labResults.length ? labResults.length : '--'}</span>
+                {isLoading.labs ? (
+                  <div className="loading-spinner">Loading...</div>
+                ) : (
+                  <svg width="110" height="110">
+                    <circle cx="55" cy="55" r="48" fill="#fce4ec" />
+                    <circle
+                      cx="55"
+                      cy="55"
+                      r="48"
+                      fill="none"
+                      stroke="#f472b6"
+                      strokeWidth="10"
+                      strokeDasharray="301.59"
+                      strokeDashoffset={301.59 - (labResults.length ? Math.min(labResults.length / 10, 1) * 301.59 : 301.59)}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                <span className="stat-value stat-pink">{getLabResultsCount()}</span>
               </div>
               <div className="stat-label">Lab Results</div>
             </div>
+
             {/* Journal Entries */}
             <div className="stat-widget">
               <div className="stat-svg">
-                <svg width="110" height="110">
-                  <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
-                  <circle cx="55" cy="55" r="48" fill="none" stroke="#34d399" strokeWidth="10" strokeDasharray="301.59" strokeDashoffset={(301.59 - (patientEntries && patientEntries.length ? Math.min(patientEntries.length / 10, 1) * 301.59 : 0))} strokeLinecap="round" />
-                </svg>
-                <span className="stat-value stat-green">{patientEntries && patientEntries.length ? patientEntries.length : '--'}</span>
+                {isLoading.entries ? (
+                  <div className="loading-spinner">Loading...</div>
+                ) : (
+                  <svg width="110" height="110">
+                    <circle cx="55" cy="55" r="48" fill="#e8f5e9" />
+                    <circle
+                      cx="55"
+                      cy="55"
+                      r="48"
+                      fill="none"
+                      stroke="#34d399"
+                      strokeWidth="10"
+                      strokeDasharray="301.59"
+                      strokeDashoffset={301.59 - (patientEntries.length ? Math.min(patientEntries.length / 10, 1) * 301.59 : 301.59)}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                <span className="stat-value stat-green">{getJournalEntriesCount()}</span>
               </div>
               <div className="stat-label">Journal Entries</div>
             </div>
           </div>
+
           {/* Main Patient Data Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Fluid Intake Card */}
             <div className="rounded-xl shadow-lg bg-gradient-to-br from-purple-800 to-blue-700 p-6">
               <h2 className="text-xl font-bold mb-2">Fluid Intake (7 days)</h2>
-              <p className="text-3xl">{fluidData.reduce((a, b) => a + b.ml, 0)} mL</p>
-              <p className="text-sm">Daily limit: 1500 mL</p>
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={fluidData}>
-                  <Line type="monotone" dataKey="ml" stroke="#38bdf8" strokeWidth={3} />
-                  <XAxis dataKey="date" stroke="#fff" />
-                  <YAxis stroke="#fff" />
-                  <Tooltip />
-                </LineChart>
-              </ResponsiveContainer>
+              {isLoading.fluid ? (
+                <div className="loading-spinner">Loading fluid data...</div>
+              ) : (
+                <>
+                  <p className="text-3xl">{getTotalFluidIntake()}</p>
+                  <p className="text-sm">Daily limit: 1500 mL</p>
+                  {fluidData.length > 0 && (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <LineChart data={fluidData}>
+                        <Line type="monotone" dataKey="ml" stroke="#38bdf8" strokeWidth={3} />
+                        <XAxis dataKey="date" stroke="#fff" />
+                        <YAxis stroke="#fff" />
+                        <Tooltip />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
+                </>
+              )}
             </div>
+
             {/* Food Log Card */}
             <div className="rounded-xl shadow-lg bg-gradient-to-br from-blue-800 to-purple-700 p-6">
               <h2 className="text-xl font-bold mb-2">Food Log (7 days)</h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-white">
-                  <thead>
-                    <tr>
-                      <th className="px-2">Date</th>
-                      <th className="px-2">Meal</th>
-                      <th className="px-2">Protein</th>
-                      <th className="px-2">Sodium</th>
-                      <th className="px-2">Potassium</th>
-                      <th className="px-2">Phosphorus</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {foodData.map((f, i) => (
-                      <tr key={i} className="border-b border-white/20">
-                        <td className="px-2">{f.date}</td>
-                        <td className="px-2">{f.meal}</td>
-                        <td className="px-2">{f.protein}</td>
-                        <td className="px-2">{f.sodium}</td>
-                        <td className="px-2">{f.potassium}</td>
-                        <td className="px-2">{f.phosphorus}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {isLoading.food ? (
+                <div className="loading-spinner">Loading food data...</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  {foodData.length > 0 ? (
+                    <table className="min-w-full text-white">
+                      <thead>
+                        <tr>
+                          <th className="px-2">Date</th>
+                          <th className="px-2">Meal</th>
+                          <th className="px-2">Protein</th>
+                          <th className="px-2">Sodium</th>
+                          <th className="px-2">Potassium</th>
+                          <th className="px-2">Phosphorus</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {foodData.map((f, i) => (
+                          <tr key={i} className="border-b border-white/20">
+                            <td className="px-2">{f.date}</td>
+                            <td className="px-2">{f.meal}</td>
+                            <td className="px-2">{f.protein}g</td>
+                            <td className="px-2">{f.sodium}mg</td>
+                            <td className="px-2">{f.potassium}mg</td>
+                            <td className="px-2">{f.phosphorus}mg</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p>No food logs available for the last 7 days.</p>
+                  )}
+                </div>
+              )}
             </div>
+
             {/* Medication List */}
             <div className="rounded-xl shadow-lg bg-gradient-to-br from-blue-800 to-purple-700 p-6">
               <h2 className="text-xl font-bold mb-2">Medications</h2>
-              <ul>
-                {medications.map(med => (
-                  <li key={med._id}>
-                    <strong>{med.name}</strong> ({med.dosage}) - {med.frequency}
-                    {med.notes && <span> | {med.notes}</span>}
-                  </li>
-                ))}
-              </ul>
+              {isLoading.meds ? (
+                <div className="loading-spinner">Loading medications...</div>
+              ) : (
+                <>
+                  {medications.length > 0 ? (
+                    <ul>
+                      {medications.map(med => (
+                        <li key={med._id} className="mb-2 p-2 bg-white/10 rounded">
+                          <strong>{med.name}</strong> ({med.dosage}) - {med.frequency}
+                          {med.notes && <span className="block text-sm opacity-80 mt-1">Notes: {med.notes}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No medications recorded.</p>
+                  )}
+                </>
+              )}
             </div>
+
             {/* Patient Journal Entries */}
             <div className="rounded-xl shadow-lg bg-gradient-to-br from-pink-800 to-purple-700 p-6 col-span-2">
               <h2 className="text-xl font-bold mb-2">Patient Journal Entries</h2>
-              <ul>
-                {patientEntries.map((entry, idx) => (
-                  <li key={entry._id || idx} className="mb-2 p-2 bg-white/10 rounded">
-                    <span className="font-semibold">{new Date(entry.date || entry.createdAt).toLocaleDateString()}:</span> {entry.content}
-                  </li>
-                ))}
-              </ul>
+              {isLoading.entries ? (
+                <div className="loading-spinner">Loading journal entries...</div>
+              ) : (
+                <>
+                  {patientEntries.length > 0 ? (
+                    <ul>
+                      {patientEntries.map((entry, idx) => (
+                        <li key={entry._id || idx} className="mb-2 p-2 bg-white/10 rounded">
+                          <span className="font-semibold">{new Date(entry.date || entry.createdAt).toLocaleDateString()}:</span> {entry.content}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No journal entries available.</p>
+                  )}
+                </>
+              )}
             </div>
+
             {/* Blood Pressure Chart */}
             <div className="rounded-xl shadow-lg bg-gradient-to-br from-blue-800 to-green-700 p-6 col-span-2">
               <h2 className="text-xl font-bold mb-2">Blood Pressure</h2>
@@ -300,11 +494,21 @@ const StaffDashboardV2 = () => {
           </div>
         </>
       )}
+
       {/* Lab Results Entry */}
       {selectedPatient && (
         <div className="rounded-xl shadow-lg bg-gradient-to-br from-green-800 to-blue-700 p-6 mt-8">
           <h2 className="text-xl font-bold mb-2">Lab Results Entry</h2>
-          <StaffLabResultForm />
+          <StaffLabResultForm onAdded={() => {
+            const fetchLabResults = async () => {
+              const token = localStorage.getItem('token');
+              const res = await axios.get(`http://localhost:5000/api/labresults/${selectedPatient}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+              setLabResults(Array.isArray(res.data) ? res.data : []);
+            };
+            fetchLabResults();
+          }} />
         </div>
       )}
     </div>
