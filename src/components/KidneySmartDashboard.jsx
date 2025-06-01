@@ -139,8 +139,8 @@ const KidneySmartDashboard = () => {
         </div>
         <div className="progress-bar-bg">
           <div 
-            className={\`progress-bar \${color}\`}
-            style={{ width: \`\${percentage}%\` }}
+            className={`progress-bar ${color}`}
+            style={{ width: `${percentage}%` }}
           />
         </div>
       </div>
@@ -346,7 +346,7 @@ const KidneySmartDashboard = () => {
                     </div>
                   </div>
                 ))
-              )}
+              }
             </div>
           </div>
         )}
