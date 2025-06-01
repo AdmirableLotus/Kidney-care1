@@ -24,8 +24,13 @@ const RegisterForm = () => {
       console.log('✅ Registration Success:', res.data);
       navigate('/login'); // Redirect to login after success
     } catch (err) {
+      // Show all error details for debugging
+      let msg = 'Registration failed.';
+      if (err.response?.data?.message) msg += '\n' + err.response.data.message;
+      if (err.response?.data?.error) msg += '\n' + err.response.data.error;
+      if (err.response?.data?.stack) msg += '\n' + err.response.data.stack;
+      setError(msg);
       console.error('❌ Registration Error:', err);
-      setError(err.response?.data?.message || 'Registration failed.');
     }
   };
 
@@ -57,13 +62,13 @@ const RegisterForm = () => {
           value={formData.password}
           onChange={handleChange}
           required
-        />        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="patient">Patient</option>
-          <option value="doctor">Doctor</option>
-          <option value="nurse">Nurse</option>
-          <option value="dietitian">Dietitian</option>
-          <option value="medical_staff">Medical Staff</option>
-        </select>
+        />       <select name="role" value={formData.role} onChange={handleChange}>
+  <option value="patient">Patient</option>
+  <option value="doctor">Doctor</option>
+  <option value="nurse">Nurse</option>
+  <option value="dietitian">Dietitian</option>
+  <option value="medical_staff">Medical Staff</option>
+</select>
         <button type="submit">Sign Up</button>
         <p>Already have an account? <Link to="/login">Log In</Link></p>
       </form>
