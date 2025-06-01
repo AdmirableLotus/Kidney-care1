@@ -1,5 +1,109 @@
 /* StaffDashboardV2.css - Modern analytics dashboard styles */
 
+.staff-dashboard-modern {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+  color: #22223b;
+  padding-bottom: 40px;
+}
+
+.staff-header {
+  background: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  border-bottom: none;
+}
+
+.staff-header-title span {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #6366f1;
+  letter-spacing: 1px;
+}
+
+.staff-header-nav {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.staff-header-link {
+  background: linear-gradient(90deg, #a5b4fc 0%, #f0abfc 100%);
+  color: #3730a3;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.7rem 2.2rem;
+  margin: 0 0.2rem;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.staff-header-link.active, .staff-header-link:focus {
+  background: linear-gradient(90deg, #818cf8 0%, #f472b6 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.18);
+}
+.staff-header-link:hover {
+  background: linear-gradient(90deg, #f472b6 0%, #818cf8 100%);
+  color: #fff;
+}
+
+.staff-logout-btn {
+  background: #f472b6;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.1rem;
+  margin-left: 1.5rem;
+  box-shadow: 0 2px 8px rgba(244,114,182,0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.staff-logout-btn:hover {
+  background: #be185d;
+  color: #fff;
+}
+
+.staff-patient-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2.5rem 0 2rem 0;
+}
+
+.staff-patient-dropdown {
+  font-size: 1.1rem;
+  padding: 0.7rem 2rem;
+  border-radius: 2rem;
+  border: 1.5px solid #a5b4fc;
+  background: #fff;
+  color: #3730a3;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.08);
+  outline: none;
+  transition: border 0.2s;
+}
+.staff-patient-dropdown:focus {
+  border: 2px solid #818cf8;
+}
+
+.staff-no-patients {
+  color: #be185d;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  background: #fce7f3;
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 8px rgba(244,114,182,0.08);
+}
+
 .staff-analytics-header {
   position: relative;
   display: flex;
