@@ -20,17 +20,18 @@ const RegisterForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
+      console.log('Submitting registration form:', formData);
       const res = await axios.post('http://localhost:5000/api/auth/register', formData);
       console.log('✅ Registration Success:', res.data);
-      navigate('/login'); // Redirect to login after success
+      // Show success message before redirecting
+      alert('Registration successful! Please log in.');
+      navigate('/login');
     } catch (err) {
-      // Show all error details for debugging
-      let msg = 'Registration failed.';
-      if (err.response?.data?.message) msg += '\n' + err.response.data.message;
-      if (err.response?.data?.error) msg += '\n' + err.response.data.error;
-      if (err.response?.data?.stack) msg += '\n' + err.response.data.stack;
-      setError(msg);
       console.error('❌ Registration Error:', err);
+      let msg = 'Registration failed. ';
+      if (err.response?.data?.message) msg += err.response.data.message;
+      if (err.response?.data?.error) msg += ' ' + err.response.data.error;
+      setError(msg);
     }
   };
 

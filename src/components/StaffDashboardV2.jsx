@@ -23,24 +23,40 @@ const StaffDashboardV2 = () => {
       let token = null;
       try {
         token = localStorage.getItem("token");
+        if (!token) {
+          console.error('No auth token found');
+          setStorageError(true);
+          return;
+        }
       } catch (e) {
         console.error('Access to storage is not allowed from this context.');
-        setPatients([]);
         setStorageError(true);
         return;
       }
+
       try {
-        const res = await axios.get("/api/users?role=patient", {
+        const res = await axios.get("http://localhost:5000/api/users/patients", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setPatients(res.data);
-        setStorageError(false);
         console.log('Loaded patients:', res.data);
+        if (Array.isArray(res.data)) {
+          setPatients(res.data);
+          setStorageError(false);
+        } else {
+          console.error('Invalid patients data format:', res.data);
+          setPatients([]);
+        }
       } catch (err) {
         console.error('Failed to load patients:', err);
         setPatients([]);
+        if (err.response?.status === 403) {
+          setStorageError('Access denied. You may not have permission to view patients.');
+        } else {
+          setStorageError('Failed to load patients. Please try again later.');
+        }
       }
     };
+
     fetchPatients();
   }, []);
 
