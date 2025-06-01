@@ -251,8 +251,7 @@ const KidneySmartDashboard = () => {
               </form>
             </div>
 
-            <div className="food-entries">
-              {loading ? (
+            <div className="food-entries">              {loading ? (
                 <p>Loading food entries...</p>
               ) : foodEntries.length === 0 ? (
                 <p>No food entries yet today. Add your first meal!</p>
@@ -271,8 +270,7 @@ const KidneySmartDashboard = () => {
                       <p>Sodium: {entry.sodium}mg</p>
                     </div>
                   </div>
-                ))
-              }
+                )))}
             </div>
           </div>
         )}
