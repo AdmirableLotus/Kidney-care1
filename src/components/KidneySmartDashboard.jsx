@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
 
 const DAILY_LIMITS = {
@@ -17,6 +18,7 @@ const KidneySmartDashboard = () => {
     sodium: 0,
     protein: 0
   });
+  const [weeklyData, setWeeklyData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('log');
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,11 +44,37 @@ const KidneySmartDashboard = () => {
       
       setFoodEntries(response.data);
       calculateDailyTotals(response.data);
+      processWeeklyData(response.data);
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch food entries:', err);
       setLoading(false);
     }
+  };
+
+  const processWeeklyData = (entries) => {
+    const last7Days = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      last7Days.push(date.toISOString().split('T')[0]);
+    }
+
+    const weeklyTotals = last7Days.map(date => {
+      const dayEntries = entries.filter(entry => 
+        new Date(entry.date).toISOString().split('T')[0] === date
+      );
+
+      return {
+        date,
+        phosphorus: dayEntries.reduce((sum, entry) => sum + (entry.phosphorus || 0), 0),
+        potassium: dayEntries.reduce((sum, entry) => sum + (entry.potassium || 0), 0),
+        sodium: dayEntries.reduce((sum, entry) => sum + (entry.sodium || 0), 0),
+        protein: dayEntries.reduce((sum, entry) => sum + (entry.protein || 0), 0),
+      };
+    });
+
+    setWeeklyData(weeklyTotals);
   };
 
   const calculateDailyTotals = (entries) => {
@@ -114,6 +142,85 @@ const KidneySmartDashboard = () => {
             className={\`progress-bar \${color}\`}
             style={{ width: \`\${percentage}%\` }}
           />
+        </div>
+      </div>
+    );
+  };
+
+  const renderTrendChart = () => {
+    const formatDate = (dateStr) => {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
+
+    return (
+      <div className="trends-charts">
+        {/* Phosphorus Chart */}
+        <div className="trend-chart-container">
+          <h3>Phosphorus Trend</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tickFormatter={formatDate} />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={formatDate}
+                formatter={(value) => [`${value} mg`, 'Phosphorus']}
+              />
+              <Line type="monotone" dataKey="phosphorus" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Potassium Chart */}
+        <div className="trend-chart-container">
+          <h3>Potassium Trend</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tickFormatter={formatDate} />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={formatDate}
+                formatter={(value) => [`${value} mg`, 'Potassium']}
+              />
+              <Line type="monotone" dataKey="potassium" stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Sodium Chart */}
+        <div className="trend-chart-container">
+          <h3>Sodium Trend</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tickFormatter={formatDate} />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={formatDate}
+                formatter={(value) => [`${value} mg`, 'Sodium']}
+              />
+              <Line type="monotone" dataKey="sodium" stroke="#ffc658" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Protein Chart */}
+        <div className="trend-chart-container">
+          <h3>Protein Trend</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tickFormatter={formatDate} />
+              <YAxis />
+              <Tooltip 
+                labelFormatter={formatDate}
+                formatter={(value) => [`${value} g`, 'Protein']}
+              />
+              <Line type="monotone" dataKey="protein" stroke="#ff7300" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     );
@@ -247,8 +354,39 @@ const KidneySmartDashboard = () => {
         {selectedTab === 'trends' && (
           <div className="trends-section">
             <h2>Weekly Nutrient Trends</h2>
-            <div className="trends-placeholder">
-              [Charts will be implemented in the next iteration]
+            {loading ? (
+              <div className="loading-spinner">Loading trends data...</div>
+            ) : (
+              renderTrendChart()
+            )}
+            <div className="trends-summary">
+              <h3>Weekly Averages</h3>
+              <div className="weekly-averages">
+                <div className="average-card">
+                  <span className="label">Phosphorus</span>
+                  <span className="value">
+                    {Math.round(weeklyData.reduce((sum, day) => sum + day.phosphorus, 0) / 7)} mg/day
+                  </span>
+                </div>
+                <div className="average-card">
+                  <span className="label">Potassium</span>
+                  <span className="value">
+                    {Math.round(weeklyData.reduce((sum, day) => sum + day.potassium, 0) / 7)} mg/day
+                  </span>
+                </div>
+                <div className="average-card">
+                  <span className="label">Sodium</span>
+                  <span className="value">
+                    {Math.round(weeklyData.reduce((sum, day) => sum + day.sodium, 0) / 7)} mg/day
+                  </span>
+                </div>
+                <div className="average-card">
+                  <span className="label">Protein</span>
+                  <span className="value">
+                    {Math.round(weeklyData.reduce((sum, day) => sum + day.protein, 0) / 7)} g/day
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         )}
