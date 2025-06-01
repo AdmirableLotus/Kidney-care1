@@ -36,9 +36,8 @@ const KidneySmartDashboard = () => {
     fetchFoodEntries();
   }, []);
   const fetchFoodEntries = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/patient/food', {
+    try {      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:3000/api/patient/food', {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Sort entries by date, most recent first
@@ -98,12 +97,11 @@ const KidneySmartDashboard = () => {
   const handleAddEntry = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const entryWithDate = {
+      const token = localStorage.getItem('token');      const entryWithDate = {
         ...newEntry,
         date: new Date().toISOString()
       };
-      await axios.post('http://localhost:5000/api/patient/food', entryWithDate, {
+      await axios.post('http://localhost:3000/api/patient/food', entryWithDate, {
         headers: { Authorization: `Bearer ${token}` }
       });
       await fetchFoodEntries();
