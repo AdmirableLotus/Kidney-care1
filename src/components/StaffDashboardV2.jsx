@@ -95,20 +95,21 @@ const StaffDashboardV2 = () => {
         <span>KidneyCare Staff</span>
       </div>
       <header className="staff-header">
-        <nav className="staff-header-nav">
+        {/* Logout button on top right */}
+        <button className="staff-logout-btn">Logout</button>
+      </header>
+      {/* Centered Patients button under title, only visible when no patient is selected */}
+      {!selectedPatient && (
+        <div className="staff-patient-center-btn">
           <button
             type="button"
-            className={`staff-header-link${!selectedPatient ? ' active' : ''}`}
+            className="staff-header-link active"
             onClick={() => setSelectedPatient("")}
           >
             Patients
           </button>
-          <button type="button" className="staff-header-link">Appointments</button>
-          <button type="button" className="staff-header-link">Reports</button>
-          <button type="button" className="staff-header-link">Settings</button>
-        </nav>
-        <button className="staff-logout-btn">Logout</button>
-      </header>
+        </div>
+      )}
       {/* Patient Dropdown: Only show when no patient is selected */}
       {!selectedPatient && (
         <div className="staff-patient-select">
@@ -132,6 +133,14 @@ const StaffDashboardV2 = () => {
             <div className="staff-no-patients">No patients found or loaded.</div>
           )}
         </div>
+      )}
+      {/* Show other nav buttons only after patient is selected */}
+      {selectedPatient && (
+        <nav className="staff-header-nav staff-nav-after-patient">
+          <button type="button" className="staff-header-link">Appointments</button>
+          <button type="button" className="staff-header-link">Reports</button>
+          <button type="button" className="staff-header-link">Settings</button>
+        </nav>
       )}
       {/* Modern Analytics Header, Circular Stats, and Patient Data Grid */}
       {selectedPatient && (
