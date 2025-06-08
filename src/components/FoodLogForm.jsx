@@ -81,7 +81,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
     setError("");
     setSuccess("");
     
-    try {      // Convert string values to numbers for the API
+    try {
       const formData = {
         ...form,
         servingSize: parseFloat(form.servingSize),
@@ -92,31 +92,24 @@ const FoodLogForm = ({ onEntryAdded }) => {
         potassium: parseFloat(form.potassium)
       };
 
-      console.log("Submitting food entry:", formData); // Debug log
-
-      const response = await logFood(formData);
-
-      if (response.status === 201) {
-        setForm({
-          dateConsumed: new Date().toISOString().split("T")[0],
-          foodName: "",
-          servingSize: "100",
-          servingUnit: "g",
-          calories: "0",
-          protein: "0",
-          phosphorus: "0",
-          sodium: "0",
-          potassium: "0"
-        });
-        setSuccess("Food entry logged successfully!");
-        if (onEntryAdded) onEntryAdded();
-      }
+      await logFood(formData);
+      
+      setForm({
+        dateConsumed: new Date().toISOString().split("T")[0],
+        foodName: "",
+        servingSize: "100",
+        servingUnit: "g",
+        calories: "0",
+        protein: "0",
+        phosphorus: "0",
+        sodium: "0",
+        potassium: "0"
+      });
+      setSuccess("Food entry logged successfully!");
+      if (onEntryAdded) onEntryAdded();
     } catch (err) {
       console.error('Error submitting food entry:', err);
-      setError(
-        err.response?.data?.message || 
-        "Failed to log food entry. Please make sure you're logged in and all required fields are filled."
-      );
+      setError(err.message || "Failed to log food entry. Please try again.");
     } finally {
       setLoading(false);
     }
