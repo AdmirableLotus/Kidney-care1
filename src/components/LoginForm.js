@@ -23,6 +23,7 @@ const LoginForm = () => {
 
       localStorage.setItem('token', token);
       localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userId', user._id);
 
       if (user.role === 'patient') {
         navigate('/dashboard/patient');

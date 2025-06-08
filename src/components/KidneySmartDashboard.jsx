@@ -31,16 +31,19 @@ const KidneySmartDashboard = () => {
     potassium: 0,
     sodium: 0
   });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchFoodEntries();
   }, []);
+
   const fetchFoodEntries = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:5000/api/patient/food', {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('Fetched food entries:', response.data);
       // Sort entries by date, most recent first
       const sortedEntries = response.data.sort((a, b) => 
         new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -51,6 +54,7 @@ const KidneySmartDashboard = () => {
       setLoading(false);
     } catch (err) {
       console.error('Failed to fetch food entries:', err);
+      setError('Unable to load food entries. Please check your connection or try again later.');
       setLoading(false);
     }
   };
@@ -98,14 +102,24 @@ const KidneySmartDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId'); // Get user ID from localStorage
-      
+      const userId = localStorage.getItem('userId');
+
+      if (!userId) {
+        alert('User ID is missing. Please log in again.');
+        return;
+      }
+
       const entryWithDate = {
-        ...newEntry,
+        meal: newEntry.meal,
+        description: newEntry.food, // Changed from 'food' to 'description'
+        protein: newEntry.protein,
+        phosphorus: newEntry.phosphorus,
+        potassium: newEntry.potassium,
+        sodium: newEntry.sodium,
         date: new Date().toISOString(),
         user: userId // Add the user ID to the entry
       };
-      
+
       await axios.post('http://localhost:5000/api/patient/food', entryWithDate, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -119,8 +133,8 @@ const KidneySmartDashboard = () => {
         sodium: 0
       });
     } catch (err) {
-      console.error('Failed to add food entry:', err);
-      alert('Failed to add food entry. Please try again.');
+      console.error("🔴 Failed to add food entry:", err.response?.data || err.message);
+      alert("Failed to add food entry: " + (err.response?.data?.message || "Unknown error"));
     }
   };
   const handleDeleteEntry = async (entryId) => {
@@ -263,6 +277,8 @@ const KidneySmartDashboard = () => {
             <div className="food-entries">
               {loading ? (
                 <p>Loading food entries...</p>
+              ) : error ? (
+                <p className="error-message">{error}</p>
               ) : foodEntries.length === 0 ? (
                 <p>No food entries yet today. Add your first meal!</p>
               ) : (
@@ -273,7 +289,7 @@ const KidneySmartDashboard = () => {
                       <button onClick={() => handleDeleteEntry(entry._id)} className="delete-btn">Delete</button>
                     </div>
                     <div className="entry-details">
-                      <p>Food: {entry.food}</p>
+                      <p>Food: {entry.description}</p>
                       <p>Protein: {entry.protein}g</p>
                       <p>Phosphorus: {entry.phosphorus}mg</p>
                       <p>Potassium: {entry.potassium}mg</p>
