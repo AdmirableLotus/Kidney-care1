@@ -23,4 +23,23 @@ export const login = (userData) => api.post('/auth/login', userData);
 export const logWater = (amount) => api.post('/patient/water', { amount });
 export const getWaterLogs = () => api.get('/patient/water');
 
+// Food Logging
+export const logFood = async (foodData) => {
+  const token = localStorage.getItem('token');
+  return api.post('/patient/food', foodData, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+};
+
+export const getFoodLogs = async () => {
+  const token = localStorage.getItem('token');
+  return api.get('/patient/food', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+};
+
 export default api;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { logFood } from "../api";
 import { getFoodNutrients, getFoodSuggestions } from "../utils/foodLookup";
 import "./FoodLogForm.css";
 
@@ -80,41 +80,46 @@ const FoodLogForm = ({ onEntryAdded }) => {
     setLoading(true);
     setError("");
     setSuccess("");
-    try {
-      const token = localStorage.getItem("token");
+    
+    try {      // Convert string values to numbers for the API
       const formData = {
         ...form,
         servingSize: parseFloat(form.servingSize),
-        calories: parseFloat(form.calories) || 0,
-        protein: parseFloat(form.protein) || 0,
-        phosphorus: parseFloat(form.phosphorus) || 0,
-        sodium: parseFloat(form.sodium) || 0,
-        potassium: parseFloat(form.potassium) || 0
+        calories: parseFloat(form.calories),
+        protein: parseFloat(form.protein),
+        phosphorus: parseFloat(form.phosphorus),
+        sodium: parseFloat(form.sodium),
+        potassium: parseFloat(form.potassium)
       };
-      
-      await axios.post(
-        "http://localhost:5000/api/patient/food",
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      setForm({
-        dateConsumed: new Date().toISOString().split("T")[0],
-        foodName: "",
-        servingSize: "100",
-        servingUnit: "g",
-        calories: "0",
-        protein: "0",
-        phosphorus: "0",
-        sodium: "0",
-        potassium: "0"
-      });
-      setSuccess("Food entry logged successfully!");
-      if (onEntryAdded) onEntryAdded();
+
+      console.log("Submitting food entry:", formData); // Debug log
+
+      const response = await logFood(formData);
+
+      if (response.status === 201) {
+        setForm({
+          dateConsumed: new Date().toISOString().split("T")[0],
+          foodName: "",
+          servingSize: "100",
+          servingUnit: "g",
+          calories: "0",
+          protein: "0",
+          phosphorus: "0",
+          sodium: "0",
+          potassium: "0"
+        });
+        setSuccess("Food entry logged successfully!");
+        if (onEntryAdded) onEntryAdded();
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to log food entry.");
+      console.error('Error submitting food entry:', err);
+      setError(
+        err.response?.data?.message || 
+        "Failed to log food entry. Please make sure you're logged in and all required fields are filled."
+      );
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
