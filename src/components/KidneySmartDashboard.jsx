@@ -4,11 +4,23 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import './KidneySmartDashboard.css';
 import { foodDatabase } from '../utils/foodLookup';
 
+// Define daily nutrient limits (in mg)
 const DAILY_LIMITS = {
-  phosphorus: 1000,
-  potassium: 3000,
-  sodium: 2400,
-  protein: 80
+  phosphorus: 800, // mg per day
+  potassium: 2000, // mg per day
+  sodium: 2000, // mg per day
+  protein: 60 // g per day
+};
+
+const checkNutrientLevels = (nutrients) => {
+  const warnings = [];
+  if (nutrients.phosphorus > DAILY_LIMITS.phosphorus) {
+    warnings.push(`High phosphorus: ${nutrients.phosphorus}mg exceeds daily limit of ${DAILY_LIMITS.phosphorus}mg`);
+  }
+  if (nutrients.potassium > DAILY_LIMITS.potassium) {
+    warnings.push(`High potassium: ${nutrients.potassium}mg exceeds daily limit of ${DAILY_LIMITS.potassium}mg`);
+  }
+  return warnings;
 };
 
 const KidneySmartDashboard = () => {
@@ -22,15 +34,19 @@ const KidneySmartDashboard = () => {
   const [weeklyData, setWeeklyData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('log');
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [newEntry, setNewEntry] = useState({
-    meal: '',
-    food: '',
-    protein: 0,
-    phosphorus: 0,
-    potassium: 0,
-    sodium: 0
+  const [searchTerm, setSearchTerm] = useState('');  const [newEntry, setNewEntry] = useState({
+    mealType: 'lunch',
+    foodName: '',
+    servingSize: '100',
+    servingUnit: 'g',
+    calories: '0',
+    protein: '0',
+    phosphorus: '0',
+    potassium: '0',
+    sodium: '0',
+    dateConsumed: new Date().toISOString().split('T')[0]
   });
+  const [warnings, setWarnings] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -109,46 +125,57 @@ const KidneySmartDashboard = () => {
     setDailyTotals(totals);
   };  const handleAddEntry = async (e) => {
     e.preventDefault();
+    setError(null);
+
+    if (!newEntry.foodName || !newEntry.servingSize || !newEntry.servingUnit) {
+      setError('Food name, serving size, and serving unit are required.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
       const userRole = localStorage.getItem('userRole');
+      const selectedPatientId = localStorage.getItem('selectedPatientId');
 
-      if (!userId) {
-        alert('User ID is missing. Please log in again.');
-        return;
-      }
-
-      const entryWithDate = {
-        meal: newEntry.meal,
-        description: newEntry.food,
-        protein: newEntry.protein,
-        phosphorus: newEntry.phosphorus,
-        potassium: newEntry.potassium,
-        sodium: newEntry.sodium,
-        date: new Date().toISOString(),
-        user: userId
+      // Convert string values to numbers
+      const entryData = {
+        ...newEntry,
+        servingSize: parseFloat(newEntry.servingSize),
+        calories: parseFloat(newEntry.calories),
+        protein: parseFloat(newEntry.protein),
+        phosphorus: parseFloat(newEntry.phosphorus),
+        sodium: parseFloat(newEntry.sodium),
+        potassium: parseFloat(newEntry.potassium)
       };
 
-      // If logged in as patient, use patient endpoint
-      const endpoint = 'http://localhost:5000/api/patient/food';
+      // Use different endpoints based on user role
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
+        : 'http://localhost:5000/api/patient/food';
 
-      await axios.post(endpoint, entryWithDate, {
+      await axios.post(endpoint, entryData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      await fetchFoodEntries();
+      // Reset form
       setNewEntry({
-        meal: '',
-        food: '',
-        protein: 0,
-        phosphorus: 0,
-        potassium: 0,
-        sodium: 0
+        mealType: 'lunch',
+        foodName: '',
+        servingSize: '100',
+        servingUnit: 'g',
+        calories: '0',
+        protein: '0',
+        phosphorus: '0',
+        potassium: '0',
+        sodium: '0',
+        dateConsumed: new Date().toISOString().split('T')[0]
       });
+
+      // Refresh food entries
+      await fetchFoodEntries();
     } catch (err) {
-      console.error("🔴 Failed to add food entry:", err.response?.data || err.message);
-      alert("Failed to add food entry: " + (err.response?.data?.message || "Unknown error"));
+      console.error('Failed to add food entry:', err);
+      setError(err.response?.data?.message || 'Failed to add food entry. Please try again.');
     }
   };
   const handleDeleteEntry = async (entryId) => {
@@ -180,6 +207,27 @@ const KidneySmartDashboard = () => {
       setNewEntry({ ...newEntry, food });
     }
   };
+
+  // Update nutrient values when food name or serving size changes
+  useEffect(() => {
+    if (newEntry.foodName) {
+      const nutrients = getFoodNutrients(newEntry.foodName, parseFloat(newEntry.servingSize));
+      if (nutrients) {
+        setNewEntry(prev => ({
+          ...prev,
+          calories: nutrients.calories.toString(),
+          protein: nutrients.protein.toString(),
+          phosphorus: nutrients.phosphorus.toString(),
+          sodium: nutrients.sodium.toString(),
+          potassium: nutrients.potassium.toString()
+        }));
+
+        // Check for nutrient warnings
+        const currentWarnings = checkNutrientLevels(nutrients);
+        setWarnings(currentWarnings);
+      }
+    }
+  }, [newEntry.foodName, newEntry.servingSize]);
 
   const renderProgressBar = (nutrient, value, limit) => {
     const percentage = Math.min((value / limit) * 100, 100);
@@ -230,6 +278,107 @@ const KidneySmartDashboard = () => {
     );
   };
 
+  const renderLogTab = () => (
+    <div className="food-log-section">
+      <form onSubmit={handleAddEntry} className="food-entry-form">
+        <div className="form-row">
+          <div className="form-group">
+            <select
+              value={newEntry.mealType}
+              onChange={(e) => setNewEntry({ ...newEntry, mealType: e.target.value })}
+              required
+              className="meal-type-select"
+            >
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+          </div>
+          <div className="form-group flex-grow">
+            <input
+              type="text"
+              placeholder="Enter food name (e.g., steak)"
+              value={newEntry.foodName}
+              onChange={(e) => setNewEntry({ ...newEntry, foodName: e.target.value })}
+              required
+              className="food-name-input"
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <input
+              type="number"
+              placeholder="Serving size"
+              value={newEntry.servingSize}
+              onChange={(e) => setNewEntry({ ...newEntry, servingSize: e.target.value })}
+              min="0"
+              step="0.1"
+              required
+              className="serving-size-input"
+            />
+          </div>
+          <div className="form-group">
+            <select
+              value={newEntry.servingUnit}
+              onChange={(e) => setNewEntry({ ...newEntry, servingUnit: e.target.value })}
+              required
+              className="unit-select"
+            >
+              <option value="g">grams (g)</option>
+              <option value="oz">ounces (oz)</option>
+              <option value="cup">cups</option>
+              <option value="piece">pieces</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Auto-calculated nutrients display */}
+        <div className="nutrients-display">
+          <h4>Nutritional Information (Auto-calculated)</h4>
+          <div className="nutrients-grid">
+            <div className="nutrient-item">
+              <label>Calories:</label>
+              <span>{newEntry.calories} kcal</span>
+            </div>
+            <div className="nutrient-item">
+              <label>Protein:</label>
+              <span>{newEntry.protein}g</span>
+            </div>
+            <div className="nutrient-item">
+              <label>Phosphorus:</label>
+              <span>{newEntry.phosphorus}mg</span>
+            </div>
+            <div className="nutrient-item">
+              <label>Potassium:</label>
+              <span>{newEntry.potassium}mg</span>
+            </div>
+            <div className="nutrient-item">
+              <label>Sodium:</label>
+              <span>{newEntry.sodium}mg</span>
+            </div>
+          </div>
+
+          {/* Nutrient warnings */}
+          {warnings.length > 0 && (
+            <div className="nutrient-warnings">
+              {warnings.map((warning, index) => (
+                <div key={index} className="warning-message">
+                  ⚠️ {warning}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button type="submit" className="submit-button">Add Food Entry</button>
+      </form>
+      {error && <div className="error-message">{error}</div>}
+    </div>
+  );
+
   return (
     <div className="kidney-smart-dashboard">
       {/* Daily Summary Panel */}
@@ -267,53 +416,7 @@ const KidneySmartDashboard = () => {
 
       {/* Tab Content */}
       <div className="tab-content">
-        {selectedTab === 'log' && (
-          <div className="food-log-section">
-            <div className="add-food-form">
-              <input
-                type="text"
-                placeholder="Search foods..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-              <form onSubmit={handleAddEntry} className="entry-form">
-                <input type="text" placeholder="Meal" value={newEntry.meal} onChange={e => setNewEntry({ ...newEntry, meal: e.target.value })} required />
-                <input type="text" placeholder="Food item" value={newEntry.food} onChange={handleFoodInput} required />
-                <input type="number" placeholder="Protein (g)" value={newEntry.protein} onChange={e => setNewEntry({ ...newEntry, protein: Number(e.target.value) })} required />
-                <input type="number" placeholder="Phosphorus (mg)" value={newEntry.phosphorus} onChange={e => setNewEntry({ ...newEntry, phosphorus: Number(e.target.value) })} required />
-                <input type="number" placeholder="Potassium (mg)" value={newEntry.potassium} onChange={e => setNewEntry({ ...newEntry, potassium: Number(e.target.value) })} required />
-                <input type="number" placeholder="Sodium (mg)" value={newEntry.sodium} onChange={e => setNewEntry({ ...newEntry, sodium: Number(e.target.value) })} required />
-                <button type="submit" className="add-entry-btn">Add Entry</button>
-              </form>
-            </div>
-
-            <div className="food-entries">
-              {loading ? (
-                <p>Loading food entries...</p>
-              ) : error ? (
-                <p className="error-message">{error}</p>
-              ) : foodEntries.length === 0 ? (
-                <p>No food entries yet today. Add your first meal!</p>
-              ) : (
-                foodEntries.map(entry => (
-                  <div key={entry._id} className="food-entry-card">
-                    <div className="entry-header">
-                      <h3>{entry.meal}</h3>
-                      <button onClick={() => handleDeleteEntry(entry._id)} className="delete-btn">Delete</button>
-                    </div>
-                    <div className="entry-details">
-                      <p>Food: {entry.description}</p>
-                      <p>Protein: {entry.protein}g</p>
-                      <p>Phosphorus: {entry.phosphorus}mg</p>
-                      <p>Potassium: {entry.potassium}mg</p>
-                      <p>Sodium: {entry.sodium}mg</p>
-                    </div>
-                  </div>
-                )))}
-            </div>
-          </div>
-        )}
+        {selectedTab === 'log' && renderLogTab()}
 
         {selectedTab === 'trends' && (
           <div className="trends-section">

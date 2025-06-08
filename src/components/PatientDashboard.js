@@ -10,6 +10,7 @@ import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
 import BloodPressureChart from "./BloodPressureChart";
 import FluidDashboard from './FluidDashboard';
+import FoodLogForm from './FoodLogForm';
 
 // Icons
 import { FaTint, FaChartLine, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
