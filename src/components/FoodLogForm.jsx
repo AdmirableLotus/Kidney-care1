@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { logFood } from "../api";
+import axios from "axios";
 import { getFoodNutrients, getFoodSuggestions } from "../utils/foodLookup";
 import "./FoodLogForm.css";
 
+const DAILY_LIMITS = {
+  phosphorus: 800, // mg per day
+  potassium: 2000, // mg per day
+  sodium: 2000, // mg per day
+  protein: 60 // g per day
+};
+
 const FoodLogForm = ({ onEntryAdded }) => {
   const [form, setForm] = useState({
+    mealType: "lunch",
     dateConsumed: new Date().toISOString().split("T")[0],
     foodName: "",
     servingSize: "100",
@@ -19,6 +27,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [warnings, setWarnings] = useState([]);
   const [success, setSuccess] = useState("");
 
   // Update nutrients when food name or serving size changes
@@ -35,6 +44,19 @@ const FoodLogForm = ({ onEntryAdded }) => {
           potassium: nutrients.potassium.toString(),
           servingUnit: nutrients.servingUnit
         }));
+
+        // Check for nutrient warnings
+        const currentWarnings = [];
+        if (nutrients.phosphorus > DAILY_LIMITS.phosphorus * 0.3) {
+          currentWarnings.push(`High phosphorus: ${nutrients.phosphorus}mg is more than 30% of daily limit (${DAILY_LIMITS.phosphorus}mg)`);
+        }
+        if (nutrients.potassium > DAILY_LIMITS.potassium * 0.3) {
+          currentWarnings.push(`High potassium: ${nutrients.potassium}mg is more than 30% of daily limit (${DAILY_LIMITS.potassium}mg)`);
+        }
+        if (nutrients.sodium > DAILY_LIMITS.sodium * 0.3) {
+          currentWarnings.push(`High sodium: ${nutrients.sodium}mg is more than 30% of daily limit (${DAILY_LIMITS.sodium}mg)`);
+        }
+        setWarnings(currentWarnings);
       }
     }
   }, [form.foodName, form.servingSize]);
@@ -92,9 +114,21 @@ const FoodLogForm = ({ onEntryAdded }) => {
         potassium: parseFloat(form.potassium)
       };
 
-      await logFood(formData);
+      const token = localStorage.getItem('token');
+      const userRole = localStorage.getItem('userRole');
+      const selectedPatientId = localStorage.getItem('selectedPatientId');
+
+      // Use different endpoints based on user role
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
+        : 'http://localhost:5000/api/patient/food';
+
+      await axios.post(endpoint, formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       
       setForm({
+        mealType: "lunch",
         dateConsumed: new Date().toISOString().split("T")[0],
         foodName: "",
         servingSize: "100",
@@ -106,10 +140,11 @@ const FoodLogForm = ({ onEntryAdded }) => {
         potassium: "0"
       });
       setSuccess("Food entry logged successfully!");
+      setWarnings([]);
       if (onEntryAdded) onEntryAdded();
     } catch (err) {
       console.error('Error submitting food entry:', err);
-      setError(err.message || "Failed to log food entry. Please try again.");
+      setError(err.response?.data?.message || "Failed to log food entry. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -118,7 +153,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
   return (
     <form onSubmit={handleSubmit} className="food-log-form">
       <h3>Log Your Meal</h3>
-      <div>
+      <div className="form-group">
         <label>
           Date:
           <input 
@@ -128,6 +163,22 @@ const FoodLogForm = ({ onEntryAdded }) => {
             onChange={handleChange} 
             required 
           />
+        </label>
+      </div>
+      <div className="form-group">
+        <label>
+          Meal Type:
+          <select
+            name="mealType"
+            value={form.mealType}
+            onChange={handleChange}
+            required
+          >
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
         </label>
       </div>
       <div className="food-input-container">
@@ -228,6 +279,15 @@ const FoodLogForm = ({ onEntryAdded }) => {
           </label>
         </div>
       </div>
+      {warnings.length > 0 && (
+        <div className="warnings-container">
+          {warnings.map((warning, index) => (
+            <div key={index} className="warning-message">
+              ⚠️ {warning}
+            </div>
+          ))}
+        </div>
+      )}
       <button type="submit" disabled={loading}>
         {loading ? "Logging..." : "Log Food"}
       </button>
