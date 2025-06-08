@@ -93,10 +93,9 @@
 
 /* Food Log Section */
 .food-log-section {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
 .search-input {
@@ -107,32 +106,88 @@
   margin-bottom: 1rem;
 }
 
-.entry-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+.food-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.entry-form input {
-  padding: 0.75rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.add-entry-btn {
-  background: #4299e1;
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.flex-grow {
+  flex: 1;
+}
+
+.meal-type-select,
+.food-name-input,
+.serving-size-input,
+.unit-select {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
 }
 
-.add-entry-btn:hover {
-  background: #3182ce;
+.nutrients-display {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.nutrients-display h4 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.nutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.nutrient-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.nutrient-item label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nutrient-item span {
+  color: white;
+  font-weight: 500;
+}
+
+.nutrient-warnings {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255, 87, 34, 0.2);
+  border-radius: 6px;
+}
+
+.warning-message {
+  color: #ffab91;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Food Entry Cards */
