@@ -1,57 +1,53 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { logWater } from '../api';
+import './WaterIntakeForm.css';
 
 const WaterIntakeForm = ({ onLogSuccess }) => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogWater = async () => {
+  const handleLogWater = async (e) => {
+    e.preventDefault();
     setError('');
     setSuccess('');
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setError('User not authenticated.');
-      return;
-    }
+    setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/patient/water',
-        { amount: parseInt(amount) },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
+      await logWater(parseInt(amount));
       setSuccess('Water intake logged successfully!');
       setAmount('');
       if (onLogSuccess) onLogSuccess();
-      console.log('✅ Logged water intake:', response.data);
     } catch (err) {
-      console.error('❌ Logging water error:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Error logging water intake.');
+      console.error('Logging water error:', err);
+      setError(err.message || 'Error logging water intake.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
+    <form onSubmit={handleLogWater} className="water-intake-form">
       <h2>💧 Track Your Water Intake</h2>
-      <label>Amount (ml):</label>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Enter amount in ml"
-      />
-      <button onClick={handleLogWater}>Log Water</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-    </div>
+      <div className="form-group">
+        <label htmlFor="water-amount">Amount (ml):</label>
+        <input
+          id="water-amount"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount in ml"
+          min="0"
+          required
+        />
+      </div>
+      <button type="submit" disabled={loading || !amount}>
+        {loading ? 'Logging...' : 'Log Water'}
+      </button>
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+    </form>
   );
 };
 

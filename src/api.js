@@ -6,7 +6,10 @@ const API_BASE_URL = 'http://localhost:5000/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  withCredentials: true
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
 });
 
 // Add request interceptor to handle token
@@ -25,7 +28,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.code === 'ECONNRESET' || error.code === 'ECONNABORTED') {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+      return Promise.reject(new Error('Session expired. Please login again.'));
+    }
+    if (error.code === 'ECONNRESET' || error.code === 'ECONNABORTED' || error.code === 'ECONNREFUSED') {
       const originalRequest = error.config;
       if (!originalRequest._retry) {
         originalRequest._retry = true;
