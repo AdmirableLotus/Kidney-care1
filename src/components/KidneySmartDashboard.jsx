@@ -40,9 +40,18 @@ const KidneySmartDashboard = () => {
   const fetchFoodEntries = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/patient/food', {
+      const userRole = localStorage.getItem('userRole');
+      const selectedPatientId = localStorage.getItem('selectedPatientId');
+
+      // Use different endpoints based on user role
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
+        : 'http://localhost:5000/api/patient/food';
+
+      const response = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       console.log('Fetched food entries:', response.data);
       // Sort entries by date, most recent first
       const sortedEntries = response.data.sort((a, b) => 
@@ -103,6 +112,7 @@ const KidneySmartDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
+      const userRole = localStorage.getItem('userRole');
 
       if (!userId) {
         alert('User ID is missing. Please log in again.');
@@ -111,18 +121,22 @@ const KidneySmartDashboard = () => {
 
       const entryWithDate = {
         meal: newEntry.meal,
-        description: newEntry.food, // Changed from 'food' to 'description'
+        description: newEntry.food,
         protein: newEntry.protein,
         phosphorus: newEntry.phosphorus,
         potassium: newEntry.potassium,
         sodium: newEntry.sodium,
         date: new Date().toISOString(),
-        user: userId // Add the user ID to the entry
+        user: userId
       };
 
-      await axios.post('http://localhost:5000/api/patient/food', entryWithDate, {
+      // If logged in as patient, use patient endpoint
+      const endpoint = 'http://localhost:5000/api/patient/food';
+
+      await axios.post(endpoint, entryWithDate, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       await fetchFoodEntries();
       setNewEntry({
         meal: '',
