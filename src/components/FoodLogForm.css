@@ -32,18 +32,24 @@
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #3498db;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
   outline: none;
 }
 
-.food-input-container {
-  position: relative;
-  margin-bottom: 20px;
+.food-input-container input {
+  cursor: text;
 }
 
 .food-suggestions {
@@ -55,58 +61,152 @@
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   list-style: none;
-  margin-bottom: 15px;
-  color: #555;
+  padding: 0;
+  margin: 4px 0 0;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.food-suggestions li {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.food-suggestions li:last-child {
+  border-bottom: none;
+}
+
+.food-suggestions li:hover {
+  background-color: #f5f7fa;
+  color: #3498db;
+  padding-left: 20px;
+}
+
+.serving-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.nutrients-container {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.nutrients-container h4 {
+  color: #2c3e50;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
 }
 
 .nutrient-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
 }
 
-.food-log-form label {
+.nutrient-grid label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: #34495e;
   font-weight: 500;
 }
 
-.food-log-form input,
-.food-log-form select {
+.nutrient-grid input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-top: 4px;
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #2c3e50;
+  font-size: 0.95rem;
 }
 
-.food-log-form input[readonly] {
-  background-color: #f5f5f5;
+.nutrient-grid input[readonly] {
+  background-color: #f8fafc;
   cursor: not-allowed;
+  color: #64748b;
 }
 
-.food-log-form button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 20px;
+.warnings-container {
+  margin-bottom: 20px;
 }
 
-.food-log-form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.warning-message {
+  background-color: #fff3e0;
+  color: #f57c00;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .error {
-  color: #dc3545;
-  margin-top: 10px;
+  background-color: #fde8e8;
+  color: #e53e3e;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
 }
 
 .success {
-  color: #28a745;
-  margin-top: 10px;
+  background-color: #e6ffed;
+  color: #38a169;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button[type="submit"]:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+button[type="submit"]:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.form-group select:hover {
+  border-color: #3498db;
 }

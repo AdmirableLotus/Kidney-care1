@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { logFood } from "../api";
 import { getFoodNutrients, getFoodSuggestions } from "../utils/foodLookup";
 import "./FoodLogForm.css";
 
@@ -114,18 +114,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
         potassium: parseFloat(form.potassium)
       };
 
-      const token = localStorage.getItem('token');
-      const userRole = localStorage.getItem('userRole');
-      const selectedPatientId = localStorage.getItem('selectedPatientId');
-
-      // Use different endpoints based on user role
-      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
-        ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
-        : 'http://localhost:5000/api/patient/food';
-
-      await axios.post(endpoint, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await logFood(formData);
       
       setForm({
         mealType: "lunch",
@@ -144,7 +133,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
       if (onEntryAdded) onEntryAdded();
     } catch (err) {
       console.error('Error submitting food entry:', err);
-      setError(err.response?.data?.message || "Failed to log food entry. Please try again.");
+      setError(err.message || "Failed to log food entry. Please try again.");
     } finally {
       setLoading(false);
     }

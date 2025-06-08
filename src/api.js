@@ -48,7 +48,15 @@ export const getWaterLogs = () => api.get('/patient/water');
 // Food Logging
 export const logFood = async (foodData) => {
   try {
-    const response = await api.post('/patient/food', foodData);
+    const userRole = localStorage.getItem('userRole');
+    const selectedPatientId = localStorage.getItem('selectedPatientId');
+
+    // Determine the endpoint based on user role
+    const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+      ? `/staff/patient/${selectedPatientId}/food`
+      : '/patient/food';
+
+    const response = await api.post(endpoint, foodData);
     return response.data;
   } catch (error) {
     console.error('Food logging error:', error);
