@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
-import { foodDatabase } from '../utils/foodLookup';
+import { foodDatabase, getFoodNutrients } from '../utils/foodLookup';
 
 // Define daily nutrient limits (in mg)
 const DAILY_LIMITS = {

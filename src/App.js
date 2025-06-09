@@ -10,13 +10,16 @@ import React from 'react';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/dashboard/patient" element={<PatientDashboard />} />
-        <Route path="/dashboard/staff" element={<StaffDashboard />} />
-      </Routes>
+      <div className="app-container">
+        <div className="page-background" />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/dashboard/patient" element={<PatientDashboard />} />
+          <Route path="/dashboard/staff" element={<StaffDashboard />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

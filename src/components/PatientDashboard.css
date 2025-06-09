@@ -1,18 +1,57 @@
-/* === Container Styling === */
+/* Base Container */
+.patient-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3a8a 0%, #5b21b6 50%, #1e40af 100%);
+  color: white;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
 .dashboard-card {
+  position: relative;
+  z-index: 3;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  overflow: visible;
 }
 
 .dashboard-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
 }
 
 .dashboard-card-header {
@@ -68,7 +107,12 @@
 }
 
 .dashboard-card {
-  @apply bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 transition-all duration-300;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -451,4 +495,72 @@ button:hover {
 button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
+}
+
+/* Patient Dashboard Specific Styles */
+.patient-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3a8a 0%, #5b21b6 50%, #1e40af 100%);
+  color: white;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Interactive elements */
+.interactive-element {
+  position: relative;
+  z-index: 4;
+  cursor: pointer;
+}
+
+button {
+  position: relative;
+  z-index: 4;
+  background: rgba(99, 102, 241, 0.8);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: rgba(99, 102, 241, 1);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+input, select {
+  position: relative;
+  z-index: 4;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.8);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Form groups */
+.form-group {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
 }

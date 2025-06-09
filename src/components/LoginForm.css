@@ -14,6 +14,8 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 400px;
+  position: relative;
+  z-index: 1;
 }
 
 .form-box h2 {
