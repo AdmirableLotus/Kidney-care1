@@ -44,7 +44,6 @@ const PatientDashboard = () => {
       setSummary({});
     }
   };
-
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -52,15 +51,21 @@ const PatientDashboard = () => {
       setUser(u);
       fetchSummary(u._id);
     } else {
-      const token = localStorage.getItem('token');
-      if (token) {
-        axios.get('http://localhost:5000/api/auth/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        }).then(res => {
-          setUser(res.data);
-          fetchSummary(res.data._id);
-        }).catch(() => {});
-      }
+      api.get('/auth/me')
+        .then(res => {
+          const userData = res.data;
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
+          fetchSummary(userData._id);
+        })
+        .catch(err => {
+          console.error('Failed to fetch user:', err);
+          // Redirect to login if authentication fails
+          if (err.response?.status === 401) {
+            localStorage.clear();
+            window.location.href = '/login';
+          }
+        });
     }
   }, []);
 
