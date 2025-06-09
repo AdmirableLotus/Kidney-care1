@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api";
 import "./PatientDashboard.css";
 
 // Components
@@ -23,31 +23,24 @@ const PatientDashboard = () => {
   const [reloadChart, setReloadChart] = useState(false);
   const [user, setUser] = useState(null);
   const [summary, setSummary] = useState({});
-
   const fetchEntries = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/patient/entries", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get("/patient/entries");
       setEntries(res.data);
       setLoading(false);
     } catch (err) {
       console.error("Failed to fetch entries", err);
-      setError("Unable to load entries.");
+      setError("Unable to load entries. Please try refreshing the page.");
       setLoading(false);
     }
   };
-
   // Fetch summary stats for dashboard cards
   const fetchSummary = async (userId) => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/patient/summary/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get(`/patient/summary/${userId}`);
       setSummary(res.data);
     } catch (err) {
+      console.error('Failed to fetch summary:', err);
       setSummary({});
     }
   };
