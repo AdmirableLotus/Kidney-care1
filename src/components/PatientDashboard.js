@@ -91,54 +91,81 @@ const PatientDashboard = () => {
       setError("Could not submit your entry.");
     }
   };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
+        <div className="text-2xl">Loading your dashboard...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
+        <div className="text-2xl text-red-400">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-      {/* Modern Analytics Header */}
-      <div className="relative flex flex-col items-center justify-center w-full mb-12">
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 z-0">
-          <div className="rounded-full bg-gradient-to-br from-purple-200 via-pink-100 to-blue-200 opacity-80 w-[340px] h-[340px] md:w-[420px] md:h-[420px] flex items-center justify-center shadow-2xl"></div>
-        </div>
-        <div className="relative z-10 flex flex-col items-center justify-center pt-12">
-          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-indigo-400 via-purple-300 to-blue-300 flex items-center justify-center shadow-xl border-8 border-white/60">
-            <span className="text-7xl md:text-8xl text-indigo-700 opacity-80">🧑‍⚕️</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mt-6 mb-2 text-indigo-900">Welcome back{user && user.name ? `, ${user.name}` : ''}</h2>
-          <p className="text-lg text-indigo-700 opacity-80">Your Kidney Care Dashboard</p>
+      {/* Header */}
+      <div className="pt-8 pb-6 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back{user && user.name ? `, ${user.name}` : ''}</h1>
+          <p className="text-lg text-blue-200">Your Kidney Care Dashboard</p>
         </div>
       </div>
 
       {/* Main Grid Widgets */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 pb-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
         {/* Water Intake Card */}
-        <div className="bg-gradient-to-br from-blue-900 to-indigo-800 rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold mb-2 flex items-center"><FaTint className="mr-2 text-cyan-300" />Track Your Water Intake</h3>
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FaTint className="text-2xl text-cyan-300" />
+            <h3 className="text-xl font-semibold">Water Intake</h3>
+          </div>
           <WaterIntakeForm onLogSuccess={() => setReloadChart(prev => !prev)} />
-          <h3 className="text-md font-semibold mt-4 mb-2 flex items-center"><FaChartLine className="mr-2 text-cyan-200" />Water Intake (Last 7 Days)</h3>
-          <WaterIntakeChart reloadTrigger={reloadChart} />
+          <div className="mt-6">
+            <h4 className="text-lg font-semibold mb-3">Last 7 Days</h4>
+            <WaterIntakeChart reloadTrigger={reloadChart} />
+          </div>
         </div>
 
-        {/* Food & Nutrition Section - Now using KidneySmartDashboard */}
-        <div className="bg-gradient-to-br from-green-900 to-teal-800 rounded-2xl shadow-lg p-6 flex flex-col">
+        {/* Food & Nutrition Section */}
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FaBook className="text-2xl text-green-300" />
+            <h3 className="text-xl font-semibold">Food & Nutrition</h3>
+          </div>
           <KidneySmartDashboard />
         </div>
 
         {/* Medication Card */}
-        <div className="bg-gradient-to-br from-purple-900 to-pink-900 rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold mb-2 flex items-center"><FaPills className="mr-2 text-green-300" />Medication & Schedule</h3>
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FaPills className="text-2xl text-purple-300" />
+            <h3 className="text-xl font-semibold">Medications</h3>
+          </div>
           <MedicationList />
         </div>
 
         {/* Blood Pressure Card */}
-        <div className="bg-gradient-to-br from-pink-900 to-red-800 rounded-2xl shadow-lg p-6 flex flex-col">
-          <h3 className="text-lg font-semibold mb-2 flex items-center"><FaHeartbeat className="mr-2 text-pink-300" />Blood Pressure</h3>
-          <BloodPressureForm onEntryAdded={() => {}} />
-          <BloodPressureChart />
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FaHeartbeat className="text-2xl text-red-300" />
+            <h3 className="text-xl font-semibold">Blood Pressure</h3>
+          </div>
+          <BloodPressureForm onEntryAdded={() => setReloadChart(prev => !prev)} />
+          <div className="mt-6">
+            <h4 className="text-lg font-semibold mb-3">History</h4>
+            <BloodPressureChart />
+          </div>
         </div>
 
         {/* Fluid Intake Dashboard Card */}
         {user && (
-          <div className="bg-gradient-to-br from-cyan-900 to-blue-800 rounded-2xl shadow-lg p-6 flex flex-col md:col-span-2">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 md:col-span-2">
             <FluidDashboard patientId={user._id} />
           </div>
         )}

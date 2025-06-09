@@ -1,14 +1,43 @@
 /* === Container Styling === */
-.patient-dashboard {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background: rgba(31, 53, 37, 0.75); /* Frosted forest glass */
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(12px);
-  color: #e6f0e6;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-card-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Form Controls */
+.dashboard-input,
+.dashboard-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: white;
+  transition: all 0.2s ease;
 }
 
 /* === Headings === */
@@ -36,6 +65,25 @@
   padding: 20px;
   margin-bottom: 2rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-card {
+  @apply bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 transition-all duration-300;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-card-header {
+  @apply flex items-center gap-2 mb-4;
+}
+
+.dashboard-card-header h3 {
+  @apply text-xl font-semibold;
 }
 
 /* === Water Intake Form === */
@@ -139,4 +187,268 @@
   color: #ff4c4c;
   font-weight: 600;
   margin-top: 10px;
+}
+
+/* === Global Styles === */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.from-indigo-900 {
+  --tw-gradient-from: #312e81;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(49, 46, 129, 0));
+}
+
+.via-purple-900 {
+  --tw-gradient-stops: var(--tw-gradient-from), #581c87, var(--tw-gradient-to, rgba(88, 28, 135, 0));
+}
+
+.to-blue-900 {
+  --tw-gradient-to: #1e3a8a;
+}
+
+.text-white {
+  color: white;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid {
+  display: grid;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.pb-10 {
+  padding-bottom: 2.5rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
+}
+
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.bg-white\/10 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.text-cyan-300 {
+  color: #67e8f9;
+}
+
+.text-green-300 {
+  color: #86efac;
+}
+
+.text-purple-300 {
+  color: #d8b4fe;
+}
+
+.text-red-300 {
+  color: #fca5a5;
+}
+
+.text-blue-200 {
+  color: #bfdbfe;
+}
+
+@media (min-width: 768px) {
+  .md\\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+
+  .md\\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .md\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Loading and Error States */
+.loading-container {
+  @apply min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 
+         flex items-center justify-center text-white;
+}
+
+.loading-spinner {
+  @apply animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white;
+}
+
+.error-container {
+  @apply min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 
+         flex items-center justify-center text-white;
+}
+
+.error-message {
+  @apply text-2xl text-red-400 bg-red-900/20 px-6 py-4 rounded-lg border border-red-500/20;
+}
+
+/* Card Content */
+.card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Form Controls */
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  margin-bottom: 1rem;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+input, select, button {
+  @apply transition-all duration-200;
+}
+
+input:not([type="submit"]):not([readonly]),
+select:not([disabled]) {
+  @apply bg-white/5 border border-white/20 rounded-lg p-2 text-white;
+  backdrop-filter: blur(4px);
+}
+
+input:not([type="submit"]):not([readonly]):hover,
+select:not([disabled]):hover {
+  @apply border-white/40;
+}
+
+input:not([type="submit"]):not([readonly]):focus,
+select:not([disabled]):focus {
+  @apply border-white/60 outline-none ring-2 ring-white/20;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+button:not([disabled]) {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-200;
+}
+
+button:not([disabled]):hover {
+  @apply bg-blue-700 transform -translate-y-0.5 shadow-lg;
+}
+
+button:not([disabled]):active {
+  @apply transform translate-y-0 shadow-none;
+}
+
+button:hover {
+  background-color: #2563eb;
+}
+
+button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
 }
