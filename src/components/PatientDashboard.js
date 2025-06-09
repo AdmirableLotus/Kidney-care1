@@ -23,6 +23,7 @@ const PatientDashboard = () => {
   const [reloadChart, setReloadChart] = useState(false);
   const [user, setUser] = useState(null);
   const [summary, setSummary] = useState({});
+
   const fetchEntries = async () => {
     try {
       const res = await api.get("/patient/entries");
@@ -108,67 +109,56 @@ const PatientDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-      {/* Header */}
-      <div className="pt-8 pb-6 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back{user && user.name ? `, ${user.name}` : ''}</h1>
-          <p className="text-lg text-blue-200">Your Kidney Care Dashboard</p>
-        </div>
-      </div>
+    <div className="patient-dashboard">
+      <div className="dashboard-content">
+        <div className="dashboard-grid">
+          {/* Water Intake Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <FaTint className="text-blue-300 text-2xl" />
+              <h3>Water Intake</h3>
+            </div>
+            <WaterIntakeForm onEntryAdded={() => setReloadChart(prev => !prev)} />
+            <WaterIntakeChart reload={reloadChart} />
+          </div>
 
-      {/* Main Grid Widgets */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
-        {/* Water Intake Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FaTint className="text-2xl text-cyan-300" />
-            <h3 className="text-xl font-semibold">Water Intake</h3>
+          {/* Food Log Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <FaBook className="text-green-300 text-2xl" />
+              <h3>Food & Nutrition</h3>
+            </div>
+            <KidneySmartDashboard />
           </div>
-          <WaterIntakeForm onLogSuccess={() => setReloadChart(prev => !prev)} />
-          <div className="mt-6">
-            <h4 className="text-lg font-semibold mb-3">Last 7 Days</h4>
-            <WaterIntakeChart reloadTrigger={reloadChart} />
-          </div>
-        </div>
 
-        {/* Food & Nutrition Section */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FaBook className="text-2xl text-green-300" />
-            <h3 className="text-xl font-semibold">Food & Nutrition</h3>
+          {/* Medication Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <FaPills className="text-purple-300 text-2xl" />
+              <h3>Medications</h3>
+            </div>
+            <MedicationList />
           </div>
-          <KidneySmartDashboard />
-        </div>
 
-        {/* Medication Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FaPills className="text-2xl text-purple-300" />
-            <h3 className="text-xl font-semibold">Medications</h3>
+          {/* Blood Pressure Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <FaHeartbeat className="text-red-300 text-2xl" />
+              <h3>Blood Pressure</h3>
+            </div>
+            <BloodPressureForm onEntryAdded={() => setReloadChart(prev => !prev)} />
+            <BloodPressureChart reload={reloadChart} />
           </div>
-          <MedicationList />
-        </div>
 
-        {/* Blood Pressure Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FaHeartbeat className="text-2xl text-red-300" />
-            <h3 className="text-xl font-semibold">Blood Pressure</h3>
-          </div>
-          <BloodPressureForm onEntryAdded={() => setReloadChart(prev => !prev)} />
-          <div className="mt-6">
-            <h4 className="text-lg font-semibold mb-3">History</h4>
-            <BloodPressureChart />
+          {/* Fluid Intake Card */}
+          <div className="dashboard-card">
+            <div className="card-header">
+              <FaChartLine className="text-teal-300 text-2xl" />
+              <h3>Fluid Intake</h3>
+            </div>
+            <FluidDashboard />
           </div>
         </div>
-
-        {/* Fluid Intake Dashboard Card */}
-        {user && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 md:col-span-2">
-            <FluidDashboard patientId={user._id} />
-          </div>
-        )}
       </div>
     </div>
   );
