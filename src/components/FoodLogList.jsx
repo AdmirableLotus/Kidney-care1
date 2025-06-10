@@ -11,45 +11,64 @@ const FoodLogList = () => {
     const fetchEntries = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/patient/food", {
+        const response = await axios.get("http://localhost:5000/api/patient/food", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setEntries(res.data);
-        setLoading(false);
+        setEntries(response.data);
       } catch (err) {
         setError("Failed to load food log.");
+      } finally {
         setLoading(false);
       }
     };
     fetchEntries();
   }, []);
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this entry?")) return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/patient/food/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEntries((prev) => prev.filter((entry) => entry._id !== id));
+    } catch (err) {
+      alert("Failed to delete entry.");
+    }
+  };
+
   if (loading) return <p>Loading food log...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <div className="food-log-list">
+      <h3>Food Log</h3>
       <ul>
         {entries.map((entry) => (
-          <li key={entry._id}>
-            <strong>{format(new Date(entry.date), "MMM d, yyyy")}</strong>: {entry.meal} <br />
-            <em>{entry.description}</em>
-            <div>
-              Protein: {entry.protein}g, Phosphorus: {entry.phosphorus}mg, Sodium: {entry.sodium}mg, Potassium: {entry.potassium}mg
+          <li key={entry._id} className="food-log-item" style={{ marginBottom: "1rem", paddingBottom: "0.5rem", borderBottom: "1px solid #ccc" }}>
+            <strong>{format(new Date(entry.date), "MMM d, yyyy")}</strong> – {entry.meal}
+            <br />
+            <em>{entry.description || "No description provided"}</em>
+            <div style={{ marginTop: "0.5rem" }}>
+              <span>Protein: {entry.protein}g, </span>
+              <span>Phosphorus: {entry.phosphorus}mg, </span>
+              <span>Sodium: {entry.sodium}mg, </span>
+              <span>Potassium: {entry.potassium}mg</span>
             </div>
-            <button onClick={async () => {
-              if(window.confirm('Delete this entry?')) {
-                try {
-                  const token = localStorage.getItem('token');
-                  await axios.delete(`http://localhost:5000/api/patient/food/${entry._id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                  });
-                  setEntries(entries.filter(e => e._id !== entry._id));
-                } catch (err) {
-                  alert('Failed to delete entry.');
-                }
-              }
-            }}>Delete</button>
+            <button
+              onClick={() => handleDelete(entry._id)}
+              style={{
+                marginTop: "0.5rem",
+                backgroundColor: "#e74c3c",
+                color: "#fff",
+                border: "none",
+                padding: "6px 12px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
