@@ -1,40 +1,40 @@
-/* Reset and Layout */
+/* ====== Layout ====== */
 .home-container {
   position: relative;
   min-height: 100vh;
-  z-index: 2;
   overflow-x: hidden;
+  z-index: 2;
 }
 
 a {
   text-decoration: none;
   color: inherit;
-  position: relative;
   z-index: 2;
+  position: relative;
 }
 
 .interactive-element {
+  cursor: pointer;
   position: relative;
   z-index: 2;
-  cursor: pointer;
 }
 
 ul {
   list-style: none;
-  padding: 0;
   margin: 0;
-  position: relative;
+  padding: 0;
   z-index: 2;
+  position: relative;
 }
 
-/* Navbar */
+/* ====== Navbar ====== */
 .navbar {
   background-color: #0f261d;
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-  color: white;
 }
 
 .logo {
@@ -47,18 +47,18 @@ ul {
   gap: 25px;
 }
 
-.nav-links li a {
+.nav-links a {
   color: white;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-.nav-links li a:hover {
+.nav-links a:hover {
   color: #23b500;
 }
 
 .auth-actions .login-button {
-  background-color: transparent;
+  background: transparent;
   color: white;
   border: 1px solid white;
   padding: 8px 16px;
@@ -68,11 +68,11 @@ ul {
 }
 
 .auth-actions .login-button:hover {
-  background-color: white;
+  background: white;
   color: #0f261d;
 }
 
-/* Hero Section */
+/* ====== Hero Section ====== */
 .hero {
   background: url('/images/hero-background.jpg') center/cover no-repeat;
   background-color: rgba(0, 0, 0, 0.6);
@@ -102,7 +102,7 @@ ul {
   margin-top: 10px;
 }
 
-/* About Section */
+/* ====== About Section ====== */
 .about {
   display: flex;
   flex-wrap: wrap;
@@ -145,10 +145,10 @@ ul {
   object-fit: cover;
 }
 
-/* Features Section */
+/* ====== Features Section ====== */
 .features {
-  padding: 60px 10%;
   background-color: #f1f5f4;
+  padding: 60px 10%;
   text-align: center;
 }
 
@@ -174,7 +174,7 @@ ul {
 .feature {
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   text-align: left;
   transition: transform 0.2s ease;
@@ -204,16 +204,16 @@ ul {
   color: #555;
 }
 
-/* Testimonials Section */
+/* ====== Testimonials ====== */
 .testimonials {
-  padding: 60px 10%;
   background-color: #fff;
+  padding: 60px 10%;
   text-align: center;
 }
 
 .testimonials h2 {
-  margin-bottom: 30px;
   color: #0f261d;
+  margin-bottom: 30px;
 }
 
 .testimonials .highlight {
@@ -232,16 +232,16 @@ ul {
 }
 
 .testimonial {
+  background: #fdfdfd;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  background: #fdfdfd;
   font-size: 1rem;
   line-height: 1.5;
   text-align: left;
 }
 
-/* Footer */
+/* ====== Footer ====== */
 footer {
   background-color: #0f261d;
   color: white;
@@ -252,12 +252,17 @@ footer {
 .footer-links {
   display: flex;
   justify-content: center;
-  gap: 25px;
   flex-wrap: wrap;
+  gap: 25px;
   margin-bottom: 15px;
 }
 
-.footer-links li a {
+.footer-links a {
   color: white;
   font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #23b500;
 }

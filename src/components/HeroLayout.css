@@ -1,0 +1,79 @@
+.hero-section {
+  position: relative;
+  height: 100vh;
+  background: linear-gradient(to right, #1e88e5, #43cea2);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  padding-top: 60px;
+}
+
+.hero-overlay {
+  z-index: 2;
+}
+
+.hero-overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.hero-overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.hero-centerpiece {
+  position: relative;
+  z-index: 1;
+  margin-top: 1rem;
+}
+
+.hero-centerpiece img {
+  width: 250px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.hero-feature {
+  position: absolute;
+  background-color: white;
+  color: #2c3e50;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 180px;
+  text-align: center;
+  z-index: 3;
+  transition: transform 0.3s ease;
+}
+
+.hero-feature:hover {
+  transform: translateY(-5px);
+}
+
+/* Positioning the features */
+.feature-top-left {
+  top: 10%;
+  left: 5%;
+}
+
+.feature-top-right {
+  top: 10%;
+  right: 5%;
+}
+
+.feature-bottom-left {
+  bottom: 10%;
+  left: 5%;
+}
+
+.feature-bottom-right {
+  bottom: 10%;
+  right: 5%;
+}
