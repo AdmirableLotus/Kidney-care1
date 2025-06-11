@@ -37,27 +37,34 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="form-container">
-      <form className="form-box" onSubmit={handleSubmit}>
+    <div className="login-form-container">
+      <form className="login-form-box" onSubmit={handleSubmit} noValidate>
         <h2>Login</h2>
-        {error && <p className="error">{error}</p>}
+
+        {error && <p className="login-form-error">{error}</p>}
+
+        <label htmlFor="email">Email</label>
         <input
+          id="email"
           type="email"
           name="email"
-          placeholder="Email"
           value={formData.email}
           onChange={handleChange}
           required
         />
+
+        <label htmlFor="password">Password</label>
         <input
+          id="password"
           type="password"
           name="password"
-          placeholder="Password"
           value={formData.password}
           onChange={handleChange}
           required
         />
+
         <button type="submit">Log In</button>
+
         <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
       </form>
     </div>
@@ -65,3 +72,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
