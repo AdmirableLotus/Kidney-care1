@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
 import "./PatientDashboard.css";
-import axios from 'axios';
+import axios from "axios";
+
 // Components
 import WaterIntakeForm from "./WaterIntakeForm";
 import WaterIntakeChart from "./WaterIntakeChart";
@@ -9,8 +10,8 @@ import KidneySmartDashboard from "./KidneySmartDashboard";
 import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
 import BloodPressureChart from "./BloodPressureChart";
-import FluidDashboard from './FluidDashboard';
-import FoodLogForm from './FoodLogForm';
+import FluidDashboard from "./FluidDashboard";
+import FoodLogForm from "./FoodLogForm";
 
 // Icons
 import { FaTint, FaChartLine, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
@@ -23,6 +24,7 @@ const PatientDashboard = () => {
   const [reloadChart, setReloadChart] = useState(false);
   const [user, setUser] = useState(null);
   const [summary, setSummary] = useState({});
+
   const fetchEntries = async () => {
     try {
       const res = await api.get("/patient/entries");
@@ -34,36 +36,36 @@ const PatientDashboard = () => {
       setLoading(false);
     }
   };
-  // Fetch summary stats for dashboard cards
+
   const fetchSummary = async (userId) => {
     try {
       const res = await api.get(`/patient/summary/${userId}`);
       setSummary(res.data);
     } catch (err) {
-      console.error('Failed to fetch summary:', err);
+      console.error("Failed to fetch summary:", err);
       setSummary({});
     }
   };
+
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const u = JSON.parse(storedUser);
       setUser(u);
       fetchSummary(u._id);
     } else {
-      api.get('/auth/me')
+      api.get("/auth/me")
         .then(res => {
           const userData = res.data;
-          localStorage.setItem('user', JSON.stringify(userData));
+          localStorage.setItem("user", JSON.stringify(userData));
           setUser(userData);
           fetchSummary(userData._id);
         })
         .catch(err => {
-          console.error('Failed to fetch user:', err);
-          // Redirect to login if authentication fails
+          console.error("Failed to fetch user:", err);
           if (err.response?.status === 401) {
             localStorage.clear();
-            window.location.href = '/login';
+            window.location.href = "/login";
           }
         });
     }
@@ -81,7 +83,7 @@ const PatientDashboard = () => {
         "http://localhost:5000/api/patient/entries",
         { content: newEntry },
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setNewEntry("");
@@ -91,6 +93,7 @@ const PatientDashboard = () => {
       setError("Could not submit your entry.");
     }
   };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
@@ -109,17 +112,16 @@ const PatientDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-      {/* Header */}
       <div className="pt-8 pb-6 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome back{user && user.name ? `, ${user.name}` : ''}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            Welcome back{user && user.name ? `, ${user.name}` : ""}
+          </h1>
           <p className="text-lg text-blue-200">Your Kidney Care Dashboard</p>
         </div>
       </div>
 
-      {/* Main Grid Widgets */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
-        {/* Water Intake Card */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <FaTint className="text-2xl text-cyan-300" />
@@ -132,7 +134,6 @@ const PatientDashboard = () => {
           </div>
         </div>
 
-        {/* Food & Nutrition Section */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <FaBook className="text-2xl text-green-300" />
@@ -141,7 +142,6 @@ const PatientDashboard = () => {
           <KidneySmartDashboard />
         </div>
 
-        {/* Medication Card */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <FaPills className="text-2xl text-purple-300" />
@@ -150,7 +150,6 @@ const PatientDashboard = () => {
           <MedicationList />
         </div>
 
-        {/* Blood Pressure Card */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <FaHeartbeat className="text-2xl text-red-300" />
@@ -163,7 +162,6 @@ const PatientDashboard = () => {
           </div>
         </div>
 
-        {/* Fluid Intake Dashboard Card */}
         {user && (
           <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6 md:col-span-2">
             <FluidDashboard patientId={user._id} />
