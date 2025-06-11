@@ -1,3 +1,4 @@
+/* NAVBAR STYLING */
 .navbar {
   position: fixed;
   top: 0;
@@ -8,17 +9,40 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: rgba(30, 136, 229, 1);
+  background-color: #1e88e5; /* Solid blue */
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   pointer-events: auto;
+  backdrop-filter: blur(8px);
 }
 
+/* LOGO */
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
+  cursor: pointer;
 }
 
+/* NAV LINKS */
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: #ffd700;
+}
+
+/* AUTH BUTTON */
 .auth-button {
   background-color: white;
   color: #1e88e5;
@@ -34,3 +58,19 @@
   background-color: #f0f0f0;
   transform: scale(1.05);
 }
+
+/* MOBILE RESPONSIVENESS (optional but sane) */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* You'll need a burger menu component for this to matter */
+  }
+
+  .navbar {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .auth-button {
+    padding: 0.5rem 1rem;
+  }
+}
+ 
