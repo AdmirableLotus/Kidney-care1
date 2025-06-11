@@ -153,3 +153,4 @@ const MedicationForm = ({ onAdded }) => {
 };
 
 export default MedicationForm;
+
