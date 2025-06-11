@@ -55,7 +55,7 @@ export default function StaffLabResultForm({ onAdded }) {
       });
       setSuccess('Lab result added!');
       setForm(initialState);
-      if (onAdded) onAdded();
+      if (onAdded) onAdded(); // <- Your error-free savior
     } catch (err) {
       setError('Failed to add lab result.');
     }
@@ -84,7 +84,9 @@ export default function StaffLabResultForm({ onAdded }) {
       <label>iPTH: <input name="iPTH" type="number" step="any" value={form.iPTH} onChange={handleChange} style={{ width: '100%', marginBottom: 12 }} /></label>
       <label>Avg Fluid Weight Gain: <input name="avgFluidWeightGain" type="number" step="any" value={form.avgFluidWeightGain} onChange={handleChange} style={{ width: '100%', marginBottom: 12 }} /></label>
       <label>Notes: <input name="notes" value={form.notes} onChange={handleChange} style={{ width: '100%', marginBottom: 12 }} /></label>
-      <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', background: '#23b500', color: '#fff', fontWeight: 700, fontSize: '1.1rem', marginTop: 12, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? 'Adding...' : 'Add Lab Result'}</button>
+      <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', background: '#23b500', color: '#fff', fontWeight: 700, fontSize: '1.1rem', marginTop: 12, cursor: loading ? 'not-allowed' : 'pointer' }}>
+        {loading ? 'Adding...' : 'Add Lab Result'}
+      </button>
       {error && <div className="error" style={{ color: '#ff4c4c', marginTop: 12 }}>{error}</div>}
       {success && <div className="success" style={{ color: '#23b500', marginTop: 12 }}>{success}</div>}
     </form>
