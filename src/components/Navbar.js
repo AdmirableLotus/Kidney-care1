@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
+import AuthModal from './AuthModal'; // Assuming you built this already
 
 export default function Navbar() {
   const [showModal, setShowModal] = useState(false);
@@ -7,13 +9,22 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <h1 className="logo">KidneyCare</h1>
+        <Link to="/" className="logo">
+          KidneyCare
+        </Link>
+        <div className="nav-links">
+          <ul>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/features">Features</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+          </ul>
+        </div>
         <button className="auth-button" onClick={() => setShowModal(true)}>
           Login / Sign Up
         </button>
       </nav>
 
-      {/* Modal will be added later */}
+      {showModal && <AuthModal closeModal={() => setShowModal(false)} />}
     </>
   );
 }
