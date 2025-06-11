@@ -16,6 +16,8 @@ const NurseDashboard = () => {
     potassium: 0,
     sodium: 0
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [entrySuccess, setEntrySuccess] = useState(false);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -37,6 +39,7 @@ const NurseDashboard = () => {
   }, []);
 
   const handlePatientSelect = async (patient) => {
+    if (selectedPatient?._id === patient._id) return;
     setSelectedPatient(patient);
     localStorage.setItem('selectedPatientId', patient._id);
     await fetchPatientFoodEntries(patient._id);
@@ -61,6 +64,10 @@ const NurseDashboard = () => {
       alert('Please select a patient first');
       return;
     }
+
+    setSubmitting(true);
+    setError('');
+    setEntrySuccess(false);
 
     try {
       const token = localStorage.getItem('token');
@@ -90,10 +97,14 @@ const NurseDashboard = () => {
         potassium: 0,
         sodium: 0
       });
+
+      setEntrySuccess(true);
     } catch (err) {
       console.error('Failed to add food entry:', err);
-      alert('Failed to add food entry: ' + (err.response?.data?.message || err.message));
+      setError('Failed to add food entry: ' + (err.response?.data?.message || err.message));
     }
+
+    setSubmitting(false);
   };
 
   if (loading) return <div>Loading patients...</div>;
@@ -116,10 +127,7 @@ const NurseDashboard = () => {
               >
                 <h4>{patient.name}</h4>
                 <p>Email: {patient.email}</p>
-                <button 
-                  onClick={(e) => e.stopPropagation()} // Placeholder
-                  className="view-details-btn"
-                >
+                <button onClick={(e) => e.stopPropagation()} className="view-details-btn">
                   View Details
                 </button>
               </div>
@@ -174,7 +182,11 @@ const NurseDashboard = () => {
               onChange={e => setNewEntry({ ...newEntry, sodium: Number(e.target.value) })}
               required
             />
-            <button type="submit">Add Food Entry</button>
+            <button type="submit" disabled={submitting}>
+              {submitting ? 'Adding...' : 'Add Food Entry'}
+            </button>
+            {entrySuccess && <p className="success-message">Entry added successfully!</p>}
+            {error && <p className="error-message">{error}</p>}
           </form>
 
           <div className="food-entries-list">
