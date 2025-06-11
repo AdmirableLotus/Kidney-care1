@@ -7,10 +7,11 @@ const StaffRegisterForm = () => {
     name: "",
     email: "",
     password: "",
-    role: "" // medical role selected from dropdown
+    role: ""
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -21,14 +22,19 @@ const StaffRegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
     try {
       const res = await axios.post("http://localhost:5000/api/auth/register", formData);
-
-      setMessage(res.data.message || "Registered successfully!");
+      setMessage(res.data.message || "✅ Registration successful!");
       setFormData({ name: "", email: "", password: "", role: "" });
     } catch (err) {
-      setMessage(err.response?.data?.message || "Registration failed.");
+      console.error("Registration error:", err);
+      const errorMsg = err.response?.data?.message || "❌ Registration failed.";
+      setMessage(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,43 +43,47 @@ const StaffRegisterForm = () => {
       <h2>Medical Staff Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <input
+          type="text"
           name="name"
+          placeholder="Full Name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Full Name"
           required
         />
         <input
-          name="email"
           type="email"
+          name="email"
+          placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Email"
           required
         />
         <input
-          name="password"
           type="password"
+          name="password"
+          placeholder="Create Password"
           value={formData.password}
           onChange={handleChange}
-          placeholder="Create Password"
           required
         />
-        <label>Select Medical Role</label>
+        <label style={{ marginTop: '0.5rem' }}>Select Medical Role</label>
         <select
           name="role"
           value={formData.role}
           onChange={handleChange}
           required
         >
-          <option value="">Select Role</option>
+          <option value="">-- Choose Role --</option>
           <option value="medical_staff">Medical Staff (General)</option>
           <option value="doctor">Doctor</option>
           <option value="nurse">Nurse</option>
           <option value="dietitian">Dietitian</option>
           <option value="admin">Admin</option>
         </select>
-        <button type="submit">Register</button>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
       </form>
 
       {message && <p className="form-message">{message}</p>}
