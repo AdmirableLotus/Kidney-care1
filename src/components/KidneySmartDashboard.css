@@ -3,9 +3,9 @@
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #2d3748;
 }
 
-/* Dashboard sections */
 .dashboard-section {
   background: white;
   border-radius: 12px;
@@ -18,10 +18,8 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: #2d3748;
 }
 
-/* Nutrient Progress Bars */
 .nutrient-grid {
   display: grid;
   gap: 1.5rem;
@@ -64,7 +62,6 @@
   background-color: #f56565;
 }
 
-/* Tabs */
 .dashboard-tabs {
   display: flex;
   gap: 1rem;
@@ -91,7 +88,6 @@
   color: white;
 }
 
-/* Food Log Section */
 .food-log-section {
   padding: 20px;
   background: rgba(255, 255, 255, 0.1);
@@ -104,6 +100,8 @@
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   margin-bottom: 1rem;
+  color: #2d3748;
+  background: #ffffff;
 }
 
 .food-entry-form {
@@ -132,21 +130,21 @@
 .serving-size-input,
 .unit-select {
   padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: #ffffff;
+  color: #2d3748;
 }
 
 .nutrients-display {
-  background: rgba(0, 0, 0, 0.2);
+  background: #edf2f7;
   padding: 15px;
   border-radius: 8px;
   margin-top: 15px;
 }
 
 .nutrients-display h4 {
-  color: white;
+  color: #2d3748;
   margin-bottom: 10px;
   font-size: 1rem;
 }
@@ -162,35 +160,34 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #f7fafc;
   border-radius: 4px;
 }
 
 .nutrient-item label {
-  color: rgba(255, 255, 255, 0.8);
+  color: #4a5568;
 }
 
 .nutrient-item span {
-  color: white;
+  color: #2d3748;
   font-weight: 500;
 }
 
 .nutrient-warnings {
   margin-top: 15px;
   padding: 10px;
-  background: rgba(255, 87, 34, 0.2);
+  background: #fff3cd;
   border-radius: 6px;
 }
 
 .warning-message {
-  color: #ffab91;
+  color: #856404;
   padding: 5px 0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Food Entry Cards */
 .food-entries {
   display: grid;
   gap: 1rem;
@@ -211,7 +208,6 @@
 
 .entry-header h3 {
   font-weight: 600;
-  color: #2d3748;
 }
 
 .delete-btn {
@@ -233,10 +229,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.5rem;
-  color: #4a5568;
 }
 
-/* Education Section */
 .education-section {
   background: white;
   border-radius: 12px;
@@ -250,7 +244,6 @@
 }
 
 .education-content h3 {
-  color: #2d3748;
   font-weight: 600;
   margin-bottom: 0.75rem;
 }
@@ -265,7 +258,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* Responsive Design */
 @media (min-width: 768px) {
   .nutrient-grid {
     grid-template-columns: repeat(2, 1fr);
