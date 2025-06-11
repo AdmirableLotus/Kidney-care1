@@ -1,148 +1,129 @@
-.medication-list {
-  color: white;
-}
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './medication.css';
+import { FaPlus } from 'react-icons/fa';
 
-.medication-list h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
+const MedicationTracker = () => {
+  const [medications, setMedications] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ name: '', dosage: '', frequency: '' });
+  const [error, setError] = useState('');
 
-.medication-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 1rem;
-}
+  useEffect(() => {
+    fetchMedications();
+  }, []);
 
-.medication-list li {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+  const fetchMedications = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('http://localhost:5000/api/patient/medications', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMedications(res.data);
+    } catch (err) {
+      console.error('Error fetching medications:', err);
+    }
+  };
 
-.medication-list li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+  const handleInputChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-.medication-list strong {
-  color: #c084fc;
-}
+  const handleAddMedication = async e => {
+    e.preventDefault();
+    setError('');
 
-.medication-list em {
-  display: block;
-  margin-top: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
-}
+    if (!formData.name || !formData.dosage || !formData.frequency) {
+      setError('All fields are required.');
+      return;
+    }
 
-.medication-list button {
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:5000/api/patient/medications', formData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFormData({ name: '', dosage: '', frequency: '' });
+      setShowForm(false);
+      fetchMedications();
+    } catch (err) {
+      console.error('Error adding medication:', err);
+      setError('Failed to add medication.');
+    }
+  };
 
-.medication-list button:hover {
-  background: rgba(239, 68, 68, 0.3);
-  border-color: rgba(239, 68, 68, 0.4);
-}
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this medication?')) return;
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/patient/medications/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMedications(medications.filter(med => med._id !== id));
+    } catch (err) {
+      console.error('Error deleting medication:', err);
+    }
+  };
 
-.medication-form {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.5rem;
-  color: white;
-}
+  return (
+    <div className="medication-list">
+      <h3>Your Medications</h3>
+      <button className="add-medication-toggle" onClick={() => setShowForm(!showForm)}>
+        <FaPlus /> Add Medication
+      </button>
 
-.medication-form h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
+      {showForm && (
+        <form className="medication-form" onSubmit={handleAddMedication}>
+          <h3>Add Medication</h3>
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              placeholder="e.g. Lisinopril"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Dosage:
+            <input
+              type="text"
+              name="dosage"
+              placeholder="e.g. 10mg"
+              value={formData.dosage}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Frequency:
+            <input
+              type="text"
+              name="frequency"
+              placeholder="e.g. Once daily"
+              value={formData.frequency}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <button type="submit">Add</button>
+          {error && <p className="error">{error}</p>}
+        </form>
+      )}
 
-.medication-form label {
-  display: block;
-  margin-bottom: 1rem;
-}
+      <ul>
+        {medications.map((med) => (
+          <li key={med._id}>
+            <strong>{med.name}</strong>
+            <em>{med.dosage}, {med.frequency}</em>
+            <button onClick={() => handleDelete(med._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-.medication-form input {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.375rem;
-  color: white;
-  transition: border-color 0.2s;
-}
-
-.medication-form input:focus {
-  outline: none;
-  border-color: #c084fc;
-}
-
-.medication-form input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.medication-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
-  border: none;
-  border-radius: 0.375rem;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.medication-form button:hover {
-  opacity: 0.9;
-}
-
-.medication-form button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.medication-form .error {
-  margin-top: 0.5rem;
-  color: #fca5a5;
-  font-size: 0.875rem;
-}
-
-.add-medication-toggle {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  transition: background-color 0.2s;
-}
-
-.add-medication-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.add-medication-toggle svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
+export default MedicationTracker;
