@@ -22,28 +22,27 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const dailyTotals = {};
+        const totalsByDate = {};
         res.data.forEach((entry) => {
           const day = new Date(entry.date).toLocaleDateString("en-CA");
-          dailyTotals[day] = (dailyTotals[day] || 0) + entry.amount;
+          totalsByDate[day] = (totalsByDate[day] || 0) + entry.amount;
         });
 
-        // Generate last 7 days (local dates)
-        const days = [];
-        for (let i = 6; i >= 0; i--) {
+        const last7Days = Array.from({ length: 7 }, (_, i) => {
           const d = new Date();
-          d.setDate(d.getDate() - i);
-          const local = d.toLocaleDateString("en-CA");
-          days.push(local);
-        }
+          d.setDate(d.getDate() - (6 - i));
+          return d;
+        });
 
-        // Merge with fetched data
-        const formatted = days.map((date) => ({
-          date: new Date(date),
-          amount: dailyTotals[date] || 0,
-        }));
+        const formattedData = last7Days.map((d) => {
+          const key = d.toLocaleDateString("en-CA");
+          return {
+            date: d,
+            amount: totalsByDate[key] || 0,
+          };
+        });
 
-        setData(formatted);
+        setData(formattedData);
       } catch (error) {
         console.error("Error fetching water intake data:", error);
       }
@@ -52,14 +51,13 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
     fetchWaterIntake();
   }, [reloadTrigger]);
 
-  // Add conversion helpers
-  const mlToCups = (ml) => (ml / 240).toFixed(2); // 1 cup = 240ml
-  const mlToOunces = (ml) => (ml / 29.5735).toFixed(2); // 1 oz = 29.5735ml
+  const mlToCups = (ml) => (ml / 240).toFixed(2);
+  const mlToOunces = (ml) => (ml / 29.5735).toFixed(2);
 
   return (
     <div className="water-intake-chart">
-      <h3>Water Intake (Last 7 Days)</h3>
-      <table>
+      <h3 style={{ marginBottom: '1rem' }}>Water Intake (Last 7 Days)</h3>
+      <table style={{ width: "100%", marginBottom: "1rem", textAlign: "left" }}>
         <thead>
           <tr>
             <th>Date</th>
@@ -70,8 +68,8 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
         </thead>
         <tbody>
           {data.map((entry) => (
-            <tr key={entry._id || entry.date}>
-              <td>{new Date(entry.date).toLocaleDateString()}</td>
+            <tr key={entry.date.toISOString()}>
+              <td>{entry.date.toLocaleDateString()}</td>
               <td>{entry.amount}</td>
               <td>{mlToCups(entry.amount)}</td>
               <td>{mlToOunces(entry.amount)}</td>
@@ -89,13 +87,17 @@ const WaterIntakeChart = ({ reloadTrigger }) => {
           <YAxis unit="ml" />
           <Tooltip
             formatter={(value) => `${value} ml`}
-            labelFormatter={(label) => format(new Date(label), "PPP")}
+            labelFormatter={(label) =>
+              `Date: ${format(new Date(label), "PPP")}`
+            }
           />
           <Line
             type="monotone"
             dataKey="amount"
             stroke="#23b500"
             strokeWidth={3}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
           />
         </LineChart>
       </ResponsiveContainer>
