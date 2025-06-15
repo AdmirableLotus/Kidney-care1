@@ -1,35 +1,34 @@
+// src/api.js
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// Create axios instance
+// Create a single axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 // Request interceptor: attach token
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
-// Response interceptor: handle errors
+// Response interceptor: handle auth errors
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401) {
-      console.warn('⛔ Unauthorized, redirecting to login...');
+      console.warn('⛔ Unauthorized – redirecting to login...');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
@@ -38,54 +37,35 @@ api.interceptors.response.use(
   }
 );
 
-// AUTH
-export const register = (userData) => api.post('/auth/register', userData);
-export const login = (userData) => api.post('/auth/login', userData);
-export const staffLogin = (userData) => api.post('/auth/staff/login', userData);
+// Auth endpoints
+export const register = userData => api.post('/auth/register', userData);
+export const login = creds => api.post('/auth/login', creds);
+export const staffLogin = creds => api.post('/auth/staff/login', creds);
 
-// WATER
-export const logWater = (amount) => api.post('/patient/water', { amount });
+// Water intake
+export const logWater = amount => api.post('/patient/water', { amount });
 export const getWaterLogs = () => api.get('/patient/water');
 
-// BLOOD PRESSURE
-export const logBloodPressure = (entry) => api.post('/patient/bloodpressure', entry);
+// Blood pressure
+export const logBloodPressure = entry => api.post('/patient/bloodpressure', entry);
 export const getBloodPressureLogs = () => api.get('/patient/bloodpressure');
 
-// MEDICATIONS
+// Medication
 export const getMedications = () => api.get('/patient/medication');
 
-// FOOD
-export const logFood = async (foodData) => {
-  try {
-    const userRole = localStorage.getItem('userRole');
-    const selectedPatientId = localStorage.getItem('selectedPatientId');
+// Food logs (handles both patient and staff roles)
+export const logFood = foodData => api.post(
+  ['/nurse','/doctor','/admin'].includes(localStorage.getItem('userRole')) 
+    ? `/staff/patient/${localStorage.getItem('selectedPatientId')}/food`
+    : '/patient/food',
+  foodData
+);
+export const getFoodLogs = () => api.get('/patient/food');
 
-    const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
-      ? `/staff/patient/${selectedPatientId}/food`
-      : '/patient/food';
-
-    const response = await api.post(endpoint, foodData);
-    return response.data;
-  } catch (error) {
-    console.error('🥩 Food logging error:', error);
-    throw new Error(error?.response?.data?.message || 'Failed to log food entry.');
-  }
-};
-
-export const getFoodLogs = async () => {
-  try {
-    const response = await api.get('/patient/food');
-    return response.data;
-  } catch (error) {
-    console.error('🍔 Failed fetching food logs:', error);
-    throw new Error('Could not fetch food logs.');
-  }
-};
-
-// GENERAL
-export const getSummary = (userId) => api.get(`/patient/summary/${userId}`);
+// Journal entries and summary
+export const getSummary = userId => api.get(`/patient/summary/${userId}`);
 export const getEntries = () => api.get('/patient/entries');
-export const postEntry = (content) =>
-  api.post('/patient/entries', { content });
+export const postEntry = content => api.post('/patient/entries', { content });
 
+// Export default instance
 export default api;

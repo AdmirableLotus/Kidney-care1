@@ -15,7 +15,12 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
     setLoading(true);
 
     try {
-      await logWater(parseInt(amount));
+      const ml = Number(amount);
+      if (isNaN(ml) || ml <= 0) {
+        throw new Error('Please enter a valid positive number.');
+      }
+
+      await logWater(ml);
       setSuccess('Water intake logged successfully!');
       setAmount('');
       if (onLogSuccess) onLogSuccess();
@@ -38,7 +43,7 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           placeholder="Enter amount in ml"
-          min="0"
+          min="1"
           required
         />
       </div>
