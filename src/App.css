@@ -13,17 +13,12 @@ body {
   color: #333;
   min-height: 100vh;
   position: relative;
+  line-height: 1.6;
 }
 
-#root {
+#root, .app-container {
   min-height: 100vh;
   position: relative;
-  z-index: 1;
-}
-
-.app-container {
-  position: relative;
-  min-height: 100vh;
   z-index: 1;
 }
 
@@ -57,29 +52,30 @@ body {
   gap: 1.5rem;
 }
 
-.nav-links a {
+.nav-links a,
+.auth-actions a {
   color: white;
   text-decoration: none;
   font-weight: 500;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
 .auth-actions a {
-  color: #0f261d;
   background-color: white;
+  color: #0f261d;
   padding: 0.5rem 1rem;
-  text-decoration: none;
   border-radius: 5px;
-  font-weight: bold;
   transition: background-color 0.3s;
 }
 
-.auth-actions a:hover {
+.auth-actions a:hover,
+.auth-actions a:focus {
   background-color: #ddd;
+  outline: none;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 /* Hero Section */
@@ -109,10 +105,13 @@ body {
   text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.cta-button:hover {
+.cta-button:hover,
+.cta-button:focus {
   background-color: #159a5b;
+  outline: none;
 }
 
 /* Sections */
@@ -138,11 +137,16 @@ section {
 }
 
 .feature {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   text-align: left;
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-4px);
 }
 
 .feature img {
@@ -198,4 +202,22 @@ footer {
 .footer-links li a {
   color: white;
   text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links li a:hover,
+.footer-links li a:focus {
+  color: #1dbf73;
+  outline: none;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
 }
