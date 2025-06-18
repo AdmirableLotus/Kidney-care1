@@ -168,6 +168,7 @@ const PatientDashboard = () => {
           </div>
         )}
       </div>
+      <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Patient Dashboard Loaded</h1>
     </div>
   );
 };
