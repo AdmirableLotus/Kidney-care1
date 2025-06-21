@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
-import { foodDatabase, getFoodNutrients } from '../utils/foodLookup';
+import { getFoodNutrients } from '../utils/foodLookup';
 
 const DAILY_LIMITS = {
   phosphorus: 800,
@@ -24,7 +24,6 @@ const KidneySmartDashboard = () => {
   const [weeklyData, setWeeklyData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('log');
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [newEntry, setNewEntry] = useState({
     mealType: 'lunch',
     foodName: '',
@@ -40,30 +39,28 @@ const KidneySmartDashboard = () => {
   const [warnings, setWarnings] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => { fetchFoodEntries(); }, []);
-
   const fetchFoodEntries = async () => {
     try {
       const token = localStorage.getItem('token');
       const userRole = localStorage.getItem('userRole');
       const selectedPatientId = localStorage.getItem('selectedPatientId');
-
       const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
         ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
         : 'http://localhost:5000/api/patient/food';
-
       const response = await axios.get(endpoint, { headers: { Authorization: `Bearer ${token}` } });
       const sortedEntries = response.data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
       setFoodEntries(sortedEntries);
       calculateDailyTotals(sortedEntries);
       processWeeklyData(sortedEntries);
-      setLoading(false);
     } catch (err) {
-      setError('Unable to load food entries. Please check your connection or try again later.');
-      setLoading(false);
+      setFoodEntries([]);
+      setDailyTotals({ phosphorus: 0, potassium: 0, sodium: 0, protein: 0 });
+      setWeeklyData([]);
     }
+    setLoading(false);
   };
+
+  useEffect(() => { fetchFoodEntries(); }, [fetchFoodEntries]);
 
   const processWeeklyData = (entries) => {
     const last7Days = Array.from({ length: 7 }, (_, i) => {

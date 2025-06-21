@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import StaffLabResultForm from './StaffLabResultForm';
-import MedicationList from './MedicationList';
 import BloodPressureChart from './BloodPressureChart';
 import './StaffDashboardV2.css';
 
