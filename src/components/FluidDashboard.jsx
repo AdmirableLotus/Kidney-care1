@@ -36,12 +36,12 @@ export default function FluidDashboard({ patientId }) {
   const fluidLimit = 1500;
 
   if (!patientId) return null;
-  if (loading) return <div>💧 Loading fluid dashboard...</div>;
+  if (loading) return <div><span role="img" aria-label="droplet">💧</span> Loading fluid dashboard...</div>;
   if (error) return <div className="text-red-600 font-semibold">{error}</div>;
 
   return (
     <div className="bg-white rounded-xl shadow p-6 w-full text-black">
-      <h2 className="text-xl font-bold mb-4">💧 Fluid Intake Dashboard</h2>
+      <h2 className="text-xl font-bold mb-4"><span role="img" aria-label="droplet">💧</span> Fluid Intake Dashboard</h2>
       
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-blue-100 p-4 rounded">
@@ -71,7 +71,7 @@ export default function FluidDashboard({ patientId }) {
         </p>
         {fluidData.overall > fluidLimit && (
           <div className="text-red-600 font-bold mt-2">
-            ⚠️ Daily fluid limit exceeded!
+            <span role="img" aria-label="warning">⚠️</span> Daily fluid limit exceeded!
           </div>
         )}
       </div>
