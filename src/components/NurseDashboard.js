@@ -110,6 +110,18 @@ const NurseDashboard = () => {
   if (loading) return <div>Loading patients...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
+  // Calculate totals for selected patient food entries
+  const totals = foodEntries.reduce(
+    (acc, item) => {
+      acc.protein += item.protein;
+      acc.phosphorus += item.phosphorus;
+      acc.potassium += item.potassium;
+      acc.sodium += item.sodium;
+      return acc;
+    },
+    { protein: 0, phosphorus: 0, potassium: 0, sodium: 0 }
+  );
+
   return (
     <div className="dashboard-container">
       <h2>Nurse Dashboard</h2>
@@ -139,6 +151,12 @@ const NurseDashboard = () => {
       {selectedPatient && (
         <div className="patient-details">
           <h2>Food Log for {selectedPatient.name}</h2>
+          <div className="totals">
+            <p>Protein: {totals.protein}</p>
+            <p>Phosphorus: {totals.phosphorus}</p>
+            <p>Potassium: {totals.potassium}</p>
+            <p>Sodium: {totals.sodium}</p>
+          </div>
           <form onSubmit={handleAddFoodEntry} className="food-entry-form">
             <input
               type="text"
