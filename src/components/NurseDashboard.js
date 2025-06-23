@@ -123,27 +123,17 @@ const NurseDashboard = () => {
     setSubmitting(false);
   };
 
-  if (loading) return <div>Loading nurse dashboard...</div>;
-  if (error) return <div className="error-message">{error}</div>;
-
-  const totals = foodEntries.reduce(
-    (acc, item) => {
-      acc.protein += item.protein;
-      acc.phosphorus += item.phosphorus;
-      acc.potassium += item.potassium;
-      acc.sodium += item.sodium;
-      return acc;
-    },
-    { protein: 0, phosphorus: 0, potassium: 0, sodium: 0 }
-  );
+  if (loading) return <div style={{color:'red'}}>DEBUG: Loading nurse dashboard...</div>;
+  if (error) return <div className="error-message" style={{color:'red'}}>DEBUG: {error}</div>;
 
   return (
     <div className="dashboard-container">
+      <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Nurse Dashboard Loaded</h1>
       <h2>Nurse Dashboard</h2>
       <div className="patients-section">
         <h3>Your Patients</h3>
         {patients.length === 0 ? (
-          <p>No patients found. New patients will appear here when they register.</p>
+          <p style={{color:'orange'}}>No patients found. New patients will appear here when they register.</p>
         ) : (
           <div className="patients-grid">
             {patients.map(patient => (
@@ -162,6 +152,10 @@ const NurseDashboard = () => {
           </div>
         )}
       </div>
+
+      {!selectedPatient && patients.length > 0 && (
+        <div style={{color:'orange',marginTop:20}}>Select a patient to view their food log.</div>
+      )}
 
       {selectedPatient && (
         <div className="patient-details">

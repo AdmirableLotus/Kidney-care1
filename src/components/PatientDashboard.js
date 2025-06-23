@@ -97,7 +97,7 @@ const PatientDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
-        <div className="text-2xl">Loading your dashboard...</div>
+        <div className="text-2xl" style={{color:'red'}}>DEBUG: Loading your dashboard...</div>
       </div>
     );
   }
@@ -113,13 +113,22 @@ const PatientDashboard = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
-        <div className="text-2xl text-red-400">{error}</div>
+        <div className="text-2xl text-red-400">DEBUG: {error}</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
+        <div className="text-2xl" style={{color:'orange'}}>DEBUG: No user found. Please log in again.</div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
+      <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Patient Dashboard Loaded</h1>
       <div className="pt-8 pb-6 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
@@ -176,7 +185,6 @@ const PatientDashboard = () => {
           </div>
         )}
       </div>
-      <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Patient Dashboard Loaded</h1>
     </div>
   );
 };

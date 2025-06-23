@@ -34,7 +34,7 @@ const WaterIntakeForm = ({ onLogSuccess }) => {
 
   return (
     <form onSubmit={handleLogWater} className="water-intake-form">
-      <h2>💧 Track Your Water Intake</h2>
+      <h2><span role="img" aria-label="water droplet">💧</span> Track Your Water Intake</h2>
       <div className="form-group">
         <label htmlFor="water-amount">Amount (ml):</label>
         <input

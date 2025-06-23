@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
@@ -19,7 +19,6 @@ const checkNutrientLevels = (nutrients) => {
 };
 
 const KidneySmartDashboard = () => {
-  const [foodEntries, setFoodEntries] = useState([]);
   const [dailyTotals, setDailyTotals] = useState({ phosphorus: 0, potassium: 0, sodium: 0, protein: 0 });
   const [weeklyData, setWeeklyData] = useState([]);
   const [selectedTab, setSelectedTab] = useState('log');
@@ -37,9 +36,8 @@ const KidneySmartDashboard = () => {
     dateConsumed: new Date().toISOString().split('T')[0]
   });
   const [warnings, setWarnings] = useState([]);
-  const [error, setError] = useState(null);
 
-  const fetchFoodEntries = async () => {
+  const fetchFoodEntries = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const userRole = localStorage.getItem('userRole');
@@ -49,16 +47,14 @@ const KidneySmartDashboard = () => {
         : 'http://localhost:5000/api/patient/food';
       const response = await axios.get(endpoint, { headers: { Authorization: `Bearer ${token}` } });
       const sortedEntries = response.data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setFoodEntries(sortedEntries);
       calculateDailyTotals(sortedEntries);
       processWeeklyData(sortedEntries);
     } catch (err) {
-      setFoodEntries([]);
       setDailyTotals({ phosphorus: 0, potassium: 0, sodium: 0, protein: 0 });
       setWeeklyData([]);
     }
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => { fetchFoodEntries(); }, [fetchFoodEntries]);
 
@@ -106,29 +102,6 @@ const KidneySmartDashboard = () => {
       }
     }
   }, [newEntry.foodName, newEntry.servingSize]);
-
-  const handleAddEntry = async (e) => {
-    e.preventDefault();
-    setError(null);
-    if (!newEntry.foodName || !newEntry.servingSize || !newEntry.servingUnit) return setError('Required fields missing.');
-
-    try {
-      const token = localStorage.getItem('token');
-      const userRole = localStorage.getItem('userRole');
-      const selectedPatientId = localStorage.getItem('selectedPatientId');
-      const entryData = Object.fromEntries(Object.entries(newEntry).map(([k, v]) => [k, ['calories', 'protein', 'phosphorus', 'sodium', 'potassium', 'servingSize'].includes(k) ? parseFloat(v) : v]));
-
-      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
-        ? `http://localhost:5000/api/staff/patient/${selectedPatientId}/food`
-        : 'http://localhost:5000/api/patient/food';
-
-      await axios.post(endpoint, entryData, { headers: { Authorization: `Bearer ${token}` } });
-      setNewEntry({ mealType: 'lunch', foodName: '', servingSize: '100', servingUnit: 'g', calories: '0', protein: '0', phosphorus: '0', potassium: '0', sodium: '0', dateConsumed: new Date().toISOString().split('T')[0] });
-      fetchFoodEntries();
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add food entry.');
-    }
-  };
 
   const renderProgressBar = (nutrient, value, limit) => {
     const percentage = Math.min((value / limit) * 100, 100);
