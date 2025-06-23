@@ -3,6 +3,8 @@ import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './KidneySmartDashboard.css';
 import { getFoodNutrients } from '../utils/foodLookup';
+import FoodLogForm from './FoodLogForm';
+import FoodLogList from './FoodLogList';
 
 const DAILY_LIMITS = {
   phosphorus: 800,
@@ -159,7 +161,12 @@ const KidneySmartDashboard = () => {
       </div>
 
       <div className="tab-content">
-        {selectedTab === 'log' && <div className="food-log-section">{/* form omitted for brevity */}</div>}
+        {selectedTab === 'log' && (
+          <div className="food-log-section">
+            <FoodLogForm onEntryAdded={fetchFoodEntries} />
+            <FoodLogList />
+          </div>
+        )}
         {selectedTab === 'trends' && (
           <div className="trends-section">
             <h2>Weekly Nutrient Trends</h2>

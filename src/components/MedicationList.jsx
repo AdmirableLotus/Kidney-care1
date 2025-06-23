@@ -9,6 +9,9 @@ const MedicationList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  // Track comment and saving state for each medication by ID
+  const [commentState, setCommentState] = useState({});
+  const [savingState, setSavingState] = useState({});
 
   const fetchMeds = async () => {
     try {
@@ -30,9 +33,8 @@ const MedicationList = () => {
     if (!window.confirm("Are you sure you want to delete this medication?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/patient/medication/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(`http://localhost:5000/api/patient/medication/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } });
       setMeds(meds.filter(m => m._id !== id));
     } catch {
       alert("Failed to delete medication.");
@@ -42,6 +44,27 @@ const MedicationList = () => {
   const handleMedicationAdded = () => {
     fetchMeds();
     setShowAddForm(false);
+  };
+
+  const handleCommentChange = (id, value) => {
+    setCommentState(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleCommentUpdate = async (id) => {
+    setSavingState(prev => ({ ...prev, [id]: true }));
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(
+        `http://localhost:5000/api/patient/medication/${id}/comment`,
+        { comment: commentState[id] || "" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchMeds();
+      setCommentState(prev => ({ ...prev, [id]: "" }));
+    } catch {
+      alert("Failed to update comment.");
+    }
+    setSavingState(prev => ({ ...prev, [id]: false }));
   };
 
   if (loading) return <p className="text-white">Loading medications...</p>;
@@ -55,9 +78,7 @@ const MedicationList = () => {
       >
         {showAddForm ? "− Cancel" : "+ Add Medication"}
       </button>
-      
       {showAddForm && <MedicationForm onAdded={handleMedicationAdded} />}
-
       {meds.length === 0 ? (
         <p>No medications added yet.</p>
       ) : (
@@ -74,6 +95,22 @@ const MedicationList = () => {
                 <>End: {format(new Date(med.endDate), "MMM d, yyyy")}<br /></>
               )}
               {med.notes && <em>Notes: {med.notes}</em>}
+              <div style={{ marginTop: 8 }}>
+                <input
+                  type="text"
+                  placeholder="Add a comment about this medication..."
+                  value={commentState[med._id] || ""}
+                  onChange={e => handleCommentChange(med._id, e.target.value)}
+                  style={{ width: '70%' }}
+                />
+                <button
+                  onClick={() => handleCommentUpdate(med._id)}
+                  disabled={savingState[med._id] || !(commentState[med._id] && commentState[med._id].trim())}
+                  style={{ marginLeft: 8 }}
+                >
+                  {savingState[med._id] ? 'Saving...' : 'Save Comment'}
+                </button>
+              </div>
               <button onClick={() => handleDelete(med._id)}>Delete</button>
             </li>
           ))}
