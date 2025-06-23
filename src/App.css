@@ -22,18 +22,23 @@ body {
   z-index: 1;
 }
 
+/* Remove .page-background for patient dashboard */
 .page-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/images/hero-background.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 0;
-  pointer-events: none;
+  display: none;
+}
+
+/* Patient Dashboard background override */
+.patient-dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  /* Soft purple-pink gradient */
+  color: #22223b;
+}
+
+/* Card backgrounds for contrast */
+.patient-dashboard-bg .bg-white\/10 {
+  background: rgba(245, 245, 250, 0.85) !important;
+  color: #22223b !important;
 }
 
 /* Navbar */

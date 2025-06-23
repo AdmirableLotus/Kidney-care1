@@ -127,7 +127,7 @@ const PatientDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
+    <div className="patient-dashboard-bg min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
       <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Patient Dashboard Loaded</h1>
       <div className="pt-8 pb-6 px-4">
         <div className="max-w-6xl mx-auto text-center">
