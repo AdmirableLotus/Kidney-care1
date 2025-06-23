@@ -4,8 +4,7 @@ import "./PatientDashboard.css";
 import axios from "axios";
 
 // Components
-import WaterIntakeForm from "./WaterIntakeForm";
-import WaterIntakeChart from "./WaterIntakeChart";
+import WaterIntakeTracker from "./WaterIntakeTracker";
 import KidneySmartDashboard from "./KidneySmartDashboard";
 import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
@@ -139,16 +138,12 @@ const PatientDashboard = () => {
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
+        <div className="water-intake-section">
           <div className="flex items-center gap-2 mb-4">
             <FaTint className="text-2xl text-cyan-300" />
             <h3 className="text-xl font-semibold">Water Intake</h3>
           </div>
-          <WaterIntakeForm onLogSuccess={() => setReloadChart(prev => !prev)} />
-          <div className="mt-6">
-            <h4 className="text-lg font-semibold mb-3">Last 7 Days</h4>
-            <WaterIntakeChart reloadTrigger={reloadChart} />
-          </div>
+          <WaterIntakeTracker />
         </div>
 
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">

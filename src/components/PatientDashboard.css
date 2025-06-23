@@ -75,45 +75,71 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
+.water-intake-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(160, 120, 255, 0.1);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.water-intake-section h3,
+.water-intake-section h4 {
+  color: #7c3aed;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
 .water-intake-form {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .water-intake-form input[type="number"] {
-  width: 100px;
-  padding: 0.4rem;
-  border: 1px solid #ccc;
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #d1c4e9;
   border-radius: 6px;
-  background-color: #f1fdf3;
-  color: #184d2b;
+  background-color: #f3e8ff;
+  color: #5b21b6;
   font-weight: bold;
+  text-align: center;
 }
 
 .water-intake-form button {
-  padding: 0.5rem 1.2rem;
-  background-color: #23b500;
+  padding: 0.4rem 1rem;
+  background-color: #a18cd1;
   color: white;
   border: none;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.2s;
 }
 
 .water-intake-form button:hover {
-  background-color: #1a9200;
+  background: #fbc2eb;
+  color: #7c3aed;
 }
 
 .water-intake-section .recharts-responsive-container {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   width: 100%;
-  height: 250px;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px dashed #a3f7b5;
-  border-radius: 12px;
+  height: 180px;
+  background: #f3e8ff;
+  border: 1px solid #e0e7ff;
+  border-radius: 10px;
 }
 
 .journal-form {
@@ -247,4 +273,96 @@ button:hover {
 button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
+}
+
+/* --- Water Intake Tracker Modernization --- */
+.water-intake-section, .water-intake-tracker {
+  background: linear-gradient(135deg, #f3e8ff 60%, #e0e7ff 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(160, 120, 255, 0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1.5px solid #e0e7ff;
+}
+
+.water-intake-tracker h2 {
+  color: #7c3aed;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.water-intake-tracker form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.water-intake-tracker input,
+.water-intake-tracker select {
+  background: #f8fafc;
+  color: #4b5563;
+  border: 1px solid #d1c4e9;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.water-intake-tracker input:focus,
+.water-intake-tracker select:focus {
+  border-color: #a18cd1;
+  outline: none;
+}
+
+.water-intake-tracker button,
+.water-intake-tracker .btn {
+  grid-column: span 2;
+  background: linear-gradient(90deg, #a18cd1 60%, #fbc2eb 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 0;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+
+.water-intake-tracker button:hover {
+  background: linear-gradient(90deg, #fbc2eb 60%, #a18cd1 100%);
+  color: #7c3aed;
+}
+
+.water-intake-tracker ul {
+  margin-top: 0.5rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.water-intake-tracker li {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  border-left: 4px solid #a18cd1;
+  box-shadow: 0 1px 4px rgba(160, 120, 255, 0.04);
+}
+
+@media (max-width: 600px) {
+  .water-intake-section, .water-intake-tracker {
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    max-width: 98vw;
+  }
+  .water-intake-tracker form {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
 }
