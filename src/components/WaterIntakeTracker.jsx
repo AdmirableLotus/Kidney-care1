@@ -10,6 +10,7 @@ export default function WaterIntakeTracker() {
     timestamp: new Date().toISOString().slice(0, 16), // 24-hour format
   });
   const [entries, setEntries] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   const fetchEntries = async () => {
     const token = localStorage.getItem('token');
@@ -86,12 +87,17 @@ export default function WaterIntakeTracker() {
           <div className="card-content">
             <h2>📊 Intake History</h2>
             <ul>
-              {entries.map((entry) => (
+              {(showAll ? entries : entries.slice(0, 3)).map((entry) => (
                 <li key={entry._id}>
                   {new Date(entry.timestamp).toLocaleString()} — {entry.amount} {entry.unit} from a {entry.container} of {entry.drinkType}
                 </li>
               ))}
             </ul>
+            {entries.length > 3 && (
+              <button className="btn" style={{marginTop: '0.5rem'}} onClick={() => setShowAll(v => !v)}>
+                {showAll ? 'View Less' : 'View More'}
+              </button>
+            )}
           </div>
         </div>
       </div>
