@@ -7,7 +7,8 @@ export default function AuthModal({ closeModal }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    role: 'patient'
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,18 +26,26 @@ export default function AuthModal({ closeModal }) {
     setLoading(true);
     try {
       if (tab === 'login') {
-        const res = await login({ email: formData.email, password: formData.password });
+        const res = await login({
+          email: formData.email,
+          password: formData.password
+        });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
       } else {
-        const res = await register({ name: formData.name, email: formData.email, password: formData.password });
+        const res = await register({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role
+        });
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('user', JSON.stringify(res.data.user));
       }
       closeModal();
       window.location.reload();
     } catch (err) {
-      setError(err.message || 'Something went wrong');
+      setError(err.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -53,14 +62,22 @@ export default function AuthModal({ closeModal }) {
 
         <form onSubmit={handleSubmit}>
           {tab === 'signup' && (
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+            <>
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              <select name="role" value={formData.role} onChange={handleChange}>
+                <option value="patient">Patient</option>
+                <option value="nurse">Nurse</option>
+                <option value="doctor">Doctor</option>
+                <option value="dietitian">Dietitian</option>
+              </select>
+            </>
           )}
           <input
             type="email"
@@ -87,4 +104,3 @@ export default function AuthModal({ closeModal }) {
     </div>
   );
 }
-

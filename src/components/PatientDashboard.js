@@ -29,10 +29,10 @@ const PatientDashboard = () => {
     try {
       const res = await api.get("/patient/entries");
       setEntries(res.data);
-      setLoading(false);
     } catch (err) {
       console.error("Failed to fetch entries", err);
       setError("Unable to load entries. Please try refreshing the page.");
+    } finally {
       setLoading(false);
     }
   };
@@ -98,6 +98,14 @@ const PatientDashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
         <div className="text-2xl">Loading your dashboard...</div>
+      </div>
+    );
+  }
+
+  if (user && user.role !== "patient") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
+        <div className="text-2xl text-red-400">Access denied. This dashboard is for patients only.</div>
       </div>
     );
   }

@@ -8,6 +8,7 @@ const NurseDashboard = () => {
   const [error, setError] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [foodEntries, setFoodEntries] = useState([]);
+  const [user, setUser] = useState(null);
   const [newEntry, setNewEntry] = useState({
     meal: '',
     food: '',
@@ -20,6 +21,21 @@ const NurseDashboard = () => {
   const [entrySuccess, setEntrySuccess] = useState(false);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const u = JSON.parse(storedUser);
+      setUser(u);
+      if (!['nurse', 'medical_staff', 'admin', 'doctor', 'dietitian'].includes(u.role)) {
+        setError('Access denied. This dashboard is for medical staff only.');
+        setLoading(false);
+        return;
+      }
+    } else {
+      setError('User not found in localStorage.');
+      setLoading(false);
+      return;
+    }
+
     const fetchPatients = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -27,10 +43,10 @@ const NurseDashboard = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPatients(response.data);
-        setLoading(false);
       } catch (err) {
         console.error('Error fetching patients:', err);
         setError('Failed to load patients. ' + (err.response?.data?.message || err.message));
+      } finally {
         setLoading(false);
       }
     };
@@ -107,10 +123,9 @@ const NurseDashboard = () => {
     setSubmitting(false);
   };
 
-  if (loading) return <div>Loading patients...</div>;
+  if (loading) return <div>Loading nurse dashboard...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
-  // Calculate totals for selected patient food entries
   const totals = foodEntries.reduce(
     (acc, item) => {
       acc.protein += item.protein;
@@ -158,51 +173,13 @@ const NurseDashboard = () => {
             <p>Sodium: {totals.sodium}</p>
           </div>
           <form onSubmit={handleAddFoodEntry} className="food-entry-form">
-            <input
-              type="text"
-              placeholder="Meal (e.g., Breakfast, Lunch)"
-              value={newEntry.meal}
-              onChange={e => setNewEntry({ ...newEntry, meal: e.target.value })}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Food Item"
-              value={newEntry.food}
-              onChange={e => setNewEntry({ ...newEntry, food: e.target.value })}
-              required
-            />
-            <input
-              type="number"
-              placeholder="Protein (g)"
-              value={newEntry.protein}
-              onChange={e => setNewEntry({ ...newEntry, protein: Number(e.target.value) })}
-              required
-            />
-            <input
-              type="number"
-              placeholder="Phosphorus (mg)"
-              value={newEntry.phosphorus}
-              onChange={e => setNewEntry({ ...newEntry, phosphorus: Number(e.target.value) })}
-              required
-            />
-            <input
-              type="number"
-              placeholder="Potassium (mg)"
-              value={newEntry.potassium}
-              onChange={e => setNewEntry({ ...newEntry, potassium: Number(e.target.value) })}
-              required
-            />
-            <input
-              type="number"
-              placeholder="Sodium (mg)"
-              value={newEntry.sodium}
-              onChange={e => setNewEntry({ ...newEntry, sodium: Number(e.target.value) })}
-              required
-            />
-            <button type="submit" disabled={submitting}>
-              {submitting ? 'Adding...' : 'Add Food Entry'}
-            </button>
+            <input type="text" placeholder="Meal" value={newEntry.meal} onChange={e => setNewEntry({ ...newEntry, meal: e.target.value })} required />
+            <input type="text" placeholder="Food Item" value={newEntry.food} onChange={e => setNewEntry({ ...newEntry, food: e.target.value })} required />
+            <input type="number" placeholder="Protein (g)" value={newEntry.protein} onChange={e => setNewEntry({ ...newEntry, protein: Number(e.target.value) })} required />
+            <input type="number" placeholder="Phosphorus (mg)" value={newEntry.phosphorus} onChange={e => setNewEntry({ ...newEntry, phosphorus: Number(e.target.value) })} required />
+            <input type="number" placeholder="Potassium (mg)" value={newEntry.potassium} onChange={e => setNewEntry({ ...newEntry, potassium: Number(e.target.value) })} required />
+            <input type="number" placeholder="Sodium (mg)" value={newEntry.sodium} onChange={e => setNewEntry({ ...newEntry, sodium: Number(e.target.value) })} required />
+            <button type="submit" disabled={submitting}>{submitting ? 'Adding...' : 'Add Food Entry'}</button>
             {entrySuccess && <p className="success-message">Entry added successfully!</p>}
             {error && <p className="error-message">{error}</p>}
           </form>
