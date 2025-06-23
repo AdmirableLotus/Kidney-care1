@@ -356,6 +356,28 @@ button:disabled {
   box-shadow: 0 1px 4px rgba(160, 120, 255, 0.04);
 }
 
+/* --- Water Intake Tracker Modernization & Positioning --- */
+.water-intake-tracker-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100vw;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .water-intake-tracker-wrapper {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+.water-intake-tracker {
+  min-width: 370px;
+  max-width: 440px;
+}
+
 @media (max-width: 600px) {
   .water-intake-section, .water-intake-tracker {
     padding: 1rem 0.5rem 1rem 0.5rem;
