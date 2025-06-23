@@ -117,4 +117,3 @@ const BloodPressureForm = ({ onEntryAdded }) => {
 };
 
 export default BloodPressureForm;
-
