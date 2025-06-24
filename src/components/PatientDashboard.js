@@ -10,19 +10,18 @@ import MedicationList from "./MedicationList";
 import BloodPressureForm from "./BloodPressureForm";
 import BloodPressureChart from "./BloodPressureChart";
 import FluidDashboard from "./FluidDashboard";
-import FoodLogForm from "./FoodLogForm";
 
 // Icons
-import { FaTint, FaChartLine, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
+import { FaTint, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
 
 const PatientDashboard = () => {
-  const [entries, setEntries] = useState([]);
-  const [newEntry, setNewEntry] = useState("");
+  // const [entries, setEntries] = useState([]);
+  // const [newEntry, setNewEntry] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [reloadChart, setReloadChart] = useState(false);
+  // const [reloadChart, setReloadChart] = useState(false);
   const [user, setUser] = useState(null);
-  const [summary, setSummary] = useState({});
+  // const [summary, setSummary] = useState({});
 
   const fetchEntries = async () => {
     try {
@@ -74,24 +73,24 @@ const PatientDashboard = () => {
     fetchEntries();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5000/api/patient/entries",
-        { content: newEntry },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setNewEntry("");
-      fetchEntries();
-    } catch (err) {
-      console.error("Failed to submit entry", err);
-      setError("Could not submit your entry.");
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     await axios.post(
+  //       "http://localhost:5000/api/patient/entries",
+  //       { content: newEntry },
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //     setNewEntry("");
+  //     fetchEntries();
+  //   } catch (err) {
+  //     console.error("Failed to submit entry", err);
+  //     setError("Could not submit your entry.");
+  //   }
+  // };
 
   if (loading) {
     return (

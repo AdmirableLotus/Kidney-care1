@@ -37,7 +37,7 @@ const KidneySmartDashboard = () => {
     sodium: '0',
     dateConsumed: new Date().toISOString().split('T')[0]
   });
-  const [warnings, setWarnings] = useState([]);
+  // const [warnings, setWarnings] = useState([]);
 
   const fetchFoodEntries = useCallback(async () => {
     try {
@@ -100,7 +100,7 @@ const KidneySmartDashboard = () => {
       const nutrients = getFoodNutrients(newEntry.foodName, parseFloat(newEntry.servingSize));
       if (nutrients) {
         setNewEntry(prev => ({ ...prev, ...Object.fromEntries(Object.entries(nutrients).map(([k, v]) => [k, v.toString()])) }));
-        setWarnings(checkNutrientLevels(nutrients));
+        // setWarnings(checkNutrientLevels(nutrients));
       }
     }
   }, [newEntry.foodName, newEntry.servingSize]);

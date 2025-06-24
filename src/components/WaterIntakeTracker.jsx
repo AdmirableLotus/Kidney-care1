@@ -1,106 +1,119 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
-export default function WaterIntakeTracker() {
+const WaterIntakeTracker = () => {
+  const [intakes, setIntakes] = useState([]);
   const [form, setForm] = useState({
     amount: '',
     unit: 'ml',
-    container: 'glass',
-    drinkType: 'water',
-    timestamp: new Date().toISOString().slice(0, 16), // 24-hour format
+    container: '',
+    type: '',
   });
-  const [entries, setEntries] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-
-  const fetchEntries = async () => {
-    const token = localStorage.getItem('token');
-    const res = await axios.get('/api/patient/water', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setEntries(res.data);
-  };
-
-  useEffect(() => {
-    fetchEntries();
-  }, []);
+  const [showHistory, setShowHistory] = useState(false);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    await axios.post('/api/patient/water', form, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setForm({ ...form, amount: '', timestamp: new Date().toISOString().slice(0, 16) });
-    fetchEntries();
+    setIntakes([...intakes, { ...form, timestamp: new Date().toISOString() }]);
+    setForm({ amount: '', unit: 'ml', container: '', type: '' });
   };
 
   return (
-    <div className="water-intake-tracker-wrapper">
-      <div className="water-intake-tracker">
-        <div className="dashboard-card">
-          <div className="card-content">
-            <h2>💧 Log Fluid Intake</h2>
-            <form onSubmit={handleSubmit} aria-label="Log Fluid Intake">
-              <label htmlFor="amount" className="sr-only">Amount</label>
-              <input type="number" id="amount" name="amount" value={form.amount} onChange={handleChange} placeholder="Amount" required min="1" />
-              <label htmlFor="unit" className="sr-only">Unit</label>
-              <select id="unit" name="unit" value={form.unit} onChange={handleChange}>
-                <option value="ml">mL</option>
-                <option value="oz">oz</option>
-              </select>
-              <label htmlFor="container" className="sr-only">Container</label>
-              <select id="container" name="container" value={form.container} onChange={handleChange}>
-                <option value="glass">Glass</option>
-                <option value="mug">Mug</option>
-                <option value="bottle">Bottle</option>
-                <option value="cup">Cup</option>
-                <option value="can">Can</option>
-              </select>
-              <label htmlFor="drinkType" className="sr-only">Drink Type</label>
-              <select id="drinkType" name="drinkType" value={form.drinkType} onChange={handleChange}>
-                <option value="water">Water</option>
-                <option value="coffee">Coffee</option>
-                <option value="tea">Tea</option>
-                <option value="juice">Juice</option>
-                <option value="milk">Milk</option>
-                <option value="soda">Soda</option>
-              </select>
-              <label htmlFor="timestamp" className="sr-only">Date & Time</label>
-              <input
-                type="datetime-local"
-                id="timestamp"
-                name="timestamp"
-                value={form.timestamp}
-                onChange={handleChange}
-                step="60"
-                pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-              />
-              <button type="submit" className="btn">Add Entry</button>
-            </form>
+    <div className="flex justify-end p-4">
+      <div className="bg-white p-4 rounded-xl shadow-lg w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Log Water Intake</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium">Amount</label>
+            <input
+              type="number"
+              name="amount"
+              value={form.amount}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              placeholder="Enter amount"
+              required
+            />
           </div>
-        </div>
-        <div className="dashboard-card" style={{marginTop: '1.5rem'}}>
-          <div className="card-content">
-            <h2>📊 Intake History</h2>
-            <ul>
-              {(showAll ? entries : entries.slice(0, 3)).map((entry) => (
-                <li key={entry._id}>
-                  {new Date(entry.timestamp).toLocaleString()} — {entry.amount} {entry.unit} from a {entry.container} of {entry.drinkType}
-                </li>
-              ))}
-            </ul>
-            {entries.length > 3 && (
-              <button className="btn" style={{marginTop: '0.5rem'}} onClick={() => setShowAll(v => !v)}>
-                {showAll ? 'View Less' : 'View More'}
-              </button>
-            )}
+
+          <div>
+            <label className="block text-sm font-medium">Unit</label>
+            <select
+              name="unit"
+              value={form.unit}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="ml">Milliliters (ml)</option>
+              <option value="oz">Ounces (oz)</option>
+            </select>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium">Container</label>
+            <select
+              name="container"
+              value={form.container}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+              <option value="">Select container</option>
+              <option value="cup">Cup</option>
+              <option value="glass">Glass</option>
+              <option value="bottle">Bottle</option>
+              <option value="mug">Mug</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium">Type of Drink</label>
+            <select
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Select drink</option>
+              <option value="water">Water</option>
+              <option value="coffee">Coffee</option>
+              <option value="tea">Tea</option>
+              <option value="milk">Milk</option>
+              <option value="juice">Juice</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+            Add Intake
+          </button>
+        </form>
+
+        <div className="mt-4">
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="text-sm text-blue-600 hover:underline"
+          >
+            {showHistory ? 'Hide History' : 'See History'}
+          </button>
+
+          {showHistory && intakes.length > 0 && (
+            <div className="mt-4 max-h-48 overflow-y-auto">
+              <ul className="space-y-2">
+                {intakes.map((entry, idx) => (
+                  <li key={idx} className="border p-2 rounded text-sm">
+                    {entry.amount} {entry.unit} - {entry.type} in a {entry.container} @ {new Date(entry.timestamp).toLocaleString()}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default WaterIntakeTracker;
