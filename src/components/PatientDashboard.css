@@ -532,3 +532,41 @@ button:disabled {
     margin-top: 1rem;
   }
 }
+
+/* --- Water Intake & Blood Pressure Tracker side-by-side layout --- */
+.tracker-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  .tracker-row {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+}
+
+.water-intake-section, .blood-pressure-section {
+  padding: 0;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.water-intake-section .bg-white, .blood-pressure-section .bg-white {
+  color: #111;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 340px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}

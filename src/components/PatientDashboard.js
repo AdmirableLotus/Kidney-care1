@@ -85,8 +85,8 @@ const PatientDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
-        <div className="flex flex-col md:flex-row gap-6 md:col-span-2">
+      <div className="max-w-6xl mx-auto p-4 pb-10">
+        <div className="tracker-row">
           <div className="water-intake-section">
             <div className="flex items-center gap-2 mb-4">
               <FaTint className="text-2xl text-cyan-300" />
