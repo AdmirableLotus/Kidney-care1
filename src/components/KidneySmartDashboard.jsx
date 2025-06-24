@@ -13,13 +13,6 @@ const DAILY_LIMITS = {
   protein: 60
 };
 
-const checkNutrientLevels = (nutrients) => {
-  const warnings = [];
-  if (nutrients.phosphorus > DAILY_LIMITS.phosphorus) warnings.push(`High phosphorus: ${nutrients.phosphorus}mg exceeds daily limit of ${DAILY_LIMITS.phosphorus}mg`);
-  if (nutrients.potassium > DAILY_LIMITS.potassium) warnings.push(`High potassium: ${nutrients.potassium}mg exceeds daily limit of ${DAILY_LIMITS.potassium}mg`);
-  return warnings;
-};
-
 const KidneySmartDashboard = () => {
   const [dailyTotals, setDailyTotals] = useState({ phosphorus: 0, potassium: 0, sodium: 0, protein: 0 });
   const [weeklyData, setWeeklyData] = useState([]);

@@ -1,63 +1,34 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
 import "./PatientDashboard.css";
-import axios from "axios";
+// import axios from "axios";
 
 // Components
 import WaterIntakeTracker from "./WaterIntakeTracker";
 import KidneySmartDashboard from "./KidneySmartDashboard";
 import MedicationList from "./MedicationList";
-import BloodPressureForm from "./BloodPressureForm";
-import BloodPressureChart from "./BloodPressureChart";
+import BloodPressureTracker from "./BloodPressureTracker";
 import FluidDashboard from "./FluidDashboard";
 
 // Icons
 import { FaTint, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
 
 const PatientDashboard = () => {
-  // const [entries, setEntries] = useState([]);
-  // const [newEntry, setNewEntry] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  // const [reloadChart, setReloadChart] = useState(false);
+  // const [error, setError] = useState("");
   const [user, setUser] = useState(null);
-  // const [summary, setSummary] = useState({});
-
-  const fetchEntries = async () => {
-    try {
-      const res = await api.get("/patient/entries");
-      setEntries(res.data);
-    } catch (err) {
-      console.error("Failed to fetch entries", err);
-      setError("Unable to load entries. Please try refreshing the page.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSummary = async (userId) => {
-    try {
-      const res = await api.get(`/patient/summary/${userId}`);
-      setSummary(res.data);
-    } catch (err) {
-      console.error("Failed to fetch summary:", err);
-      setSummary({});
-    }
-  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const u = JSON.parse(storedUser);
       setUser(u);
-      fetchSummary(u._id);
     } else {
       api.get("/auth/me")
         .then(res => {
           const userData = res.data;
           localStorage.setItem("user", JSON.stringify(userData));
           setUser(userData);
-          fetchSummary(userData._id);
         })
         .catch(err => {
           console.error("Failed to fetch user:", err);
@@ -67,30 +38,8 @@ const PatientDashboard = () => {
           }
         });
     }
+    setLoading(false);
   }, []);
-
-  useEffect(() => {
-    fetchEntries();
-  }, []);
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     await axios.post(
-  //       "http://localhost:5000/api/patient/entries",
-  //       { content: newEntry },
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-  //     setNewEntry("");
-  //     fetchEntries();
-  //   } catch (err) {
-  //     console.error("Failed to submit entry", err);
-  //     setError("Could not submit your entry.");
-  //   }
-  // };
 
   if (loading) {
     return (
@@ -108,13 +57,13 @@ const PatientDashboard = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
-        <div className="text-2xl text-red-400">DEBUG: {error}</div>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white flex items-center justify-center">
+  //       <div className="text-2xl text-red-400">DEBUG: {error}</div>
+  //     </div>
+  //   );
+  // }
 
   if (!user) {
     return (
@@ -137,12 +86,21 @@ const PatientDashboard = () => {
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 p-4 pb-10">
-        <div className="water-intake-section">
-          <div className="flex items-center gap-2 mb-4">
-            <FaTint className="text-2xl text-cyan-300" />
-            <h3 className="text-xl font-semibold">Water Intake</h3>
+        <div className="flex flex-col md:flex-row gap-6 md:col-span-2">
+          <div className="water-intake-section">
+            <div className="flex items-center gap-2 mb-4">
+              <FaTint className="text-2xl text-cyan-300" />
+              <h3 className="text-xl font-semibold">Water Intake</h3>
+            </div>
+            <WaterIntakeTracker />
           </div>
-          <WaterIntakeTracker />
+          <div className="blood-pressure-section">
+            <div className="flex items-center gap-2 mb-4">
+              <FaHeartbeat className="text-2xl text-red-300" />
+              <h3 className="text-xl font-semibold">Blood Pressure</h3>
+            </div>
+            <BloodPressureTracker />
+          </div>
         </div>
 
         <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
@@ -159,18 +117,6 @@ const PatientDashboard = () => {
             <h3 className="text-xl font-semibold">Medications</h3>
           </div>
           <MedicationList />
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FaHeartbeat className="text-2xl text-red-300" />
-            <h3 className="text-xl font-semibold">Blood Pressure</h3>
-          </div>
-          <BloodPressureForm onEntryAdded={() => setReloadChart(prev => !prev)} />
-          <div className="mt-6">
-            <h4 className="text-lg font-semibold mb-3">History</h4>
-            <BloodPressureChart />
-          </div>
         </div>
 
         {user && (

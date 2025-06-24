@@ -388,3 +388,147 @@ button:disabled {
     gap: 0.7rem;
   }
 }
+
+/* --- Water Intake Tracker left alignment and improved organization --- */
+.water-intake-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.water-intake-section .bg-white {
+  color: #111;
+  background: #fff;
+}
+
+.water-intake-section label,
+.water-intake-section h2,
+.water-intake-section input,
+.water-intake-section select,
+.water-intake-section button,
+.water-intake-section .text-blue-600 {
+  color: #111 !important;
+}
+
+.water-intake-section .border {
+  border-color: #d1d5db;
+}
+
+.water-intake-section .bg-blue-600 {
+  background-color: #2563eb !important;
+  color: #fff !important;
+}
+
+/* --- Water Intake Tracker: improved alignment and centering --- */
+.water-intake-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100%;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.water-intake-section .bg-white {
+  color: #111;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin-bottom: 2rem;
+  min-width: 340px;
+  max-width: 400px;
+  margin-left: 2.5rem;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.water-intake-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.water-intake-section .mt-4 {
+  margin-top: 1.2rem !important;
+}
+
+.water-intake-section button[type="submit"] {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 900px) {
+  .water-intake-section {
+    justify-content: center;
+  }
+  .water-intake-section .bg-white {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
+
+/* --- Blood Pressure Tracker section styling (same as water) --- */
+.blood-pressure-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blood-pressure-section .bg-white {
+  color: #111;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  margin-bottom: 2rem;
+  min-width: 340px;
+  max-width: 400px;
+  margin-left: 2.5rem;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.blood-pressure-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.blood-pressure-section .mt-4 {
+  margin-top: 1.2rem !important;
+}
+
+.blood-pressure-section button[type="submit"] {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 900px) {
+  .blood-pressure-section {
+    justify-content: center;
+  }
+  .blood-pressure-section .bg-white {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
