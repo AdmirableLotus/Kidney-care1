@@ -60,6 +60,7 @@ const WaterIntakeTracker = () => {
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
+            >
               <option value="">Select container</option>
               <option value="cup">Cup</option>
               <option value="glass">Glass</option>
