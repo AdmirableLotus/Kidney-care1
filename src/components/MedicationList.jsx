@@ -16,7 +16,8 @@ const MedicationList = () => {
   const fetchMeds = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/patient/medication", {
+      const patientId = localStorage.getItem("patientId"); // Ensure patientId is available
+      const res = await axios.get(`http://localhost:5000/api/patients/${patientId}/medications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMeds(res.data);

@@ -8,6 +8,12 @@ const NurseDashboard = () => {
   const [error, setError] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [foodEntries, setFoodEntries] = useState([]);
+  const [totals, setTotals] = useState({
+    protein: 0,
+    phosphorus: 0,
+    potassium: 0,
+    sodium: 0
+  });
   const [user, setUser] = useState(null);
   const [newEntry, setNewEntry] = useState({
     meal: '',
@@ -54,6 +60,19 @@ const NurseDashboard = () => {
     fetchPatients();
   }, []);
 
+  const calculateTotals = (entries) => {
+    return entries.reduce(
+      (acc, entry) => {
+        acc.protein += entry.protein || 0;
+        acc.phosphorus += entry.phosphorus || 0;
+        acc.potassium += entry.potassium || 0;
+        acc.sodium += entry.sodium || 0;
+        return acc;
+      },
+      { protein: 0, phosphorus: 0, potassium: 0, sodium: 0 }
+    );
+  };
+
   const handlePatientSelect = async (patient) => {
     if (selectedPatient?._id === patient._id) return;
     setSelectedPatient(patient);
@@ -68,6 +87,7 @@ const NurseDashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFoodEntries(response.data);
+      setTotals(calculateTotals(response.data));
     } catch (err) {
       console.error('Error fetching food entries:', err);
       setError('Failed to load food entries: ' + (err.response?.data?.message || err.message));
@@ -130,6 +150,7 @@ const NurseDashboard = () => {
     <div className="dashboard-container">
       <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Nurse Dashboard Loaded</h1>
       <h2>Nurse Dashboard</h2>
+      
       <div className="patients-section">
         <h3>Your Patients</h3>
         {patients.length === 0 ? (
@@ -154,18 +175,19 @@ const NurseDashboard = () => {
       </div>
 
       {!selectedPatient && patients.length > 0 && (
-        <div style={{color:'orange',marginTop:20}}>Select a patient to view their food log.</div>
+        <div style={{color:'orange', marginTop:20}}>Select a patient to view their food log.</div>
       )}
 
       {selectedPatient && (
         <div className="patient-details">
           <h2>Food Log for {selectedPatient.name}</h2>
           <div className="totals">
-            <p>Protein: {totals.protein}</p>
-            <p>Phosphorus: {totals.phosphorus}</p>
-            <p>Potassium: {totals.potassium}</p>
-            <p>Sodium: {totals.sodium}</p>
+            <p>Protein: {totals.protein} g</p>
+            <p>Phosphorus: {totals.phosphorus} mg</p>
+            <p>Potassium: {totals.potassium} mg</p>
+            <p>Sodium: {totals.sodium} mg</p>
           </div>
+
           <form onSubmit={handleAddFoodEntry} className="food-entry-form">
             <input type="text" placeholder="Meal" value={newEntry.meal} onChange={e => setNewEntry({ ...newEntry, meal: e.target.value })} required />
             <input type="text" placeholder="Food Item" value={newEntry.food} onChange={e => setNewEntry({ ...newEntry, food: e.target.value })} required />
@@ -190,10 +212,10 @@ const NurseDashboard = () => {
                   </div>
                   <div className="entry-details">
                     <p>Food: {entry.description}</p>
-                    <p>Protein: {entry.protein}g</p>
-                    <p>Phosphorus: {entry.phosphorus}mg</p>
-                    <p>Potassium: {entry.potassium}mg</p>
-                    <p>Sodium: {entry.sodium}mg</p>
+                    <p>Protein: {entry.protein} g</p>
+                    <p>Phosphorus: {entry.phosphorus} mg</p>
+                    <p>Potassium: {entry.potassium} mg</p>
+                    <p>Sodium: {entry.sodium} mg</p>
                   </div>
                 </div>
               ))

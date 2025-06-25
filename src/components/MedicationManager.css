@@ -1,30 +1,44 @@
 .medication-manager {
-  padding: 1.5rem;
-  background-color: #f9fafb;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-top: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .medication-manager h2 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: #1e3a8a;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
 }
 
 .medication-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .medication-form input,
 .medication-form select,
 .medication-form textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
+  background-color: #f8fafc;
+  transition: border-color 0.3s;
+}
+
+.medication-form input:focus,
+.medication-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
 }
 
 .medication-form button {
@@ -32,11 +46,48 @@
   color: white;
   padding: 0.75rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .medication-form button:hover {
   background-color: #2563eb;
+}
+
+.medication-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.medication-item {
+  background-color: #f1f5f9;
+  border-left: 4px solid #3b82f6;
+  padding: 1rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.medication-item p {
+  margin: 0.3rem 0;
+}
+
+.secondary-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.secondary-btn:hover {
+  background-color: #dc2626;
 }

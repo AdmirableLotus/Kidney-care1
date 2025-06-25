@@ -7,6 +7,7 @@ import MedicationManager from "./MedicationManager";
 import MedicationList from "./MedicationList";
 import BloodPressureTracker from "./BloodPressureTracker";
 import FluidDashboard from "./FluidDashboard";
+import MedicationSummary from "./MedicationSummary";
 import { FaTint, FaHeartbeat, FaPills, FaBook } from "react-icons/fa";
 
 const PatientDashboard = () => {
@@ -106,6 +107,17 @@ const PatientDashboard = () => {
         {user && (
           <div className="dashboard-card wide">
             <FluidDashboard patientId={user._id} />
+          </div>
+        )}
+
+        {/* Medication Summary Section - Visible to patients only */}
+        {user.role === "patient" && (
+          <div className="dashboard-card">
+            <div className="dashboard-section-header">
+              <FaPills className="icon text-purple-300" />
+              <h3>Your Medication Summary</h3>
+            </div>
+            <MedicationSummary patientId={user._id} />
           </div>
         )}
       </div>
