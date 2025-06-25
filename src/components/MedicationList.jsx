@@ -72,6 +72,7 @@ const MedicationList = () => {
 
   return (
     <div className="medication-list">
+      <h2>Medications</h2>
       <button 
         className="add-medication-toggle" 
         onClick={() => setShowAddForm(!showAddForm)}
