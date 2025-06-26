@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './StaffDashboardV2.css';
+import MedicationManager from './MedicationManager';
+import FluidDashboard from './FluidDashboard';
 
 const NurseDashboard = () => {
   const [patients, setPatients] = useState([]);
@@ -59,6 +61,11 @@ const NurseDashboard = () => {
 
     fetchPatients();
   }, []);
+
+  useEffect(() => {
+    console.log("User role:", user?.role);
+    console.log("Selected patient:", selectedPatient);
+  }, [user, selectedPatient]);
 
   const calculateTotals = (entries) => {
     return entries.reduce(
@@ -221,6 +228,11 @@ const NurseDashboard = () => {
               ))
             )}
           </div>
+
+          <MedicationManager patientId={selectedPatient._id} />
+          {console.log("Patient ID passed to MedicationManager:", selectedPatient?._id)}
+
+          <FluidDashboard patientId={selectedPatient._id} />
         </div>
       )}
     </div>

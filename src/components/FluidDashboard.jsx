@@ -12,9 +12,19 @@ export default function FluidDashboard({ patientId }) {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`/api/fluids/totals/${patientId}`, {
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        const isStaff = ['nurse', 'doctor', 'admin', 'dietitian'].includes(user?.role);
+        const endpoint = isStaff
+          ? `/api/staff/fluid/patient/${patientId}`
+          : `/api/fluids/totals/${patientId}`;
+
+        console.log('Fetching fluid data for patientId:', patientId, 'Role:', user?.role);
+        const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        console.log('Fluid data fetched:', res.data);
         setFluidData(res.data || { totals: [], overall: 0 });
         setError('');
       } catch (err) {
@@ -42,7 +52,7 @@ export default function FluidDashboard({ patientId }) {
   return (
     <div className="bg-white rounded-xl shadow p-6 w-full text-black">
       <h2 className="text-xl font-bold mb-4"><span role="img" aria-label="droplet">💧</span> Fluid Intake Dashboard</h2>
-      
+
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-blue-100 p-4 rounded">
           <p className="font-semibold">Drinks</p>

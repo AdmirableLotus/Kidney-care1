@@ -1,0 +1,31 @@
+.medication-summary {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.medication-summary h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.medication-summary ul {
+  list-style: none;
+  padding: 0;
+}
+
+.medication-summary li {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.medication-summary li strong {
+  font-weight: bold;
+}
+
+.medication-summary .error {
+  color: red;
+  font-weight: bold;
+}
