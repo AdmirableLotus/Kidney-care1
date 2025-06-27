@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Medication.css";
 
-const MedicationForm = ({ onAdded }) => {
+const MedicationForm = ({ onAdded, patientId }) => {
   const [form, setForm] = useState({
     name: "",
     dosage: "",
@@ -25,6 +25,11 @@ const MedicationForm = ({ onAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!patientId) {
+      setError("No patient selected.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -36,7 +41,7 @@ const MedicationForm = ({ onAdded }) => {
       };
 
       await axios.post(
-        "http://localhost:5000/api/patient/medication",
+        `http://localhost:5000/api/patients/${patientId}/medications`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -153,4 +158,3 @@ const MedicationForm = ({ onAdded }) => {
 };
 
 export default MedicationForm;
-

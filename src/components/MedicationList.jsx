@@ -4,39 +4,40 @@ import { format } from "date-fns";
 import MedicationForm from "./MedicationForm";
 import "./Medication.css";
 
-const MedicationList = () => {
+const MedicationList = ({ patientId }) => {
   const [meds, setMeds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
-  // Track comment and saving state for each medication by ID
   const [commentState, setCommentState] = useState({});
   const [savingState, setSavingState] = useState({});
 
   const fetchMeds = async () => {
     try {
       const token = localStorage.getItem("token");
-      const patientId = localStorage.getItem("patientId"); // Ensure patientId is available
       const res = await axios.get(`http://localhost:5000/api/patients/${patientId}/medications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMeds(res.data);
-      setLoading(false);
     } catch (err) {
       setError("Failed to load medications.");
+    } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchMeds(); }, []);
+  useEffect(() => {
+    if (patientId) fetchMeds();
+  }, [patientId]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this medication?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/patient/medication/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } });
-      setMeds(meds.filter(m => m._id !== id));
+      await axios.delete(`http://localhost:5000/api/medications/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMeds(meds.filter((m) => m._id !== id));
     } catch {
       alert("Failed to delete medication.");
     }
@@ -48,24 +49,24 @@ const MedicationList = () => {
   };
 
   const handleCommentChange = (id, value) => {
-    setCommentState(prev => ({ ...prev, [id]: value }));
+    setCommentState((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleCommentUpdate = async (id) => {
-    setSavingState(prev => ({ ...prev, [id]: true }));
+    setSavingState((prev) => ({ ...prev, [id]: true }));
     try {
       const token = localStorage.getItem("token");
       await axios.patch(
-        `http://localhost:5000/api/patient/medication/${id}/comment`,
+        `http://localhost:5000/api/medications/${id}/comment`,
         { comment: commentState[id] || "" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchMeds();
-      setCommentState(prev => ({ ...prev, [id]: "" }));
+      setCommentState((prev) => ({ ...prev, [id]: "" }));
     } catch {
       alert("Failed to update comment.");
     }
-    setSavingState(prev => ({ ...prev, [id]: false }));
+    setSavingState((prev) => ({ ...prev, [id]: false }));
   };
 
   if (loading) return <p className="text-white">Loading medications...</p>;
@@ -74,45 +75,45 @@ const MedicationList = () => {
   return (
     <div className="medication-list">
       <h2>Medications</h2>
-      <button 
-        className="add-medication-toggle" 
-        onClick={() => setShowAddForm(!showAddForm)}
-      >
+
+      <button className="add-medication-toggle" onClick={() => setShowAddForm(!showAddForm)}>
         {showAddForm ? "− Cancel" : "+ Add Medication"}
       </button>
-      {showAddForm && <MedicationForm onAdded={handleMedicationAdded} />}
+
+      {showAddForm && <MedicationForm onAdded={handleMedicationAdded} patientId={patientId} />}
+
       {meds.length === 0 ? (
         <p>No medications added yet.</p>
       ) : (
         <ul>
-          {meds.map(med => (
+          {meds.map((med) => (
             <li key={med._id}>
               <strong>{med.name}</strong> ({med.dosage})<br />
               Frequency: {med.frequency}<br />
-              {med.time && med.time.length > 0 && (
-                <>Time(s): {med.time.join(", ")}<br /></>
-              )}
+              {med.time?.length > 0 && <>Time(s): {med.time.join(", ")}<br /></>}
               Start: {format(new Date(med.startDate), "MMM d, yyyy")}<br />
-              {med.endDate && (
-                <>End: {format(new Date(med.endDate), "MMM d, yyyy")}<br /></>
-              )}
+              {med.endDate && <>End: {format(new Date(med.endDate), "MMM d, yyyy")}<br /></>}
               {med.notes && <em>Notes: {med.notes}</em>}
+              
               <div style={{ marginTop: 8 }}>
                 <input
                   type="text"
                   placeholder="Add a comment about this medication..."
                   value={commentState[med._id] || ""}
-                  onChange={e => handleCommentChange(med._id, e.target.value)}
-                  style={{ width: '70%' }}
+                  onChange={(e) => handleCommentChange(med._id, e.target.value)}
+                  style={{ width: "70%" }}
                 />
                 <button
                   onClick={() => handleCommentUpdate(med._id)}
-                  disabled={savingState[med._id] || !(commentState[med._id] && commentState[med._id].trim())}
+                  disabled={
+                    savingState[med._id] || !(commentState[med._id] && commentState[med._id].trim())
+                  }
                   style={{ marginLeft: 8 }}
                 >
-                  {savingState[med._id] ? 'Saving...' : 'Save Comment'}
+                  {savingState[med._id] ? "Saving..." : "Save Comment"}
                 </button>
               </div>
+
               <button onClick={() => handleDelete(med._id)}>Delete</button>
             </li>
           ))}
