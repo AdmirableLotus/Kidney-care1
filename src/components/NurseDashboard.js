@@ -134,6 +134,11 @@ const NurseDashboard = () => {
     setSubmitting(false);
   };
 
+  console.log("Rendering NurseDashboard");
+  console.log("Selected patient:", selectedPatient);
+  console.log("Patients list:", patients);
+  console.log("User role:", user?.role);
+
   if (loading) return <div style={{ color: 'red' }}>Loading nurse dashboard...</div>;
   if (error) return <div className="error-message" style={{ color: 'red' }}>{error}</div>;
 

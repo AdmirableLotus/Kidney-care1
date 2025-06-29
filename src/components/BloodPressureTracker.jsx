@@ -13,12 +13,6 @@ const BloodPressureTracker = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const getCurrentTimestamp = () => {
-    const now = new Date();
-    now.setSeconds(0, 0);
-    return now.toISOString().slice(0, 16);
-  };
-
   useEffect(() => {
     fetchReadings();
   }, []);

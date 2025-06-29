@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./Medication.css";
+import "./MedicationForm.css";
 
 const MedicationForm = ({ onAdded, patientId }) => {
   const [form, setForm] = useState({
     name: "",
-    dosage: "",
     frequency: "",
-    time: "",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: "",
     notes: "",
   });
   const [loading, setLoading] = useState(false);
@@ -37,11 +33,10 @@ const MedicationForm = ({ onAdded, patientId }) => {
       const token = localStorage.getItem("token");
       const formData = {
         ...form,
-        time: form.time ? form.time.split(",").map((t) => t.trim()) : [],
       };
 
       const res = await axios.post(
-        `http://localhost:5000/api/staff/patient/${patientId}/medications`,
+        `http://localhost:5000/api/staff/patients/${patientId}/medications`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -50,11 +45,7 @@ const MedicationForm = ({ onAdded, patientId }) => {
 
       setForm({
         name: "",
-        dosage: "",
         frequency: "",
-        time: "",
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: "",
         notes: "",
       });
 
@@ -71,87 +62,44 @@ const MedicationForm = ({ onAdded, patientId }) => {
     <form onSubmit={handleSubmit} className="medication-form">
       <h3>Add New Medication</h3>
 
-      <label>
-        Medication Name:
+      <div className="form-group">
+        <label htmlFor="name">Medication Name:</label>
         <input
           type="text"
+          id="name"
           name="name"
           value={form.name}
           onChange={handleChange}
           required
           placeholder="e.g. Lisinopril"
         />
-      </label>
+      </div>
 
-      <label>
-        Dosage:
+      <div className="form-group">
+        <label htmlFor="frequency">Frequency:</label>
         <input
           type="text"
-          name="dosage"
-          value={form.dosage}
-          onChange={handleChange}
-          required
-          placeholder="e.g. 10mg"
-        />
-      </label>
-
-      <label>
-        Frequency:
-        <input
-          type="text"
+          id="frequency"
           name="frequency"
           value={form.frequency}
           onChange={handleChange}
           required
           placeholder="e.g. Once daily"
         />
-      </label>
+      </div>
 
-      <label>
-        Time(s):
-        <input
-          type="text"
-          name="time"
-          value={form.time}
-          onChange={handleChange}
-          placeholder="e.g. 8:00 AM, 8:00 PM"
-        />
-      </label>
-
-      <label>
-        Start Date:
-        <input
-          type="date"
-          name="startDate"
-          value={form.startDate}
-          onChange={handleChange}
-          required
-        />
-      </label>
-
-      <label>
-        End Date:
-        <input
-          type="date"
-          name="endDate"
-          value={form.endDate}
-          onChange={handleChange}
-          min={form.startDate}
-        />
-      </label>
-
-      <label>
-        Notes:
-        <input
-          type="text"
+      <div className="form-group">
+        <label htmlFor="notes">Notes:</label>
+        <textarea
+          id="notes"
           name="notes"
           value={form.notes}
           onChange={handleChange}
           placeholder="Any special instructions or notes"
-        />
-      </label>
+        ></textarea>
+      </div>
 
-      <button type="submit" disabled={loading}>
+      <button type="submit" className="submit-btn" disabled={loading}>
         {loading ? "Adding..." : "Add Medication"}
       </button>
 

@@ -42,7 +42,12 @@ const StaffMedicationForm = ({ onAdded }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/patient/medication", form, {
+      await axios.post(`http://localhost:5000/api/patients/${form.user}/medications`, {
+        name: form.name,
+        dosage: form.dosage,
+        frequency: form.frequency,
+        notes: form.notes
+      }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSuccess("Medication assigned successfully.");

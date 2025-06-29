@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import StaffLabResultForm from './StaffLabResultForm';
 import BloodPressureChart from './BloodPressureChart';
+import MedicationForm from './MedicationForm';
 import './StaffDashboardV2.css';
 
 const StaffDashboardV2 = () => {
@@ -64,6 +65,24 @@ const StaffDashboardV2 = () => {
 
     fetchPatients();
   }, []);
+
+  // Moved useCallback to the top level of the component
+  const fetchMedications = useCallback(async () => {
+    if (!selectedPatient) return;
+    setIsLoading(prev => ({ ...prev, meds: true }));
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `http://localhost:5000/api/staff/patients/${selectedPatient}/medications`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMedications(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching medications:", err);
+      setMedications([]);
+    }
+    setIsLoading(prev => ({ ...prev, meds: false }));
+  }, [selectedPatient]);
 
   useEffect(() => {
     if (!selectedPatient) return;
@@ -150,28 +169,13 @@ const StaffDashboardV2 = () => {
       setIsLoading(prev => ({ ...prev, entries: false }));
     };
 
-    // Fetch medications
-    const fetchMedications = async () => {
-      setIsLoading(prev => ({ ...prev, meds: true }));
-      try {
-        const res = await axios.get(`http://localhost:5000/api/patient/medication/${selectedPatient}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setMedications(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error('Error fetching medications:', err);
-        setMedications([]);
-      }
-      setIsLoading(prev => ({ ...prev, meds: false }));
-    };
-
     // Fetch all data for the selected patient
     fetchFluid();
     fetchFood();
     fetchLabResults();
     fetchPatientEntries();
     fetchMedications();
-  }, [selectedPatient]);
+  }, [selectedPatient, fetchMedications]);
 
   // Get selected patient's name
   const getSelectedPatientName = () => {
@@ -459,6 +463,13 @@ const StaffDashboardV2 = () => {
                   ) : (
                     <p>No medications recorded.</p>
                   )}
+                  {/* Medication Form for adding/editing medications */}
+                  <MedicationForm
+                    patientId={selectedPatient}
+                    onMedicationAdded={() => {
+                      fetchMedications();
+                    }}
+                  />
                 </>
               )}
             </div>

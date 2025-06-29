@@ -61,10 +61,10 @@ const FoodLogList = () => {
               </div>
               <div className="text-lg font-medium text-gray-900">{entry.foodName || "No food name"}</div>
               <div className="text-sm text-gray-700 mt-2">
-                <span className="mr-2">🥩 Protein: {entry.protein}g</span>
-                <span className="mr-2">🦴 Phosphorus: {entry.phosphorus}mg</span>
-                <span className="mr-2">🧂 Sodium: {entry.sodium}mg</span>
-                <span>🍌 Potassium: {entry.potassium}mg</span>
+                <span className="mr-2"><span role="img" aria-label="Protein">🥩</span> Protein: {entry.protein}g</span>
+                <span className="mr-2"><span role="img" aria-label="Phosphorus">🦴</span> Phosphorus: {entry.phosphorus}mg</span>
+                <span className="mr-2"><span role="img" aria-label="Sodium">🧂</span> Sodium: {entry.sodium}mg</span>
+                <span><span role="img" aria-label="Potassium">🍌</span> Potassium: {entry.potassium}mg</span>
               </div>
               <button
                 onClick={() => handleDelete(entry._id)}

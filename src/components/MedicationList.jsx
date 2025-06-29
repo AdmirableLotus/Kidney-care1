@@ -34,7 +34,7 @@ const MedicationList = ({ patientId }) => {
 
   useEffect(() => {
     if (patientId) fetchMeds();
-  }, [patientId]);
+  }, [patientId, fetchMeds]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this medication?")) return;
