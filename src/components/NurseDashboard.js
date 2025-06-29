@@ -4,42 +4,30 @@ import './StaffDashboardV2.css';
 import MedicationManager from './MedicationManager';
 import FluidDashboard from './FluidDashboard';
 
+const emptyFoodEntry = {
+  meal: '',
+  food: '',
+  protein: 0,
+  phosphorus: 0,
+  potassium: 0,
+  sodium: 0
+};
+
 const NurseDashboard = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [foodEntries, setFoodEntries] = useState([]);
-  const [totals, setTotals] = useState({
-    protein: 0,
-    phosphorus: 0,
-    potassium: 0,
-    sodium: 0
-  });
-  const [user, setUser] = useState(null);
-  const [newEntry, setNewEntry] = useState({
-    meal: '',
-    food: '',
-    protein: 0,
-    phosphorus: 0,
-    potassium: 0,
-    sodium: 0
-  });
+  const [totals, setTotals] = useState({ ...emptyFoodEntry });
+  const [newEntry, setNewEntry] = useState({ ...emptyFoodEntry });
   const [submitting, setSubmitting] = useState(false);
   const [entrySuccess, setEntrySuccess] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const u = JSON.parse(storedUser);
-      setUser(u);
-      if (!['nurse', 'medical_staff', 'admin', 'doctor', 'dietitian'].includes(u.role)) {
-        setError('Access denied. This dashboard is for medical staff only.');
-        setLoading(false);
-        return;
-      }
-    } else {
-      setError('User not found in localStorage.');
+    const userRole = localStorage.getItem('userRole');
+    if (!['nurse', 'medical_staff', 'admin', 'doctor', 'dietitian'].includes(userRole)) {
+      setError('Access denied. This dashboard is for medical staff only.');
       setLoading(false);
       return;
     }
@@ -51,6 +39,14 @@ const NurseDashboard = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPatients(response.data);
+
+        const storedId = localStorage.getItem('selectedPatientId');
+        const selected = response.data.find(p => p._id === storedId);
+        if (selected) {
+          setSelectedPatient(selected);
+          await fetchPatientFoodEntries(selected._id);
+        }
+
       } catch (err) {
         console.error('Error fetching patients:', err);
         setError('Failed to load patients. ' + (err.response?.data?.message || err.message));
@@ -62,11 +58,6 @@ const NurseDashboard = () => {
     fetchPatients();
   }, []);
 
-  useEffect(() => {
-    console.log("User role:", user?.role);
-    console.log("Selected patient:", selectedPatient);
-  }, [user, selectedPatient]);
-
   const calculateTotals = (entries) => {
     return entries.reduce(
       (acc, entry) => {
@@ -76,7 +67,7 @@ const NurseDashboard = () => {
         acc.sodium += entry.sodium || 0;
         return acc;
       },
-      { protein: 0, phosphorus: 0, potassium: 0, sodium: 0 }
+      { ...emptyFoodEntry }
     );
   };
 
@@ -103,10 +94,12 @@ const NurseDashboard = () => {
 
   const handleAddFoodEntry = async (e) => {
     e.preventDefault();
-    if (!selectedPatient) {
-      alert('Please select a patient first');
-      return;
-    }
+    if (!selectedPatient) return alert('Please select a patient first');
+
+    const invalid = ['protein', 'phosphorus', 'potassium', 'sodium'].some(
+      key => newEntry[key] === '' || isNaN(newEntry[key])
+    );
+    if (invalid) return alert('Please fill in all numeric fields correctly.');
 
     setSubmitting(true);
     setError('');
@@ -131,16 +124,7 @@ const NurseDashboard = () => {
       );
 
       await fetchPatientFoodEntries(selectedPatient._id);
-
-      setNewEntry({
-        meal: '',
-        food: '',
-        protein: 0,
-        phosphorus: 0,
-        potassium: 0,
-        sodium: 0
-      });
-
+      setNewEntry({ ...emptyFoodEntry });
       setEntrySuccess(true);
     } catch (err) {
       console.error('Failed to add food entry:', err);
@@ -150,40 +134,32 @@ const NurseDashboard = () => {
     setSubmitting(false);
   };
 
-  if (loading) return <div style={{color:'red'}}>DEBUG: Loading nurse dashboard...</div>;
-  if (error) return <div className="error-message" style={{color:'red'}}>DEBUG: {error}</div>;
+  if (loading) return <div style={{ color: 'red' }}>Loading nurse dashboard...</div>;
+  if (error) return <div className="error-message" style={{ color: 'red' }}>{error}</div>;
 
   return (
     <div className="dashboard-container">
-      <h1 style={{color: 'red', zIndex: 9999}}>DEBUG: Nurse Dashboard Loaded</h1>
       <h2>Nurse Dashboard</h2>
-      
+
       <div className="patients-section">
         <h3>Your Patients</h3>
         {patients.length === 0 ? (
-          <p style={{color:'orange'}}>No patients found. New patients will appear here when they register.</p>
+          <p style={{ color: 'orange' }}>No patients found.</p>
         ) : (
           <div className="patients-grid">
             {patients.map(patient => (
-              <div 
-                key={patient._id} 
+              <div
+                key={patient._id}
                 className={`patient-card ${selectedPatient?._id === patient._id ? 'selected' : ''}`}
                 onClick={() => handlePatientSelect(patient)}
               >
                 <h4>{patient.name}</h4>
                 <p>Email: {patient.email}</p>
-                <button onClick={(e) => e.stopPropagation()} className="view-details-btn">
-                  View Details
-                </button>
               </div>
             ))}
           </div>
         )}
       </div>
-
-      {!selectedPatient && patients.length > 0 && (
-        <div style={{color:'orange', marginTop:20}}>Select a patient to view their food log.</div>
-      )}
 
       {selectedPatient && (
         <div className="patient-details">
@@ -230,8 +206,6 @@ const NurseDashboard = () => {
           </div>
 
           <MedicationManager patientId={selectedPatient._id} />
-          {console.log("Patient ID passed to MedicationManager:", selectedPatient?._id)}
-
           <FluidDashboard patientId={selectedPatient._id} />
         </div>
       )}

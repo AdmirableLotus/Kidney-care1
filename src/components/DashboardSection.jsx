@@ -1,4 +1,8 @@
 import React from "react";
+import WaterIntakeForm from "./WaterIntakeForm";
+import WaterHistory from "./WaterHistory";
+import BloodPressureForm from "./BloodPressureForm";
+import BloodPressureChart from "./BloodPressureChart";
 
 const DashboardSection = () => {
   return (
@@ -18,36 +22,8 @@ const DashboardSection = () => {
             <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 text-2xl" role="img" aria-label="water droplet">💧</span>
             Water Intake
           </h3>
-          <form className="space-y-4">
-            <input
-              type="number"
-              placeholder="Enter amount"
-              className="w-full border border-gray-300 p-2 rounded"
-            />
-            <select className="w-full border border-gray-300 p-2 rounded">
-              <option>Milliliters (ml)</option>
-              <option>Ounces (oz)</option>
-            </select>
-            <select className="w-full border border-gray-300 p-2 rounded">
-              <option>Select container</option>
-              <option>Cup</option>
-              <option>Bottle</option>
-              <option>Glass</option>
-            </select>
-            <select className="w-full border border-gray-300 p-2 rounded">
-              <option>Select drink</option>
-              <option>Water</option>
-              <option>Coffee</option>
-              <option>Milk</option>
-              <option>Juice</option>
-            </select>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">
-              Add Intake
-            </button>
-            <button className="w-full mt-2 border border-blue-600 text-blue-600 hover:bg-blue-50 py-2 rounded">
-              See History
-            </button>
-          </form>
+          <WaterIntakeForm />
+          <WaterHistory />
         </div>
 
         {/* Blood Pressure Section */}
@@ -56,33 +32,10 @@ const DashboardSection = () => {
             <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 text-2xl" role="img" aria-label="heart">🫀</span>
             Blood Pressure
           </h3>
-          <form className="space-y-4">
-            <input
-              type="number"
-              placeholder="Systolic (e.g. 120)"
-              className="w-full border border-gray-300 p-2 rounded"
-            />
-            <input
-              type="number"
-              placeholder="Diastolic (e.g. 80)"
-              className="w-full border border-gray-300 p-2 rounded"
-            />
-            <input
-              type="number"
-              placeholder="Pulse (e.g. 70)"
-              className="w-full border border-gray-300 p-2 rounded"
-            />
-            <input
-              type="datetime-local"
-              className="w-full border border-gray-300 p-2 rounded"
-            />
-            <button className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded">
-              Add Reading
-            </button>
-            <button className="w-full mt-2 border border-sky-600 text-sky-600 hover:bg-sky-50 py-2 rounded">
-              See History
-            </button>
-          </form>
+          <BloodPressureForm />
+          <div className="mt-6">
+            <BloodPressureChart />
+          </div>
         </div>
       </div>
     </div>
@@ -90,3 +43,4 @@ const DashboardSection = () => {
 };
 
 export default DashboardSection;
+

@@ -3,7 +3,6 @@ import api from "../api";
 import "./PatientDashboard.css";
 import WaterIntakeTracker from "./WaterIntakeTracker";
 import KidneySmartDashboard from "./KidneySmartDashboard";
-import MedicationManager from "./MedicationManager";
 import MedicationList from "./MedicationList";
 import BloodPressureTracker from "./BloodPressureTracker";
 import FluidDashboard from "./FluidDashboard";
@@ -15,24 +14,29 @@ const PatientDashboard = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      api.get("/auth/me")
-        .then(res => {
+    const fetchUser = async () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setLoading(false);
+      } else {
+        try {
+          const res = await api.get("/auth/me");
           localStorage.setItem("user", JSON.stringify(res.data));
           setUser(res.data);
-        })
-        .catch(err => {
+        } catch (err) {
           console.error("Failed to fetch user:", err);
           if (err.response?.status === 401) {
             localStorage.clear();
             window.location.href = "/login";
           }
-        });
-    }
-    setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUser();
   }, []);
 
   if (loading) {
@@ -43,18 +47,10 @@ const PatientDashboard = () => {
     );
   }
 
-  if (user && user.role !== "patient") {
+  if (!user || user.role !== "patient") {
     return (
       <div className="dashboard-loading-screen">
         <div className="text-2xl text-red-400">Access denied. This dashboard is for patients only.</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="dashboard-loading-screen">
-        <div className="text-2xl text-yellow-400">No user found. Please log in again.</div>
       </div>
     );
   }
@@ -100,26 +96,20 @@ const PatientDashboard = () => {
             <FaPills className="icon text-purple-300" />
             <h3>Medications</h3>
           </div>
-          {user.role === "patient" && <MedicationList patientId={user._id} />}
-          {user.role === "nurse" && <MedicationManager patientId={user._id} />}
+          <MedicationList patientId={user._id} />
         </div>
 
-        {user && (
-          <div className="dashboard-card wide">
-            <FluidDashboard patientId={user._id} />
+        <div className="dashboard-card">
+          <div className="dashboard-section-header">
+            <FaPills className="icon text-purple-300" />
+            <h3>Your Medication Summary</h3>
           </div>
-        )}
+          <MedicationSummary patientId={user._id} />
+        </div>
 
-        {/* Medication Summary Section - Visible to patients only */}
-        {user.role === "patient" && (
-          <div className="dashboard-card">
-            <div className="dashboard-section-header">
-              <FaPills className="icon text-purple-300" />
-              <h3>Your Medication Summary</h3>
-            </div>
-            <MedicationSummary patientId={user._id} />
-          </div>
-        )}
+        <div className="dashboard-card">
+          <FluidDashboard patientId={user._id} />
+        </div>
       </div>
     </div>
   );

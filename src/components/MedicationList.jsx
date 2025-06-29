@@ -15,11 +15,17 @@ const MedicationList = ({ patientId }) => {
   const fetchMeds = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/patients/${patientId}/medications`, {
+      const userRole = localStorage.getItem("userRole");
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${patientId}/medications`
+        : `http://localhost:5000/api/patients/${patientId}/medications`;
+
+      const res = await axios.get(endpoint, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMeds(res.data);
     } catch (err) {
+      console.error("❌ Fetch meds error:", err);
       setError("Failed to load medications.");
     } finally {
       setLoading(false);
@@ -38,7 +44,8 @@ const MedicationList = ({ patientId }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMeds(meds.filter((m) => m._id !== id));
-    } catch {
+    } catch (err) {
+      console.error("❌ Delete medication error:", err);
       alert("Failed to delete medication.");
     }
   };

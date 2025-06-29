@@ -1,36 +1,40 @@
 .hero-section {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(to right, #1e88e5, #43cea2);
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   text-align: center;
   color: white;
-  padding-top: 60px;
+  padding: 80px 20px 40px;
+  overflow: hidden;
 }
 
 .hero-overlay {
   z-index: 2;
+  max-width: 800px;
 }
 
 .hero-overlay h1 {
-  font-size: 3rem;
+  font-size: 2.8rem;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .hero-overlay p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-bottom: 2rem;
+  line-height: 1.6;
+  color: #f0f0f0;
 }
 
 .hero-centerpiece {
   position: relative;
   z-index: 1;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .hero-centerpiece img {
@@ -38,8 +42,10 @@
   height: auto;
   border-radius: 50%;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  border: 4px solid white;
 }
 
+/* Feature card styling */
 .hero-feature {
   position: absolute;
   background-color: white;
@@ -50,14 +56,15 @@
   width: 180px;
   text-align: center;
   z-index: 3;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-feature:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Positioning the features */
+/* Feature card positions */
 .feature-top-left {
   top: 10%;
   left: 5%;
@@ -76,4 +83,42 @@
 .feature-bottom-right {
   bottom: 10%;
   right: 5%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 60px 15px 30px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 2rem;
+  }
+
+  .hero-overlay p {
+    font-size: 1rem;
+  }
+
+  .hero-centerpiece img {
+    width: 180px;
+  }
+
+  .hero-feature {
+    width: 150px;
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+
+  .feature-top-left,
+  .feature-top-right,
+  .feature-bottom-left,
+  .feature-bottom-right {
+    position: static;
+    margin: 0.5rem auto;
+  }
+
+  .hero-feature {
+    position: relative;
+    display: inline-block;
+  }
 }

@@ -16,8 +16,8 @@ export default function FluidDashboard({ patientId }) {
 
         const isStaff = ['nurse', 'doctor', 'admin', 'dietitian'].includes(user?.role);
         const endpoint = isStaff
-          ? `/api/staff/fluid/patient/${patientId}`
-          : `/api/fluids/totals/${patientId}`;
+          ? `http://localhost:5000/api/staff/patient/${patientId}/fluid`
+          : `http://localhost:5000/api/fluids/totals/${patientId}`;
 
         console.log('Fetching fluid data for patientId:', patientId, 'Role:', user?.role);
         const res = await axios.get(endpoint, {

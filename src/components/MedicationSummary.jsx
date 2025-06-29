@@ -10,12 +10,14 @@ const MedicationSummary = ({ patientId }) => {
     const fetchMedications = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `/api/patients/${patientId}/medications`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const userRole = localStorage.getItem("userRole");
+        const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+          ? `/api/staff/patient/${patientId}/medications`
+          : `/api/patients/${patientId}/medications`;
+
+        const response = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setMedications(response.data);
       } catch (err) {
         console.error("Failed to fetch medications:", err);

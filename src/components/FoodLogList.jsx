@@ -41,9 +41,9 @@ const FoodLogList = () => {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div className="food-log-list">
-      <h3>Food Log</h3>
-      <ul>
+    <div className="food-log-list bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <h3 className="text-xl font-semibold text-center mb-4 text-gray-800">Food Log</h3>
+      <ul className="space-y-4">
         {entries.map((entry) => {
           let dateStr = "";
           try {
@@ -52,27 +52,23 @@ const FoodLogList = () => {
             dateStr = "Invalid date";
           }
           return (
-            <li key={entry._id} className="food-log-item" style={{ marginBottom: "1rem", paddingBottom: "0.5rem", borderBottom: "1px solid #ccc" }}>
-              <strong>{dateStr}</strong> – {entry.mealType || "Meal"}
-              <br />
-              <em>{entry.foodName || "No food name"}</em>
-              <div style={{ marginTop: "0.5rem" }}>
-                <span>Protein: {entry.protein}g, </span>
-                <span>Phosphorus: {entry.phosphorus}mg, </span>
-                <span>Sodium: {entry.sodium}mg, </span>
-                <span>Potassium: {entry.potassium}mg</span>
+            <li
+              key={entry._id}
+              className="border border-gray-200 p-4 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition duration-200"
+            >
+              <div className="mb-2">
+                <strong className="text-blue-700">{dateStr}</strong> – <span className="text-gray-700">{entry.mealType || "Meal"}</span>
+              </div>
+              <div className="text-lg font-medium text-gray-900">{entry.foodName || "No food name"}</div>
+              <div className="text-sm text-gray-700 mt-2">
+                <span className="mr-2">🥩 Protein: {entry.protein}g</span>
+                <span className="mr-2">🦴 Phosphorus: {entry.phosphorus}mg</span>
+                <span className="mr-2">🧂 Sodium: {entry.sodium}mg</span>
+                <span>🍌 Potassium: {entry.potassium}mg</span>
               </div>
               <button
                 onClick={() => handleDelete(entry._id)}
-                style={{
-                  marginTop: "0.5rem",
-                  backgroundColor: "#e74c3c",
-                  color: "#fff",
-                  border: "none",
-                  padding: "6px 12px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
+                className="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
               >
                 Delete
               </button>

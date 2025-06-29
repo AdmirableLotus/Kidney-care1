@@ -14,11 +14,18 @@ const MedicationManager = ({ patientId }) => {
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
+  const getEndpoint = () => {
+    const userRole = localStorage.getItem("userRole");
+    return ['nurse', 'doctor', 'admin'].includes(userRole)
+      ? `/api/staff/patient/${patientId}/medications`
+      : `/api/patients/${patientId}/medications`;
+  };
+
   const fetchMedications = async () => {
     try {
       const token = localStorage.getItem("token");
       console.log("Fetching medications for patientId:", patientId);
-      const response = await axios.get(`/api/patients/${patientId}/medications`, {
+      const response = await axios.get(getEndpoint(), {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log("Medications fetched:", response.data);
@@ -42,10 +49,7 @@ const MedicationManager = ({ patientId }) => {
     try {
       const token = localStorage.getItem("token");
       console.log("Adding medication with data:", formData);
-      console.log("Medication POST request URL:", `/api/patients/${patientId}/medications`);
-      console.log("Medication POST request headers:", { Authorization: `Bearer ${token}` });
-      console.log("Medication POST request body:", formData);
-      const response = await axios.post(`/api/patients/${patientId}/medications`, formData, {
+      const response = await axios.post(getEndpoint(), formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log("Medication added successfully:", response.data);

@@ -1,106 +1,90 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
-import { format, subDays } from "date-fns";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const FoodLogChart = () => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState("");
+export default function FluidDashboard({ patientId }) {
+  const [fluidData, setFluidData] = useState({ totals: [], overall: 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchFoodData = async () => {
+    if (!patientId) return;
+
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/patient/food", {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        const isStaff = ['nurse', 'doctor', 'admin', 'dietitian'].includes(user?.role);
+        const endpoint = isStaff
+          ? `http://localhost:5000/api/staff/patient/${patientId}/fluid`
+          : `http://localhost:5000/api/fluids/totals/${patientId}`;
+
+        console.log('Fetching fluid data for patientId:', patientId, 'Role:', user?.role);
+        const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const totalsByDate = {};
-
-        res.data.forEach((entry) => {
-          const day = format(new Date(entry.date), "yyyy-MM-dd");
-          if (!totalsByDate[day]) {
-            totalsByDate[day] = {
-              date: day,
-              protein: 0,
-              phosphorus: 0,
-              sodium: 0,
-              potassium: 0,
-            };
-          }
-          totalsByDate[day].protein += entry.protein || 0;
-          totalsByDate[day].phosphorus += entry.phosphorus || 0;
-          totalsByDate[day].sodium += entry.sodium || 0;
-          totalsByDate[day].potassium += entry.potassium || 0;
-        });
-
-        const last7Days = Array.from({ length: 7 }).map((_, i) => {
-          const date = format(subDays(new Date(), 6 - i), "yyyy-MM-dd");
-          return totalsByDate[date] || {
-            date,
-            protein: 0,
-            phosphorus: 0,
-            sodium: 0,
-            potassium: 0,
-          };
-        });
-
-        setData(last7Days);
-        setError("");
+        console.log('Fluid data fetched:', res.data);
+        setFluidData(res.data || { totals: [], overall: 0 });
+        setError('');
       } catch (err) {
-        console.error("Failed to load food log chart:", err);
-        setError("Unable to load chart. Please try again later.");
-        setData([]);
+        console.error('Fluid data fetch error:', err);
+        setError('Failed to load fluid data.');
+        setFluidData({ totals: [], overall: 0 });
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchFoodData();
-  }, []);
+    fetchData();
+  }, [patientId]);
+
+  const getByType = (type) => {
+    return fluidData.totals.find((t) => t._id === type)?.totalMl || 0;
+  };
+
+  const fluidLimit = 1500;
+
+  if (!patientId) return null;
+  if (loading) return <div><span role="img" aria-label="droplet">💧</span> Loading fluid dashboard...</div>;
+  if (error) return <div className="text-red-600 font-semibold">{error}</div>;
 
   return (
-    <div className="food-log-chart">
-      <h3 className="text-lg font-semibold mb-2">Nutrient Intake (Last 7 Days)</h3>
+    <div className="bg-white rounded-xl shadow p-6 w-full text-black">
+      <h2 className="text-xl font-bold mb-4"><span role="img" aria-label="droplet">💧</span> Fluid Intake Dashboard</h2>
 
-      {error && (
-        <div className="text-red-500 mb-4 font-medium">{error}</div>
-      )}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-blue-100 p-4 rounded">
+          <p className="font-semibold">Drinks</p>
+          <p className="text-2xl">{getByType("drink")} mL</p>
+        </div>
+        <div className="bg-green-100 p-4 rounded">
+          <p className="font-semibold">From Food</p>
+          <p className="text-2xl">{getByType("food")} mL</p>
+        </div>
+      </div>
 
-      {data.length === 0 && !error ? (
-        <div className="text-gray-300 italic">No data to display.</div>
-      ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              tickFormatter={(dateStr) => format(new Date(dateStr), "MMM d")}
-            />
-            <YAxis />
-            <Tooltip
-              formatter={(value) => `${value}`}
-              labelFormatter={(label) =>
-                format(new Date(label), "MMMM d, yyyy")
-              }
-            />
-            <Legend />
-            <Line type="monotone" dataKey="protein" stroke="#007bff" name="Protein (g)" />
-            <Line type="monotone" dataKey="phosphorus" stroke="#ff9800" name="Phosphorus (mg)" />
-            <Line type="monotone" dataKey="sodium" stroke="#00b894" name="Sodium (mg)" />
-            <Line type="monotone" dataKey="potassium" stroke="#d500f9" name="Potassium (mg)" />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
+      <div className="mt-6">
+        <p className="font-semibold">Total Intake</p>
+        <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
+          <div
+            className={`h-4 rounded-full transition-all duration-300 ${
+              fluidData.overall > fluidLimit ? 'bg-red-500' : 'bg-blue-500'
+            }`}
+            style={{
+              width: `${Math.min((fluidData.overall / fluidLimit) * 100, 100)}%`,
+            }}
+          />
+        </div>
+        <p className="text-sm mt-1">
+          {fluidData.overall} mL / {fluidLimit} mL
+        </p>
+        {fluidData.overall > fluidLimit && (
+          <div className="text-red-600 font-bold mt-2">
+            <span role="img" aria-label="warning">⚠️</span> Daily fluid limit exceeded!
+          </div>
+        )}
+      </div>
     </div>
   );
-};
-
-export default FoodLogChart;
+}

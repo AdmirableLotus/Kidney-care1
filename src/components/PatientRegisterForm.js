@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './RegisterForm.css'; // reuse styling
+import './RegisterForm.css';
+
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 const PatientRegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ const PatientRegisterForm = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -20,9 +23,11 @@ const PatientRegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post(`${API_BASE}/api/auth/register`, {
         ...formData,
         role: "patient"
       });
@@ -32,34 +37,19 @@ const PatientRegisterForm = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || "Registration failed.");
     }
+    setLoading(false);
   };
 
-  const handleAlena = async () => {
+  const quickRegister = async (payload, label) => {
+    setLoading(true);
+    setMessage("");
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name: "Alena",
-        email: "alena@example.com",
-        password: "Alena2025!",
-        role: "patient"
-      });
-      setMessage("Patient Alena registered successfully!");
+      await axios.post(`${API_BASE}/api/auth/register`, payload);
+      setMessage(`${label} registered successfully!`);
     } catch (err) {
       setMessage(err.response?.data?.message || "Registration failed.");
     }
-  };
-
-  const handleTestPatient = async () => {
-    try {
-      await axios.post("http://localhost:5000/api/auth/register", {
-        name: "Test Patient",
-        email: `testpatient${Date.now()}@example.com`,
-        password: "Test2025!",
-        role: "patient"
-      });
-      setMessage("Test patient registered successfully!");
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Registration failed.");
-    }
+    setLoading(false);
   };
 
   return (
@@ -89,9 +79,45 @@ const PatientRegisterForm = () => {
           placeholder="Create Password"
           required
         />
-        <button type="submit">Register</button>
-        <button type="button" onClick={handleAlena} style={{marginLeft:8}}>Register Alena</button>
-        <button type="button" onClick={handleTestPatient} style={{marginLeft:8}}>Register Test Patient</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            quickRegister(
+              {
+                name: "Alena",
+                email: "alena@example.com",
+                password: "Alena2025!",
+                role: "patient"
+              },
+              "Alena"
+            )
+          }
+          disabled={loading}
+          style={{ marginLeft: 8 }}
+        >
+          Register Alena
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            quickRegister(
+              {
+                name: "Test Patient",
+                email: `testpatient${Date.now()}@example.com`,
+                password: "Test2025!",
+                role: "patient"
+              },
+              "Test Patient"
+            )
+          }
+          disabled={loading}
+          style={{ marginLeft: 8 }}
+        >
+          Register Test Patient
+        </button>
       </form>
 
       {message && <p className="form-message">{message}</p>}

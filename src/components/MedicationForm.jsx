@@ -40,11 +40,13 @@ const MedicationForm = ({ onAdded, patientId }) => {
         time: form.time ? form.time.split(",").map((t) => t.trim()) : [],
       };
 
-      await axios.post(
-        `http://localhost:5000/api/patients/${patientId}/medications`,
+      const res = await axios.post(
+        `http://localhost:5000/api/staff/patient/${patientId}/medications`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      console.log("✅ Medication added:", res.data);
 
       setForm({
         name: "",
@@ -58,6 +60,7 @@ const MedicationForm = ({ onAdded, patientId }) => {
 
       if (onAdded) onAdded();
     } catch (err) {
+      console.error("❌ Medication submit error:", err);
       setError(err.response?.data?.message || "Failed to add medication.");
     }
 

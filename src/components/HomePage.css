@@ -35,6 +35,7 @@ ul {
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -45,6 +46,7 @@ ul {
 .nav-links {
   display: flex;
   gap: 25px;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -100,6 +102,11 @@ ul {
   border-radius: 5px;
   display: inline-block;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #1c9e00;
 }
 
 /* ====== About Section ====== */
@@ -110,6 +117,7 @@ ul {
   align-items: center;
   padding: 60px 10%;
   background-color: white;
+  gap: 20px;
 }
 
 .about .text {
@@ -265,4 +273,34 @@ footer {
 
 .footer-links a:hover {
   color: #23b500;
+}
+
+/* ====== Responsive Fixes ====== */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .about {
+    flex-direction: column;
+    padding: 40px 5%;
+  }
+
+  .about .text {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .nav-links {
+    justify-content: center;
+  }
 }

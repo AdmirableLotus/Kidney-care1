@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const BloodPressureTracker = () => {
   const [readings, setReadings] = useState([]);
@@ -9,23 +10,64 @@ const BloodPressureTracker = () => {
     time: '',
   });
   const [showHistory, setShowHistory] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const getCurrentTimestamp = () => {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    return now.toISOString().slice(0, 16);
+  };
+
+  useEffect(() => {
+    fetchReadings();
+  }, []);
+
+  const fetchReadings = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('http://localhost:5000/api/patient/bloodpressure', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const sorted = res.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setReadings(sorted);
+    } catch (err) {
+      console.error('Failed to fetch blood pressure readings:', err);
+      setError('Could not load readings.');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setReadings([
-      ...readings,
-      { ...form, timestamp: form.time || new Date().toISOString() },
-    ]);
-    setForm({ systolic: '', diastolic: '', pulse: '', time: '' });
+    setError('');
+    setSuccess('');
+    try {
+      const token = localStorage.getItem('token');
+      const entry = {
+        systolic: form.systolic,
+        diastolic: form.diastolic,
+        pulse: form.pulse,
+        timestamp: form.time || new Date().toISOString(),
+      };
+      await axios.post('http://localhost:5000/api/patient/bloodpressure', entry, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setReadings((prev) => [entry, ...prev]);
+      setSuccess('✅ Entry saved');
+      setForm({ systolic: '', diastolic: '', pulse: '', time: '' });
+    } catch (err) {
+      console.error('Failed to submit:', err);
+      setError('❌ Could not save. Try again.');
+    }
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-lg w-full max-w-md" style={{color:'#111'}}>
+    <div className="bg-white p-4 rounded-xl shadow-lg w-full max-w-md" style={{ color: '#111' }}>
       <h2 className="text-xl font-bold mb-4">Log Blood Pressure</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -36,7 +78,6 @@ const BloodPressureTracker = () => {
             value={form.systolic}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            placeholder="e.g. 120"
             required
           />
         </div>
@@ -48,7 +89,6 @@ const BloodPressureTracker = () => {
             value={form.diastolic}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            placeholder="e.g. 80"
             required
           />
         </div>
@@ -60,7 +100,6 @@ const BloodPressureTracker = () => {
             value={form.pulse}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            placeholder="e.g. 70"
           />
         </div>
         <div>
@@ -77,6 +116,10 @@ const BloodPressureTracker = () => {
           Add Reading
         </button>
       </form>
+
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {success && <p className="text-green-600 mt-2">{success}</p>}
+
       <div className="mt-4">
         <button
           onClick={() => setShowHistory(!showHistory)}
@@ -89,7 +132,8 @@ const BloodPressureTracker = () => {
             <ul className="space-y-2">
               {readings.map((entry, idx) => (
                 <li key={idx} className="border p-2 rounded text-sm">
-                  {entry.systolic}/{entry.diastolic} mmHg, Pulse: {entry.pulse} @ {new Date(entry.timestamp).toLocaleString()}
+                  {entry.systolic}/{entry.diastolic} mmHg, Pulse: {entry.pulse} @{' '}
+                  {new Date(entry.timestamp).toLocaleString()}
                 </li>
               ))}
             </ul>

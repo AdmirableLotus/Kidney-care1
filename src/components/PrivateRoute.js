@@ -1,28 +1,34 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-// Optional: Validate JWT expiration
-const isTokenValid = (token) => {
+// Safely decode JWT payload
+const getTokenPayload = (token) => {
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload && payload.exp * 1000 > Date.now();
+    return JSON.parse(atob(token.split(".")[1]));
   } catch {
-    return false;
+    return null;
   }
 };
 
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+// Check if token is valid and optionally if user has an allowed role
+const isTokenValid = (token, allowedRoles = []) => {
+  const payload = getTokenPayload(token);
+  if (!payload || payload.exp * 1000 <= Date.now()) return false;
 
-  if (!token || !isTokenValid(token)) {
-    return <Navigate to="/" replace />;
+  if (allowedRoles.length > 0) {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    return allowedRoles.includes(user.role);
   }
 
-  // Optional: Role-based protection
-  // const user = JSON.parse(localStorage.getItem("user") || "{}");
-  // if (user.role !== "patient") {
-  //   return <Navigate to="/unauthorized" replace />;
-  // }
+  return true;
+};
+
+const PrivateRoute = ({ children, roles = [] }) => {
+  const token = localStorage.getItem("token");
+
+  if (!token || !isTokenValid(token, roles)) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 };

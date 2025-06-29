@@ -20,14 +20,17 @@ const MedicationManager = ({ patientId }) => {
   const fetchMeds = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(
-        `http://localhost:5000/api/patients/${patientId}/medications`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const userRole = localStorage.getItem("userRole");
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${patientId}/medications`
+        : `http://localhost:5000/api/patients/${patientId}/medications`;
+
+      const res = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setMeds(res.data);
     } catch (err) {
+      console.error("❌ Fetch medications error:", err);
       setError("Failed to load medications");
     }
   };
@@ -46,18 +49,19 @@ const MedicationManager = ({ patientId }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const userRole = localStorage.getItem("userRole");
+      const endpoint = ['nurse', 'doctor', 'admin'].includes(userRole)
+        ? `http://localhost:5000/api/staff/patient/${patientId}/medications`
+        : `http://localhost:5000/api/patients/${patientId}/medications`;
+
       const dataToSend = {
         ...newMed,
         time: newMed.time ? newMed.time.split(",").map((t) => t.trim()) : [],
       };
 
-      await axios.post(
-        `http://localhost:5000/api/patients/${patientId}/medications`,
-        dataToSend,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post(endpoint, dataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setNewMed({
         name: "",
@@ -72,6 +76,7 @@ const MedicationManager = ({ patientId }) => {
 
       fetchMeds();
     } catch (err) {
+      console.error("❌ Add medication error:", err);
       setError("Failed to add medication");
     }
     setLoading(false);
@@ -81,14 +86,12 @@ const MedicationManager = ({ patientId }) => {
     if (!window.confirm("Delete this medication?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(
-        `http://localhost:5000/api/medications/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`http://localhost:5000/api/medications/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       fetchMeds();
     } catch (err) {
+      console.error("❌ Delete medication error:", err);
       alert("Failed to delete");
     }
   };
@@ -177,4 +180,3 @@ const MedicationManager = ({ patientId }) => {
 };
 
 export default MedicationManager;
-

@@ -23,7 +23,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
     sodium: "0",
     potassium: "0"
   });
-  
+
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -191,7 +191,7 @@ const FoodLogForm = ({ onEntryAdded }) => {
       <div className="nutrients-container">
         <h4>Nutritional Information (calculated automatically)</h4>
         <div className="nutrient-grid">
-          {['calories','protein','phosphorus','sodium','potassium'].map(key => (
+          {["calories","protein","phosphorus","sodium","potassium"].map(key => (
             <label key={key}>
               {key.charAt(0).toUpperCase() + key.slice(1)}:
               <input type="number" name={key} value={form[key]} readOnly />
