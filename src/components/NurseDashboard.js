@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './StaffDashboardV2.css';
 import MedicationManager from './MedicationManager';
-import FluidDashboard from './FluidDashboard';
 
 const emptyFoodEntry = {
   meal: '',
@@ -23,6 +22,7 @@ const NurseDashboard = () => {
   const [newEntry, setNewEntry] = useState({ ...emptyFoodEntry });
   const [submitting, setSubmitting] = useState(false);
   const [entrySuccess, setEntrySuccess] = useState(false);
+  const [waterIntake, setWaterIntake] = useState([]);
 
   useEffect(() => {
     const userRole = localStorage.getItem('userRole');
@@ -45,6 +45,7 @@ const NurseDashboard = () => {
         if (selected) {
           setSelectedPatient(selected);
           await fetchPatientFoodEntries(selected._id);
+          await fetchWaterIntake(selected._id);
         }
 
       } catch (err) {
@@ -76,6 +77,7 @@ const NurseDashboard = () => {
     setSelectedPatient(patient);
     localStorage.setItem('selectedPatientId', patient._id);
     await fetchPatientFoodEntries(patient._id);
+    await fetchWaterIntake(patient._id);
   };
 
   const fetchPatientFoodEntries = async (patientId) => {
@@ -89,6 +91,20 @@ const NurseDashboard = () => {
     } catch (err) {
       console.error('Error fetching food entries:', err);
       setError('Failed to load food entries: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
+  const fetchWaterIntake = async (patientId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:5000/api/staff/fluid/patient/${patientId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('Backend response for water intake:', response.data); // Debug log
+      setWaterIntake(response.data);
+    } catch (err) {
+      console.error('Error fetching water intake:', err);
+      setError('Failed to load water intake: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -138,6 +154,8 @@ const NurseDashboard = () => {
   console.log("Selected patient:", selectedPatient);
   console.log("Patients list:", patients);
   console.log("User role:", user?.role);
+  console.log('Selected patient:', selectedPatient); // Debug log
+  console.log('Water intake state:', waterIntake); // Debug log
 
   if (loading) return <div style={{ color: 'red' }}>Loading nurse dashboard...</div>;
   if (error) return <div className="error-message" style={{ color: 'red' }}>{error}</div>;
@@ -207,11 +225,23 @@ const NurseDashboard = () => {
                   </div>
                 </div>
               ))
-            )}
+            }
           </div>
 
           <MedicationManager patientId={selectedPatient._id} />
-          <FluidDashboard patientId={selectedPatient._id} />
+
+          <div>
+            <h2>Water Intake</h2>
+            {waterIntake.length > 0 ? (
+              <ul>
+                {waterIntake.map((entry, index) => (
+                  <li key={index}>{entry.date}: {entry.ml} mL</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No water intake data available.</p>
+            )}
+          </div>
         </div>
       )}
     </div>

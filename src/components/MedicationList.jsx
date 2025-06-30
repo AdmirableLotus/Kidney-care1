@@ -34,7 +34,7 @@ const MedicationList = ({ patientId }) => {
 
   useEffect(() => {
     if (patientId) fetchMeds();
-  }, [patientId, fetchMeds]);
+  }, [patientId, fetchMeds]); // Added fetchMeds to dependency array
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this medication?")) return;
