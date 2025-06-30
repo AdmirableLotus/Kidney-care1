@@ -225,7 +225,7 @@ const NurseDashboard = () => {
                   </div>
                 </div>
               ))
-            }
+            )}
           </div>
 
           <MedicationManager patientId={selectedPatient._id} />
@@ -239,7 +239,7 @@ const NurseDashboard = () => {
                 ))}
               </ul>
             ) : (
-              <p>No water intake data available.</p>
+              <p>No water intake records found.</p>
             )}
           </div>
         </div>
