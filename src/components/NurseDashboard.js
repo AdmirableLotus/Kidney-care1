@@ -97,9 +97,9 @@ const NurseDashboard = () => {
   const fetchWaterIntake = async (patientId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/staff/fluid/patient/${patientId}`, {
+      const response = await axios.get(`http://localhost:5000/api/staff/water/patient/${patientId}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      }); // Updated endpoint to fetch water intake
       console.log('Backend response for water intake:', response.data); // Debug log
       setWaterIntake(response.data);
     } catch (err) {
